@@ -81,7 +81,7 @@ export default {
 			host: "",
 			// 上传时,是否按用户id进行分组储存
 			groupUserId: true,
-			// vk.callFunctionUtil.uploadFile 是否默认上传到阿里云OSS
+			// vk.uploadFile 是否默认上传到阿里云OSS
 			isDefault: false
 		}
 	},

@@ -298,7 +298,7 @@
 					count: 1,
 					success: (res) => {
 						// 上传图片到云储存
-						vk.callFunctionUtil.uploadFile({
+						vk.uploadFile({
 							title:"上传中...",
 							filePath: res.tempFilePaths[0],
 							fileType: "image",
@@ -346,7 +346,7 @@
 					count: 1,
 					success: (res) => {
 						// 上传视频到云储存
-						vk.callFunctionUtil.uploadFile({
+						vk.uploadFile({
 							title:"上传中...",
 							filePath: res.tempFilePath,
 							fileType: "video",
