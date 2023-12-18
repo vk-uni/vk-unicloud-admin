@@ -1,6 +1,8 @@
-* 【升级】`vk-unicloud-admin-ui` 包升级至 `1.17.52`
+* 【升级】`vk-unicloud-admin-ui` 包升级至 `1.17.54`
 * 【修复】`万能表单` radio 和 checkbox 因 `1.17.4` 更新导致当超出一行后不会自动换行的问题
 * 【修复】`万能表单` group 间距样式问题
+* 【优化】`万能表单` `file-select` 当分类太多时显示滚动条
+* 【优化】`万能表单` `file-select` watch新增返回option属性
 
 ##### 框架更新步骤 [点击查看](https://vkdoc.fsq.pub/admin/1/update.html)
 ##### 框架学习Q群：`22466457` 欢迎萌新和大佬来使用和共同改进框架

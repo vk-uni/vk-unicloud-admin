@@ -41,14 +41,14 @@
 		"sms": {
 			"name": "重要",
 			"codeExpiresIn": 180,
-			"smsKey": "你的smsKey",
-			"smsSecret": "你的smsSecret",
-			"templateId": "你的短信模板ID"
+			"templateId": "",
+			"smsKey": "",
+			"smsSecret": ""
 		},
 		"univerify": {
-			"appid": "your appid",
-			"apiKey": "your apiKey",
-			"apiSecret": "your apiSecret"
+			"appid": "",
+			"apiKey": "",
+			"apiSecret": ""
 		}
 	}
 }

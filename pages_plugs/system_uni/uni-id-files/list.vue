@@ -22,6 +22,7 @@
 			</view>
 		</view>
 		<view class="nav" v-loading="loading.nav">
+			<view class="add-group" @click.stop="vk.pubfn.openForm('addCategory')">添加分组</view>
 			<view
 				class="nav-list"
 				v-for="(item, index) of data.navList" :key="index"
@@ -36,8 +37,7 @@
 					</el-popconfirm>
 				</view>
 			</view>
-
-			<view class="add-group" @click.stop="vk.pubfn.openForm('addCategory')">添加分组</view>
+			
 		</view>
 		<view class="main" v-loading="loading.main">
 			<!-- 内容详情 -->
@@ -216,7 +216,7 @@ export default {
 				url: "admin/system_uni/uni-id-files/files/kh/getList",
 				loading: { that, name: "loading.main" },
 				data: queryForm1,
-				success: function(data) {
+				success: (data) => {
 					that.data.content = data;
 					selectedIds.length = 0;
 				}
@@ -229,9 +229,9 @@ export default {
 				loading: { that, name: "loading.nav" },
 				data: {
 					pageIndex: 1,
-					pageSize: 100
+					pageSize: 1000
 				},
-				success: function(data) {
+				success: (data) => {
 					that.data.navList = [
 						{ _id: "", name: "全部" },
 						{ _id: "null", name: "未分组" },
@@ -255,7 +255,7 @@ export default {
 				data: {
 					_id
 				},
-				success: function(data) {
+				success: (data) => {
 					that.data.navList.splice(index, 1);
 				}
 			});
@@ -268,7 +268,7 @@ export default {
 				data: {
 					_id: ids
 				},
-				success: function(data) {
+				success: (data) => {
 					if(data.num>0){
 						if (typeof ids !== "object") ids = [ids];
 						ids.map(id => {
@@ -315,7 +315,7 @@ export default {
 					// 			needSave: true,
 					// 			fileType,
 					// 			category_id: that.queryForm1.formData.category_id,
-					// 			onUploadProgress:function(progressRes){
+					// 			onUploadProgress:(progressRes)=>{
 					// 				// 上传过程中
 					// 				vk.showLoading(`文件${i+1}：${progressRes.progress}%\n`);
 					// 			},
@@ -385,13 +385,12 @@ export default {
 		},
 		coverImageFilter(item){
 			let src = "";
-			let { cover_image, url, width=600, height=600 } = item;
+			let { cover_image, url, width=0, height=0 } = item;
 			if(cover_image){
 				src = cover_image;
 			}else{
 				src = `${url}?x-oss-process=video/snapshot,t_1000,f_jpg,w_${width},h_${height},m_fast`;
 			}
-			console.log('src: ', src)
 			return src;
 		},
 		durationFilter(value){

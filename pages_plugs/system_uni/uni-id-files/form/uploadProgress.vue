@@ -87,7 +87,7 @@ export default {
 		async upload(item){
 			let that = this;
 			let { vk } = that;
-			let { tempFilePaths, tempFiles, categoryId, fileType } = item;
+			let { tempFilePaths, tempFiles, categoryId, fileType, cloudDirectory } = item;
 			that.total = tempFilePaths.length;
 			that.totalPercentage = 0;
 			for (let i = 0; i < tempFilePaths.length; i++) {
@@ -95,16 +95,28 @@ export default {
 				that.currentIndex = i;
 				let percentage = vk.pubfn.toDecimal((i+1) / tempFilePaths.length * 100, 0);
 				try {
-					await vk.uploadFile({
-						filePath: tempFilePaths[i],
-						file: tempFiles[i],
-						needSave: true,
-						fileType,
-						category_id: categoryId,
-						onUploadProgress:(progressRes) => {
-							// 上传过程中
-							that.currentPercentage = progressRes.progress;
-						},
+					await new Promise((resolve, reject) => {
+						vk.uploadFile({
+							filePath: tempFilePaths[i],
+							file: tempFiles[i],
+							needSave: true,
+							fileType,
+							category_id: categoryId,
+							cloudDirectory,
+							onUploadProgress:(progressRes) => {
+								// 上传过程中
+								that.currentPercentage = progressRes.progress;
+							},
+							addSuccess:(res) => {
+								resolve(res);
+							},
+							fail: (res) => {
+								reject(res);
+							},
+							addFail: (res) => {
+								reject(res);
+							},
+						});
 					});
 					that.totalPercentage = percentage;
 				} catch(err){
