@@ -303,7 +303,7 @@
 							filePath: res.tempFilePaths[0],
 							fileType: "image",
 							success(res) {
-								let imageUrl = res.fileID;
+								let imageUrl = res.url;
 								that.editorCtx.insertImage({
 									src: imageUrl,
 									alt: "image",
@@ -351,7 +351,7 @@
 							filePath: res.tempFilePath,
 							fileType: "video",
 							success(res) {
-								let imageUrl = res.fileID;
+								let imageUrl = res.url;
 								// 目前 uniapp 的原生富文本 没有 insertVideo api
 								that.editorCtx.insertVideo({
 									src: imageUrl,
@@ -839,7 +839,7 @@
 	.text_color,
 	.bg_color{
 		position: absolute;
-		z-index: 100;
+		z-index: 101;
 		top: 40px;
 		display: grid;
 		grid-template-columns: repeat(7,30px);

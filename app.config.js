@@ -64,35 +64,60 @@ export default {
 	myfn: myPubFunction,
 	// 第三方服务配置
 	service: {
-		// 阿里云oss配置
-		aliyunOSS: {
-			// 密钥和签名信息 (由于签名的获取比较麻烦,建议初学者使用上传到unicloud的方案,上传到阿里云OSS是给有特殊需求的用户使用)
-			// 相关文档 : https://help.aliyun.com/document_detail/31925.html?spm=a2c4g.11186623.6.1757.b7987d9czoFCVu
-			uploadData: {
-				OSSAccessKeyId: "",
-				policy: "",
-				signature: "",
+		// 云储存相关配置
+		cloudStorage: {
+			/**
+			 * vk.uploadFile 接口默认使用哪个存储
+			 * unicloud 空间内置存储（默认）
+			 * extStorage 扩展存储
+			 * aliyun 阿里云oss 
+			 */
+			defaultProvider: "unicloud",
+			// 空间内置存储
+			unicloud: {
+				// 暂无配置项
 			},
-			// oss上传地址
-			action: "",
-			// 根目录名称
-			dirname: "",
-			// oss外网访问地址，也可以是阿里云cdn地址
-			host: "",
-			// 上传时,是否按用户id进行分组储存
-			groupUserId: true,
-			// vk.uploadFile 是否默认上传到阿里云OSS
-			isDefault: false
+			// 扩展存储配置
+			extStorage: {
+				provider: "qiniu", // qiniu: 扩展存储-七牛云
+				// 根目录名称（如果改了这里的dirname，则云函数user/pub/getUploadFileOptionsForExtStorage内判断的目录权限也要改，否则无法上传）
+				dirname: "public",
+				// 用于鉴权的云函数地址（一般不需要改这个参数）
+				authAction: "user/pub/getUploadFileOptionsForExtStorage",
+				// 自定义域名，如：cdn.example.com（填你在扩展存储绑定的域名）
+				domain: "cdn.example.com",
+				// 上传时，是否按用户id进行分组储存
+				groupUserId: false,
+			},
+			// 阿里云oss
+			// 密钥和签名信息（由于签名的获取比较麻烦,建议初学者使用上传到unicloud或extStorage的方案，上传到阿里云OSS是给有特殊需求的用户使用）
+			// 相关文档 : https://help.aliyun.com/document_detail/31925.html?spm=a2c4g.11186623.6.1757.b7987d9czoFCVu
+			aliyun: {
+				// 密钥和签名信息
+				uploadData: {
+					OSSAccessKeyId: "",
+					policy: "",
+					signature: "",
+				},
+				// oss上传地址
+				action: "https://xxx.oss-cn-hangzhou.aliyuncs.com",
+				// 根目录名称
+				dirname: "public",
+				// oss外网访问地址，也可以是阿里云cdn地址
+				host: "https://xxx.xxx.com",
+				// 上传时，是否按用户id进行分组储存
+				groupUserId: false,
+			}
 		}
 	},
 	// 全局异常码，可以自定义提示结果
 	globalErrorCode: {
-	  // 阿里云10秒非正常超时，其实请求还在执行（且一般已经成功了，但前端接受不到成功结果）
-	  "cloudfunction-unusual-timeout": "请求超时，但请求还在执行，请重新进入页面。",
-	  // 请求超时（真正的请求超时）
-	  "cloudfunction-timeout": "请求超时，请重试！",
-	  // 不在预期内的异常（如数据库异常、云函数编译异常等）
-	  "cloudfunction-system-error": "网络开小差了！"
+		// 阿里云10秒非正常超时，其实请求还在执行（且一般已经成功了，但前端接受不到成功结果）
+		"cloudfunction-unusual-timeout": "请求超时，但请求还在执行，请重新进入页面。",
+		// 请求超时（真正的请求超时）
+		"cloudfunction-timeout": "请求超时，请重试！",
+		// 不在预期内的异常（如数据库异常、云函数编译异常等）
+		"cloudfunction-system-error": "网络开小差了！"
 	},
 	// 页面风格
 	pageStyle: {

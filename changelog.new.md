@@ -1,4 +1,5 @@
-* 【升级】`vk-unicloud-admin-ui` 包升级至 `1.17.54`
+* 【升级】`vk-unicloud-admin-ui` 包升级至 `1.17.55`
+* 【重要】`vk.uploadFile` 支持扩展存储-七牛云 [传送门](https://vkdoc.fsq.pub/client/pages/uploadFile.html#%E4%B8%8A%E4%BC%A0%E6%89%A9%E5%B1%95%E5%AD%98%E5%82%A8)
 * 【修复】`万能表单` radio 和 checkbox 因 `1.17.4` 更新导致当超出一行后不会自动换行的问题
 * 【修复】`万能表单` group 间距样式问题
 * 【优化】`万能表单` `file-select` 当分类太多时显示滚动条
