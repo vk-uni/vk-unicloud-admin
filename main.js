@@ -15,13 +15,7 @@ Vue.use(UmyUi);
 
 // 引入 vk 实例
 import vk from 'uni_modules/vk-unicloud';
-Vue.use(vk);
-
-// 初始化 vk框架
-Vue.prototype.vk.init({
-	Vue,               // Vue实例
-	config,	           // 配置
-});
+Vue.use(vk, config);
 
 // 引入 vkAdminUI 组件
 import vkAdminUI from 'vk-unicloud-admin-ui';
