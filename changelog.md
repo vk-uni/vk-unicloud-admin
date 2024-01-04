@@ -1,3 +1,11 @@
+## 1.17.7（2024-01-04）
+* 【升级】`vk-unicloud-admin-ui` 包升级至 `1.17.56`
+* 【修复】支付宝小程序云环境下，非admin账号左侧菜单不显示二级菜单的问题
+* 【优化】前端 `main.js` 移除 `vk.init` 代码（不再需要手动init）
+
+##### 框架更新步骤 [点击查看](https://vkdoc.fsq.pub/admin/1/update.html)
+##### 框架学习Q群：`22466457` 欢迎萌新和大佬来使用和共同改进框架
+##### 如果你觉得框架对你有用，可以在下方进行评论或赞赏。
 ## 1.17.6（2023-12-27）
 * 【升级】`vk-unicloud-admin-ui` 包升级至 `1.17.55`
 * 【重要】`vk.uploadFile` 支持扩展存储-七牛云 [传送门](https://vkdoc.fsq.pub/client/pages/uploadFile.html#%E4%B8%8A%E4%BC%A0%E6%89%A9%E5%B1%95%E5%AD%98%E5%82%A8)
