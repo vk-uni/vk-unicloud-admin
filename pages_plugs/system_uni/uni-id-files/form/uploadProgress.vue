@@ -87,7 +87,7 @@ export default {
 		async upload(item){
 			let that = this;
 			let { vk } = that;
-			let { tempFilePaths, tempFiles, categoryId, fileType, cloudDirectory } = item;
+			let { tempFilePaths, tempFiles, categoryId, fileType, cloudDirectory, cloudPathRemoveChinese, provider } = item;
 			that.total = tempFilePaths.length;
 			that.totalPercentage = 0;
 			for (let i = 0; i < tempFilePaths.length; i++) {
@@ -103,6 +103,10 @@ export default {
 							fileType,
 							category_id: categoryId,
 							cloudDirectory,
+							cloudPathRemoveChinese,
+							provider,
+							uniCloud: item.uniCloud,
+							env: item.env,
 							onUploadProgress:(progressRes) => {
 								// 上传过程中
 								that.currentPercentage = progressRes.progress;

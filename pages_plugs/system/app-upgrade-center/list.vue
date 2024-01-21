@@ -90,7 +90,7 @@
 					action:"admin/system/app-upgrade-center/sys/getList",
 					// 表格字段显示规则
 					columns:[
-						{ key:"appid", title:"AppID", type:"text", width:120 },
+						{ key:"appid", title:"AppID", type:"text", width:140 },
 						{ key:"title", title:"更新标题", type:"text", width:120 },
 						{
 							key: "type", title: "安装包类型", type: "tag", width: 140, size: "small",
@@ -198,7 +198,6 @@
 					url: 'admin/system/app/sys/getList',
 					loading:true,
 					data: {
-						pageSize:500,
 						formData:{
 							enable_upgrade_center: true
 						},

@@ -24,7 +24,17 @@
 			:cancel-text="page.cancelText"
 			:submit-text="page.submitText"
 			@success="onFormSuccess"
-		></vk-data-form>
+		>
+			<template v-slot:url="{ form, keyName }">
+				<view>
+					<el-input v-model="form[keyName]">
+						<template v-slot:append v-if="form[keyName]">
+							<el-button @click="toUrl(form[keyName])">测试下载</el-button>
+						</template>
+					</el-input>
+				</view>
+			</template>
+		</vk-data-form>
 		<!-- 页面主体内容结束 -->
 	</vk-data-dialog>
 </template>
@@ -129,7 +139,7 @@ export default {
 							watch: ({ value, formData, column, index, $set }) => {
 								$set("url", value);
 							},
-							tips:"上传apk包到当前服务空间的云存储中，上传成功后，会自动使用云存储地址填充下载链接"
+							tips:`上传apk包，上传成功后，会自动使用云存储地址填充下载链接，支持<a href="https://vkdoc.fsq.pub/client/pages/uploadFile.html#%E9%BB%98%E8%AE%A4%E4%B8%8A%E4%BC%A0%E8%87%B3%E6%89%A9%E5%B1%95%E5%AD%98%E5%82%A8" target="_blank">扩展存储</a>`
 						},
 						{ key:"wgt", title:"上传wgt包", type:"file", limit:1, accept:".wgt",
 							showRule:(formData)=>{
@@ -138,7 +148,7 @@ export default {
 							watch: ({ value, formData, column, index, $set }) => {
 								$set("url", value);
 							},
-							tips:"上传wgt包到当前服务空间的云存储中，上传成功后，会自动使用云存储地址填充下载链接"
+							tips:`上传wgt包，上传成功后，会自动使用云存储地址填充下载链接，支持<a href="https://vkdoc.fsq.pub/client/pages/uploadFile.html#%E9%BB%98%E8%AE%A4%E4%B8%8A%E4%BC%A0%E8%87%B3%E6%89%A9%E5%B1%95%E5%AD%98%E5%82%A8" target="_blank">扩展存储</a>`
 						},
 						{ key: "url", title: "下载链接", type: "text",
 							showRule:(formData)=>{
@@ -236,9 +246,10 @@ export default {
 			let { value={} } = this;
 			let { item={} } = value;
 			// 每次打开时，重新设置表单的值 = value.item 的值，item通过 vk.pubfn.openForm('表单名',{ item:{ _id:"1" } }) 传递值
+			let title = item.type === "native_app" ? "原生APP安装包" : "wgt资源包";
 			if(value.mode === "update"){
 				this.form1.props.action = "admin/system/app-upgrade-center/sys/addUpdate";
-				this.page.title = pageName + "修改";
+				this.page.title = pageName + `修改 - ${title}`;
 				this.page.submitText = "修改";
 				if (item.type === "native_app") {
 					item.platformRadio = item.platform[0];
@@ -246,7 +257,7 @@ export default {
 				this.form1.data = vk.pubfn.objectAssign(vk.pubfn.copyObject(defaultFormData), vk.pubfn.copyObject(item));
 			}else{
 				this.form1.props.action = "admin/system/app-upgrade-center/sys/addUpdate";
-				this.page.title = pageName + "添加";
+				this.page.title = pageName + `添加 - ${title}`;
 				this.page.submitText = "添加";
 				this.form1.data = vk.pubfn.objectAssign(vk.pubfn.copyObject(defaultFormData), vk.pubfn.copyObject(item));
 			}
@@ -264,6 +275,9 @@ export default {
 		resetForm(){
 			vk.pubfn.resetForm(originalForms, this);
 		},
+		toUrl(url){
+			window.open(url);
+		}
 	},
 	watch: {
 
