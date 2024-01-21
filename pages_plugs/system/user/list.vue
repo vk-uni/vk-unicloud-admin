@@ -354,7 +354,7 @@
 			},
 			// 搜索
 			search(){
-				that.$refs.table1.query();
+				that.$refs.table1.search();
 			},
 			// 刷新
 			refresh(){

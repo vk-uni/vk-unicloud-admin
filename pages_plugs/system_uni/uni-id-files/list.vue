@@ -305,28 +305,6 @@ export default {
 						fileType,
 					};
 					vk.pubfn.openForm('uploadProgress', { item });
-					// vk.showLoading("上传中...");
-					// for (let i = 0; i < res.tempFilePaths.length; i++) {
-					// 	let percentage = vk.pubfn.toDecimal((i+1) / res.tempFilePaths.length * 100, 0);
-					// 	try {
-					// 		await vk.uploadFile({
-					// 			filePath: res.tempFilePaths[i],
-					// 			file: res.tempFiles[i],
-					// 			needSave: true,
-					// 			fileType,
-					// 			category_id: that.queryForm1.formData.category_id,
-					// 			onUploadProgress:(progressRes)=>{
-					// 				// 上传过程中
-					// 				vk.showLoading(`文件${i+1}：${progressRes.progress}%\n`);
-					// 			},
-					// 		});
-					// 		vk.showLoading(`总上传进度：${percentage}%`);
-					// 	} catch(err){
-					// 		console.error(err);
-					// 	}
-					// }
-					// vk.hideLoading();
-					// that.getList();
 				}
 			});
 		},
