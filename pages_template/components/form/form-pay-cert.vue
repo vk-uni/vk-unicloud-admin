@@ -19,8 +19,8 @@
 				</el-table-column>
 				<el-table-column prop="key4" label="选择后可复制" minWidth="200" >
 					<template slot-scope="scope">
-						<!-- <el-button type="success" @click="copy(scope.row.name)" size="mini" plain v-if="scope.row.content && scope.row.file === scope.row.name"> 复制 </el-button> -->
-						<el-button type="success" size="mini" plain v-if="scope.row.content && scope.row.file === scope.row.name"> 请复制下方证书内容 </el-button>
+						<el-button type="success" @click="copy(scope.row.name)" size="mini" plain v-if="scope.row.content && scope.row.file === scope.row.name"> 复制 </el-button>
+					<!-- 	<el-button type="success" size="mini" plain v-if="scope.row.content && scope.row.file === scope.row.name"> 请复制下方证书内容 </el-button> -->
 					</template>
 				</el-table-column>
 			</el-table>
@@ -178,6 +178,7 @@
 					return name === item.name;
 				});
 				let content = contentItem.content;
+				content = content.replace(/\n/g, "\\n");
 				uni.setClipboardData({
 					data: content,
 					success: () => {
