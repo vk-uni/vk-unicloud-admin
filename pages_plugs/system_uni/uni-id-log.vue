@@ -59,12 +59,15 @@ export default {
 					{ key: "userInfo", title: "用户信息", type: "userInfo", width: 150 },
 					{ key: "ip", title: "ip地址", type: "text", width: 150 },
 					{ key: "type", title: "日志类型", type: "text", width: 120 },
-					{ key: "login_type", title: "登录类型", type: "select", width: 120,
+					{ key: "login_type", title: "登录类型", type: "select", width: 120, defaultValue: "未知",
 						data:[
-							{ value: "phone", label:"手机短信" },
 							{ value: "password", label:"账号密码" },
-							{ value: "weixin", label:"微信登录" },
 							{ value: "alipay", label:"支付宝登录" },
+							{ value: "email", label:"邮箱验证码" },
+							{ value: "qq", label:"QQ登录" },
+							{ value: "sms", label:"手机短信" },
+							{ value: "univerify", label:"本机号码一键登录" },
+							{ value: "weixin", label:"微信登录" },
 							{ value: "weixinPhoneNumber", label:"微信手机号" },
 							{ value: "token", label:"token" }
 						]
