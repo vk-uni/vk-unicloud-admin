@@ -45,7 +45,9 @@ export default {
 		mode: 2,
 		list: [
 			"/pages/login/*",
-			"/pages_template/*",
+			"/pages_template/element/*",
+			"/pages_template/components/form/*",
+			"/pages_template/components/icons/*",
 		]
 	},
 	// 静态文件的资源URL地址

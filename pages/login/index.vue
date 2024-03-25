@@ -122,6 +122,14 @@ export default {
 			vk.setVuex("$app.navMenu", []);
 			// 再执行init函数
 			getApp().init();
+			// 检查是否有指定跳转的页面
+			if (this.options.uniIdRedirectUrl) {
+				let uniIdRedirectUrl = decodeURIComponent(this.options.uniIdRedirectUrl);
+				if (uniIdRedirectUrl) {
+					vk.redirectTo(uniIdRedirectUrl);
+					return;
+				}
+			}
 			// 最后跳转到首页或页面返回
 			let pages = getCurrentPages();
 			if (

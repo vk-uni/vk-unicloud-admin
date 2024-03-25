@@ -29,69 +29,6 @@
 				{ "path": "system_uni/uni-id-files/list" },
 				{ "path": "system_uni/vk-pay-orders" }
 			]
-		},
-		
-		{
-			"root": "pages_template/components",
-			"pages": [
-				{ "path": "icons/vk-icons" },
-				{ "path": "icons/element-icons" },
-				{ "path": "icons/vk-icons-page", "style": { "topWindow": false,"leftWindow": false } },
-				{ "path": "icons/element-icons-page", "style": { "topWindow": false,"leftWindow": false } },
-				{ "path": "table/table-basic" },
-				{ "path": "table/table-easy" },
-				{ "path": "table/table-query" },
-				{ "path": "table/table-expand" },
-				{ "path": "form/form-array-object" },
-				{ "path": "form/form-basic" },
-				{ "path": "form/form-cert" , "style": { "topWindow": false,"leftWindow": false } },
-				{ "path": "form/form-pay-cert" , "style": { "topWindow": false,"leftWindow": false } },
-				{ "path": "form/form-inline" },
-				{ "path": "form/form-dialog" },
-				{ "path": "form/form-pro" },
-				{ "path": "form/form-dialog-2" },
-				{ "path": "form/form-slot" },
-				{ "path": "detail/detail-basic" },
-				{ "path": "detail/detail-table" },
-				{ "path": "dialog/dialog-basic" },
-				{ "path": "dialog/dialog-form" },
-				{ "path": "dialog/dialog-table" },
-				{ "path": "upload/upload-basic" },
-				{ "path": "upload/upload-drag" },
-				{ "path": "input/input-address" },
-				{ "path": "input/input-money" },
-				{ "path": "input/input-number" },
-				{ "path": "input/input-number-box" },
-				{ "path": "input/input-percentage" },
-				{ "path": "input/input-json" },
-				{ "path": "input/input-province" },
-				{ "path": "input/input-select" },
-				{ "path": "input/input-remote-select" },
-				{ "path": "input/input" },
-				{ "path": "editor/editor" }
-			]
-		},
-		{
-			"root": "pages_template/element",
-			"pages": [
-				{ "path": "detail/detail" },
-				{ "path": "form/basic-form" },
-				{ "path": "form/advanced-form" },
-				{ "path": "form/step-form" },
-				{ "path": "setting/account" },
-				{ "path": "popup/alert" },
-				{ "path": "popup/dialog" },
-				{ "path": "popup/drawer" },
-				{ "path": "popup/loading" },
-				{ "path": "popup/message" },
-				{ "path": "popup/message-box" },
-				{ "path": "popup/notification" },
-				{ "path": "popup/popconfirm" },
-				{ "path": "popup/popover" },
-				{ "path": "popup/tooltip" },
-				{ "path": "result/fail" },
-				{ "path": "result/success" }
-			]
 		}
 	],
 	"globalStyle": {
