@@ -44,7 +44,7 @@
             "data": "插件不采集任何数据",
             "permissions": "无"
         },
-        "npmurl": "https://vkdoc.fsq.pub/admin/",
+        "npmurl": "",
         "type": "unicloud-template-project"
     },
     "uni_modules": {
