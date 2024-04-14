@@ -26,19 +26,27 @@
 			@success="onFormSuccess"
 		>
 			<template v-slot:permissionList>
-				<el-tree
-					ref="tree"
-					:data="data.treeData"
-					:node-key="data.nodeKey"
-					:default-checked-keys="data.checkedKeys"
-					:props="{
-						children: 'children',
-						label: 'label'
-					}"
-					show-checkbox
-					default-expand-all
-					expand-on-click-node
-				></el-tree>
+				<el-input placeholder="输入关键字进行搜索" v-model="tree.filterText"> </el-input>
+				<view style="margin-top: 5px;">
+					<el-checkbox v-model="tree.expandAll" @change="expandAllChange">展开/折叠</el-checkbox>
+					<el-checkbox v-model="tree.checkAll" @change="checkAllChange" v-if="!tree.filterText">全选/全不选</el-checkbox>
+				</view>
+				<view class="tree-box">
+					<el-tree
+						ref="tree"
+						:data="data.treeData"
+						:node-key="data.nodeKey"
+						:default-checked-keys="data.checkedKeys"
+						:props="{
+							children: 'children',
+							label: 'label'
+						}"
+						show-checkbox
+						expand-on-click-node
+						:default-expand-all="false"
+						:filter-node-method="filterNode"
+					></el-tree>
+				</view>
 			</template>
 		</vk-data-form>
 		<!-- 页面主体内容结束 -->
@@ -83,6 +91,11 @@ export default {
 				width:"800px",
 				loading: false
 			},
+			tree:{
+				filterText: "",
+				expandAll: false,
+				checkAll: false
+			},
 			form1: {
 				// 表单请求数据，此处可以设置默认值
 				data: {
@@ -98,13 +111,13 @@ export default {
 					// 表单字段显示规则
 					columns: [
 						// 常用字段类型
-						{ key: "permissionList", title: "权限列表", type: "text" }
+						{ key: "permissionList", title: "权限", type: "text" }
 					],
 					// 表单验证规则
 					rules: {
 
 					},
-					labelWidth: "100px",
+					labelWidth: "80px",
 					beforeAction:function(formData){
 						let checkedKeys = that.$refs.tree.getCheckedKeys();
 						let halfCheckedKeys = that.$refs.tree.getHalfCheckedKeys();
@@ -205,13 +218,8 @@ export default {
 				data: {},
 				loading:{ that, name:"page.loading" },
 			  success: (data) => {
-					let rows = [{
-						label :"全选",
-						permission_id :"",
-						children : data.rows
-					}];
 					// 渲染树
-					that.data.treeData = rows;
+					that.data.treeData = data.rows;
 					that.data.list = data.list;
 					that.initData();
 			  }
@@ -242,15 +250,38 @@ export default {
 		onFormSuccess(res) {
 			if (res.data.info) {
 				that.$set(that.value.item, "permission", res.data.info.permission);
+				that.$set(that.value.item, "permissionList", res.data.info.permissionList);
 				that.$set(that.value.item, "stats_count_info", res.data.info.stats_count_info);
 			}
 			that.value.show = false; // 关闭页面
 			that.$emit("success");
+		},
+		filterNode(value, data) {
+			if (!value) return true;
+			return data.label.indexOf(value) !== -1;
+		},
+		// 展开
+		expandAllChange(e) {
+			this.tree.expandAll = e;
+			const nodes = this.$refs.tree.store._getAllNodes();
+			for (let i in nodes) {
+				nodes[i].expanded = this.tree.expandAll;
+			}
+		},
+		// 全选
+		checkAllChange(val) {
+			if (val) {
+				this.$refs.tree.setCheckedNodes(this.data.treeData);
+			} else {
+				this.$refs.tree.setCheckedKeys([]);
+			}
 		}
 	},
 	// 监听属性
 	watch: {
-
+		'tree.filterText'(val) {
+			this.$refs.tree.filter(val);
+		}
 	},
 	// 计算属性
 	computed: {
@@ -260,5 +291,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.tree-box{
+	padding: 10px;
+	margin-top: 10px;
+	border: 1px solid #DCDFE6;
+	border-radius: 4px;
+	overflow: hidden;
+}
 </style>
