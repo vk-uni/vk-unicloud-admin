@@ -1,12 +1,14 @@
 <template>
 	<view class="page-body">
 		<!-- 页面内容开始 -->
-
 		<!-- 自定义按钮区域开始 -->
 		<view class="vk-table-button-box">
 			<el-button type="success" size="small" icon="el-icon-circle-plus-outline" @click="addBtn">添加</el-button>
 			<el-button type="primary" size="small" icon="el-icon-s-tools" :disabled="!table1.selectItem" @click="bindPermissionBtn">设置内置权限</el-button>
 			<el-button type="success" size="small" icon="el-icon-circle-plus-outline" @click="addMenuByJsonBtn">通过JSON数组批量导入菜单</el-button>
+			<el-badge v-if="pluginMenus && pluginMenus.length > 0" :value="pluginMenus.length" class="item">
+				<el-button type="warning" size="small" icon="el-icon-circle-plus-outline" style="margin-right:0;" @click="addPluginMenuMenu">待添加的插件菜单</el-button>
+			</el-badge>
 		</view>
 		<!-- 自定义按钮区域结束 -->
 
@@ -22,6 +24,7 @@
 			@delete="deleteBtn"
 			@current-change="currentChange"
 			@selection-change="selectionChange"
+			@success="tableSuccess"
 		>
 			<!-- 排序值 -->
 			<template v-slot:sort="{ row, column, index }">
@@ -54,6 +57,9 @@
 
 		<!-- 通过JSON批量导入菜单 -->
 		<addMenuByJson v-model="formDatas.addMenuByJson" @success="refresh"></addMenuByJson>
+
+		<!-- 添加插件菜单 -->
+		<addPluginMenu v-model="formDatas.addPluginMenu" @success="refresh"></addPluginMenu>
 		<!-- 页面内容结束 -->
 	</view>
 </template>
@@ -61,6 +67,11 @@
 <script>
 	import bindPermission from './form/bindPermission.vue'
 	import addMenuByJson from './form/addMenuByJson.vue'
+	import addPluginMenu from './form/addPluginMenu.vue'
+
+	import getPluginMenu from './libs/pluginMenu.js'
+	const pluginMenuJsons = getPluginMenu();
+
 	var that;													// 当前页面对象
 	var vk = uni.vk;									// vk实例
 	var originalForms = {};						// 表单初始化数据
@@ -88,11 +99,13 @@
 	export default {
 		components:{
 			bindPermission,
-			addMenuByJson
+			addMenuByJson,
+			addPluginMenu
 		},
 		data() {
 			// 页面数据变量
 			return {
+				pluginMenus: [],
 				// 页面是否请求中或加载中
 				loading:false,
 				// init请求返回的数据
@@ -254,6 +267,9 @@
 			init(options) {
 				originalForms["form1"] = vk.pubfn.copyObject(that.form1);
 			},
+			tableSuccess(){
+				this.pluginMenus = this.getPluginMenus();
+			},
 			// 页面跳转
 			pageTo(path) {
 				vk.navigateTo(path);
@@ -347,6 +363,25 @@
 
 					}
 				});
+			},
+			addPluginMenuMenu(){
+				vk.pubfn.openForm('addPluginMenu',{ pluginMenus: this.pluginMenus });
+			},
+			getPluginMenus() {
+				const menus = [];
+				const tableData = this.$refs.table1.getTableData() || [];
+				const dbMenus = vk.pubfn.treeToArray(tableData, {
+					id:"menu_id",
+					parent_id:"parent_id",
+					children:"children"
+				});
+				pluginMenuJsons.forEach(menu => {
+					// 查找尚未被注册到数据库中的菜单
+					if (!dbMenus.find(item => item.menu_id === menu.menu_id)) {
+						menus.push(menu);
+					}
+				})
+				return menus;
 			},
 		},
 		// 监听属性
