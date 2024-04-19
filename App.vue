@@ -86,7 +86,8 @@ export default {
 			let that = this;
 			let { vk } = that;
 			let systemInfo = uni.getSystemInfoSync();
-			if (systemInfo.appId && this.$hasRole('admin')) {
+			let isHome = `/${this.appOptions.path}` === config.index.url; // 是否是首页
+			if (systemInfo.appId && isHome && vk.checkToken() && this.$hasRole('admin')) {
 				vk.callFunction({
 					url: 'admin/system/app/sys/getInfo',
 					data: {
@@ -148,9 +149,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
-/* 此为uni-admin的样式，如果你不使用uni-admin的官方插件，可以不需要加载这些样式 */
-@import "@/common/uni-admin/css/uni.css";
+<style lang="scss">/* 此为uni-admin的样式，如果你不使用uni-admin的官方插件，可以不需要加载这些样式 */@import "@/common/uni-admin/css/uni.css";
 @import "@/common/uni-admin/css/uni-icons.css";
 /* 此为uni-admin的样式，如果你不使用uni-admin的官方插件，可以不需要加载这些样式 */
 </style>
