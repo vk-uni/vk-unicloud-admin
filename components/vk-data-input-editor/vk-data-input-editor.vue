@@ -221,6 +221,7 @@
 				let { detail } = e;
 				let { html, text, delta } = detail;
 				this.$emit('input',html);
+				this.$emit('change',html);
 				this.inputTime = Date.now();
 			},
 			onEditorReady() {
