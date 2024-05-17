@@ -451,7 +451,7 @@ export default {
 	},
 	computed: {
 		widthCom() {
-			const width = this.width;
+			const width = this._getProp("width");
 			if (/^[\d]+(\.[\d]+)?$/.test(width)) {
 				return `${width}px`;
 			}
