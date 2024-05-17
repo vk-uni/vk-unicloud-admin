@@ -174,6 +174,7 @@ export default {
 		};
 	},
 	mounted() {
+		this._updateValue(this.value || "");
 		this.init();
 	},
 	destroyed() {
