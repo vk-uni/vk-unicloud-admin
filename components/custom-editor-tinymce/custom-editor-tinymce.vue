@@ -311,10 +311,12 @@ export default {
 				video_template_callback: function (data) {
 					let htmlStr = "";
 					if (data.source.indexOf(".html") > -1) {
-						htmlStr = `<iframe height=498 width=510 src="${data.source}" frameborder=0 'allowfullscreen'></iframe>`;
+						htmlStr = `<iframe height=750 width=375 src="${data.source}" frameborder=0 'allowfullscreen' style="max-width:100%;"></iframe>`;
 					} else {
+						let width = 750;
+						let height = Math.round(width / data.width * data.height);
 						htmlStr = `
-						<video controls width="${data.width}" height="${data.height}" class="editor-video" style="max-width:100%;">
+						<video controls width="${width}" height="${height}" class="editor-video" style="max-width:100%;">
 							<source src="${data.source}" :type="${data.sourcemime}">
 							您的浏览器不支持播放此视频
 						</video>
