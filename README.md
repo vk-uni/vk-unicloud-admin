@@ -5,6 +5,7 @@
 ### 作者：VK
 
 ## 序
+
 * 如果你热爱编程，想快速入门云开发，欢迎使用`vk-unicloud`系列开发框架
 * 无需转变开发习惯，0成本上手云开发。
 * 框架内置了众多API、工具包，为你的业务扫平障碍。使你的项目刚起步进度就是50%（微信登录、短信、验证码、缓存、生成小程序码等等）
@@ -13,8 +14,7 @@
 * `admin端`框架地址：[https://ext.dcloud.net.cn/plugin?id=5043](https://ext.dcloud.net.cn/plugin?name=vk-unicloud-admin)
 * `client端`框架文档：[点击查看](https://vkdoc.fsq.pub/client/)
 * `admin端`框架文档：[点击查看](https://vkdoc.fsq.pub/admin/)
-
-#### 框架学习Q群：`22466457` 欢迎萌新和大佬来使用和共同改进框架
+* 框架学习Q群：`22466457` 欢迎萌新和大佬来使用和共同改进框架
 
 #### 框架体验地址：[点击进入『框架体验地址』](https://vkunicloud.fsq.pub/admin/)
 
@@ -48,8 +48,7 @@
 * 9、只要你开发过传统 `vue admin` 项目，那么上手此框架的学习成本几乎为0
 * 10、众多示例代码，为你的云开发之路扫平障碍。
 * 11、内置3个主题（纯黑，纯白，黑白）且支持自定义主题。[点击查看主题](https://vkdoc.fsq.pub/admin/1/theme.html)
-* 12、群内众多开发者，关于框架使用问题几乎有问必答。Q群：22466457
-* 13、更多功能敬请体验。
+* 12、更多功能敬请体验。
 
 ### 核心功能
 
@@ -219,9 +218,6 @@ opendb-admin-menus 菜单表
 
 * 3、完成，可以登录了。
 
-
-#### 如有疑问，请加群：22466457 关于插件的问题包教包会！
-
 [点击查看『完整安装步骤』](https://vkdoc.fsq.pub/admin/1/quickstart.html)
 
 ## 3、框架目录结构
@@ -299,7 +295,5 @@ opendb-admin-menus 菜单表
 [点击查看『vuex使用文档』](https://vkdoc.fsq.pub/client/pages/vuex.html)
 
 ## 29、更多其他功能敬请在框架内体验
-
-### vk-unicloud-admin 框架研究Q群:`22466457` 如有问题或建议可以在群内讨论。
 
 ### 如果你觉得框架对你有用，可以在下方进行评论，也可以进行赞赏。
