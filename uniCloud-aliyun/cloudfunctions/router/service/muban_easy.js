@@ -7,8 +7,8 @@ module.exports = {
 	 * @param {String} params1  参数1
 	 */
 	main: async (event) => {
-		let { data = {}, userInfo, util, filterResponse, originalParam } = event;
-		let { customUtil, uniID, config, pubFun, vk, db, _, $ } = util;
+		let { data = {}, userInfo, util, originalParam } = event;
+		let { customUtil, config, pubFun, vk, db, _, $ } = util;
 		let { uid } = data;
 		let res = { code: 0, msg: "" };
 		// 业务逻辑开始-----------------------------------------------------------
