@@ -35,7 +35,7 @@ var vk = uni.vk; // vk实例
 export default {
 	props: {
 		value: {
-			Type: Object,
+			type: Object,
 			default: function() {
 				return {
 					show: false,

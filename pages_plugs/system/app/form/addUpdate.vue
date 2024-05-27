@@ -36,7 +36,7 @@ var originalForms = {};						// 表单初始化数据
 export default {
 	props: {
 		value: {
-			Type: Object,
+			type: Object,
 			default: function() {
 				return {
 					show: false,

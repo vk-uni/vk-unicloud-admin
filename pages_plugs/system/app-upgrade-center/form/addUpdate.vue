@@ -63,7 +63,7 @@ var defaultFormData = {
 export default {
 	props: {
 		value: {
-			Type: Object,
+			type: Object,
 			default: function() {
 				return {
 					show: false,
