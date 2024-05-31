@@ -86,7 +86,7 @@ export default {
 				dirname: "public",
 				// 用于鉴权的云函数地址（一般不需要改这个参数）
 				authAction: "user/pub/getUploadFileOptionsForExtStorage",
-				// 自定义域名，如：cdn.example.com（填你在扩展存储绑定的域名）
+				// 自定义域名，如：cdn.example.com（填你在扩展存储绑定的域名，若云端已设置 uni-config-center/vk-unicloud/index.js 内的 vk.service.cloudStorage.extStorage.domain 则此处可不填）
 				domain: "cdn.example.com",
 				// 上传时，是否按用户id进行分组储存
 				groupUserId: false,
@@ -119,7 +119,11 @@ export default {
 		// 请求超时（真正的请求超时）
 		"cloudfunction-timeout": "请求超时，请重试！",
 		// 不在预期内的异常（如数据库异常、云函数编译异常等）
-		"cloudfunction-system-error": "网络开小差了！"
+		"cloudfunction-system-error": "网络开小差了！",
+		// 云函数达到并发限制
+		"cloudfunction-reaches-burst-limit": "系统繁忙，请稍后再试。",
+		// APP未授权网络访问时的异常提示
+		"cloudfunction-network-unauthorized": "需要进行网络请求许可，若您已授权，请点击确定"
 	},
 	// 页面风格
 	pageStyle: {
