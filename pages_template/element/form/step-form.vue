@@ -279,10 +279,6 @@
 				this.$refs.ruleForm.resetFields();
 			}
 		},
-		// 过滤器
-		filters: {
-
-		},
 		// 计算属性
 		computed: {
 

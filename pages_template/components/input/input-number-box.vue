@@ -131,10 +131,6 @@
 				that.$refs["input-number-3"].select();
 			}
 		},
-		// 过滤器
-		filters:{
-
-		},
 		// 计算属性
 		computed:{
 

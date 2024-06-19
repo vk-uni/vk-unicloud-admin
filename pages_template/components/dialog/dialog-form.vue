@@ -126,10 +126,6 @@ export default {
 			if (that.$refs.form1) that.$refs.form1.resetForm();
 		}
 	},
-	// 过滤器
-	filters: {
-
-	},
 	// 计算属性
 	computed: {
 

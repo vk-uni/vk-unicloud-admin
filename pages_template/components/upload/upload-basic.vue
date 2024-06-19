@@ -78,10 +78,6 @@
 				that.form1.images = ['https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1608288366373&di=c8e0bb26e8a98a5dc1c869037c5f2286&imgtype=0&src=http%3A%2F%2Fimg3.iqilu.com%2Fdata%2Fattachment%2Fforum%2F201308%2F22%2F092042sk2dhz7sdzkftyc1.jpg'];
 			},
 		},
-		// 过滤器
-		filters:{
-
-		},
 		// 计算属性
 		computed:{
 

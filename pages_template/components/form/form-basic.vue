@@ -142,10 +142,6 @@
 				console.log("表单提交成功");
 			}
 		},
-		// 过滤器
-		filters:{
-
-		},
 		// 计算属性
 		computed:{
 

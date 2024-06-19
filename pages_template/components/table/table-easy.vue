@@ -291,10 +291,6 @@
 		watch: {
 
 		},
-		// 过滤器
-		filters: {
-
-		},
 		// 计算属性
 		computed: {
 
