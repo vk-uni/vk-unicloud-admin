@@ -60,7 +60,7 @@ class CallFunctionUtil {
 		 */
 		this.getToken = (res = {}) => {
 			let config = this.config;
-			return vk.getStorageSync(config.uniIdTokenKeyName);
+			return vk.getStorageSync(config.uniIdTokenKeyName) || undefined;
 		}
 		/**
 		 * 保存新的token
@@ -287,7 +287,7 @@ class CallFunctionUtil {
 		 * 云函数请求封装 - 统一入口
 		 * 文档 [https://vkdoc.fsq.pub/client/pages/callFunction.html](https://vkdoc.fsq.pub/client/pages/callFunction.html)
 		 * @description 通过云函数路由，1个云函数实现多个云函数的效果。
-		 * @param {Object}   obj       	
+		 * @param {Object}   obj
 		 * @param {String}   obj.name       大云函数名称（默认router）
 		 * @param {String}   obj.url        请求路径
 		 * @param {Object}   obj.data       请求参数，如 { a:1, b:"2" } 云函数内可通过 let { a, b } = data; 获取参数
@@ -302,6 +302,7 @@ class CallFunctionUtil {
 		 * @param {Boolean}   [obj.needAlert=true] - 默认值 true，请求错误时，会有弹窗提示
 		 * @param {Boolean}   [obj.needAlert=false] - 可选值 false，请求错误时，没有弹窗提示
 		 * @param {Number}   obj.retryCount 系统异常重试机制（表单提交时慎用，建议只用在查询请求中，即无任何数据库修改的请求中）
+		 * @param {Boolean}   obj.encrypt 是否加密请求
 		 * @param {Function} obj.success    请求成功时，执行的回调函数
 		 * @param {Function} obj.fail  	 	  请求失败时，执行的回调函数
 		 * @param {Function} obj.complete   无论请求成功与否，都会执行的回调函数
@@ -387,6 +388,27 @@ class CallFunctionUtil {
 			if (typeof obj.isRequest === "undefined") {
 				obj.isRequest = config.isRequestDefault;
 			}
+
+			// 判断是否需要加密请求开始-----------------------------------------------------------
+			let encryptRequestConfig = {};
+			if (typeof vk.getVuex === "function") {
+				encryptRequestConfig = vk.getVuex("$app.config.checkEncryptRequest") || {};
+			} else {
+				let lifeData = vk.getStorageSync("lifeData") || {};
+				encryptRequestConfig = vk.pubfn.getData(lifeData, "$app.config.checkEncryptRequest") || {};
+			}
+			if (encryptRequestConfig.mode === 1) {
+				let list = encryptRequestConfig.list || [];
+				for (let i = 0; i < list.length; i++) {
+					let regExp = new RegExp(list[i]);
+					if (regExp.test(url)) {
+						obj.encrypt = true;
+						break;
+					}
+				}
+			}
+			// 判断是否需要加密请求结束-----------------------------------------------------------
+
 			// 执行请求
 			if (obj.isRequest) {
 				return that.runRequest(obj);
@@ -456,12 +478,12 @@ class CallFunctionUtil {
 		 * @param {Object} 	obj													上传时的loading提示语
 		 * @param {String} 	obj.title										上传时的loading提示语
 		 * @param {String} 	obj.file										要上传的文件对象，file与filePath二选一即可
-		 * @param {String} 	obj.filePath								要上传的文件路径，file与filePath二选一即可	
+		 * @param {String} 	obj.filePath								要上传的文件路径，file与filePath二选一即可
 		 * @param {String} 	obj.provider								云存储供应商，支持：unicloud、aliyun、qiniu
 		 * @param {String} 	obj.cloudPath								指定上传后的云端文件路径（不指定会自动生成）cloudPath优先级大于cloudDirectory
 		 * @param {String} 	obj.cloudDirectory					指定上传后的云端文件目录
 		 * @param {String} 	obj.needSave								是否需要将图片信息保存到admin素材库
-		 * @param {String} 	obj.category_id							素材库分类id，当needSave为true时生效	
+		 * @param {String} 	obj.category_id							素材库分类id，当needSave为true时生效
 		 * @param {String} 	obj.uniCloud								上传到其他空间时使用，uniCloud和env二选一即可（仅provider是unicloud时支持）
 		 * @param {String} 	obj.env											上传到其他空间时使用，uniCloud和env二选一即可（仅provider是unicloud时支持）
 		 * @param {String} 	obj.cloudPathAsRealPath			阿里云目录支持，需HBX3.8.5以上版本才支持（仅provider是unicloud时支持）
@@ -610,7 +632,8 @@ class CallFunctionUtil {
 			complete,
 			uniCloud: myCloud,
 			env = "default",
-			secretType
+			secretType,
+			encrypt
 		} = obj;
 		if (title) vk.showLoading(title);
 		if (loading) vk.setLoading(true, loading);
@@ -621,14 +644,24 @@ class CallFunctionUtil {
 		let promiseAction = new Promise(function(resolve, reject) {
 			if (config.debug) Logger.startTime = Date.now();
 			let runCloud = myCloud || uniCloudEnvs[env] || uniCloud;
+			let decryptFn;
+			if (encrypt) {
+				let encryptRes = vk.crypto.encryptCallFunction(data);
+				data = encryptRes.data;
+				decryptFn = encryptRes.decrypt;
+			}
 			runCloud.callFunction({
 				name: name,
 				data: {
 					$url: url,
-					data: data
+					data: data,
+					encrypt
 				},
 				secretType,
 				success(res = {}) {
+					if (typeof decryptFn === "function") {
+						res.result = decryptFn(res.result);
+					}
 					that.callFunctionSuccess({
 						res: res.result,
 						params: obj,
@@ -669,7 +702,8 @@ class CallFunctionUtil {
 			title,
 			loading,
 			name,
-			complete
+			complete,
+			encrypt
 		} = obj;
 		if (typeof obj.needAlert === "undefined") obj.needAlert = true;
 		if (!name) name = config.isTest ? config.testFunctionName : config.functionName;
@@ -689,38 +723,48 @@ class CallFunctionUtil {
 				requestUrl += "/";
 			}
 			requestUrl += url;
-			const systemInfo = uni.getSystemInfoSync();
-			const {
-				appId: vkAppid,
-				uniPlatform: vkPlatform,
-				appLanguage: vkLocale,
-				deviceId: vkDeviceId,
-				osName: vkOsName,
-				appName: vkAppName,
-				appVersion: vkAppVersion,
-				appVersionCode: vkAppVersionCode,
-				browserName: vkBrowserName,
-				browserVersion: vkBrowserVersion,
-			} = systemInfo;
+
+			let decryptFn;
+			if (encrypt) {
+				let encryptRes = vk.crypto.encryptCallFunction(data);
+				data = encryptRes.data;
+				decryptFn = encryptRes.decrypt;
+			}
+
+			const sysInfo = uni.getSystemInfoSync();
+			// 设置请求头，并将值为undefined的属性删除
+			let header = JSON.parse(JSON.stringify({
+				"content-type": "application/json;charset=utf8",
+				"vk-encrypt": encrypt ? "true" : undefined,
+				"uni-id-token": uniIdToken,
+				"vk-appid": sysInfo.appId,
+				"vk-platform": sysInfo.uniPlatform,
+				"vk-locale": sysInfo.appLanguage,
+				"vk-device-id": sysInfo.deviceId,
+				"vk-os": sysInfo.osName,
+				"vk-app-name": sysInfo.appName ? encodeURIComponent(sysInfo.appName) : undefined,
+				"vk-app-version": sysInfo.appVersion,
+				"vk-app-version-code": sysInfo.appVersionCode,
+				"vk-browser-name": sysInfo.browserName ? encodeURIComponent(sysInfo.browserName) : undefined,
+				"vk-browser-version": sysInfo.browserVersion,
+				"vk-app-wgt-version": sysInfo.appWgtVersion,
+				"vk-device-brand": sysInfo.deviceBrand,
+				"vk-device-model": sysInfo.deviceModel,
+				"vk-device-type": sysInfo.deviceType,
+				"vk-uni-compile-version": sysInfo.uniCompileVersion,
+				"vk-uni-runtime-version": sysInfo.uniRuntimeVersion,
+				"vk-uni-compiler-version": sysInfo.uniCompilerVersion,
+			}));
+
 			uni.request({
 				method: "POST",
 				url: requestUrl,
-				header: {
-					"content-type": "application/json;charset=utf8",
-					"uni-id-token": uniIdToken, 
-					"vk-appid": vkAppid,
-					"vk-platform": vkPlatform,
-					"vk-locale": vkLocale,
-					"vk-device-id": vkDeviceId,
-					"vk-os": vkOsName,
-					"vk-app-name": vkAppName ? encodeURIComponent(vkAppName) : undefined,
-					"vk-app-version": vkAppVersion,
-					"vk-app-version-code": vkAppVersionCode,
-					"vk-browser-name": vkBrowserName ? encodeURIComponent(vkBrowserName) : undefined,
-					"vk-browser-version": vkBrowserVersion,
-				},
+				header,
 				data,
 				success: (res = {}) => {
+					if (typeof decryptFn === "function") {
+						res.data = decryptFn(res.data);
+					}
 					that.callFunctionSuccess({
 						res: res.data,
 						params: obj,
@@ -875,6 +919,11 @@ class CallFunctionUtil {
 				});
 			}, 2000, false, "cloudfunction-network-unauthorized");
 			// #endif
+		} else if (typeof res.error === "object" && res.success === false) {
+			res = {
+				code: res.error.code || -1,
+				msg: res.error.message || res.error.msg || res.error.errMsg || "未知错误"
+			}
 		}
 		let runKey = true;
 		if (typeof that.interceptor.fail == "function") {
@@ -915,7 +964,8 @@ class CallFunctionUtil {
 			url,
 			isRequest,
 			complete,
-			debug: debugLog
+			debug: debugLog,
+			encrypt
 		} = params;
 		if (params.needRetry && Logger.sysFail) {
 			return false;
@@ -933,6 +983,9 @@ class CallFunctionUtil {
 			let colorStr = colorArr[counterNum % colorArr.length];
 			counterNum++;
 			let functionType = url.indexOf(".") > -1 ? "云对象" : "云函数";
+			if (encrypt) {
+				functionType = functionType + "加密";
+			}
 			console.log(`%c--------【开始】${Logger.label}【${functionType}请求】【${name}】【${url}】--------`, `color: ${colorStr};font-size: 12px;font-weight: bold;`);
 			console.log("【请求参数】: ", Logger.params);
 			console.log("【返回数据】: ", Logger.result);
@@ -945,13 +998,16 @@ class CallFunctionUtil {
 					console.error("【Stack】: ", Logger.error.err.stack);
 				} else {
 					errorLog("【Error】: ", Logger.error);
+					if ((typeof Logger.error === "object" && typeof Logger.error.code === "undefined" && typeof Logger.error.success !== "boolean") || (typeof Logger.error !== "object")) {
+						errorLog("【提示】: ", "返回数据必须是对象，且至少需要返回 { code: 0 }，请查看VK框架响应体规范 https://vkdoc.fsq.pub/client/uniCloud/cloudfunctions/resformat.html");
+					}
 				}
 			}
 			console.log(`%c--------【结束】${Logger.label}【${functionType}请求】【${name}】【${url}】--------`, `color: ${colorStr};font-size: 12px;font-weight: bold;`);
 		}
 		if (typeof complete == "function") complete(res);
 	}
-	
+
 	// 获取文件后缀名
 	getFileSuffix(obj = {}) {
 		let {
@@ -975,7 +1031,7 @@ class CallFunctionUtil {
 		}
 		return suffix;
 	}
-	
+
 	// 获取文件类型
 	getFileType(obj = {}) {
 		let {
@@ -991,7 +1047,7 @@ class CallFunctionUtil {
 		}
 		return fileType;
 	}
-	
+
 	// 获取文件名
 	getFileName(cloudPath="") {
 		// 使用split方法分割字符串
@@ -999,7 +1055,7 @@ class CallFunctionUtil {
 		// 返回最后一个部分（即文件名）
 		return parts[parts.length - 1];
 	}
-	
+
 
 	// 系统异常重试机制（表单提交时慎用，建议只用在查询请求中，即无任何数据库修改的请求中）
 	callFunctionRetry(obj = {}) {

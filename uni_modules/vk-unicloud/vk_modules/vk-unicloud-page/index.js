@@ -29,7 +29,8 @@ import initPermission     from './libs/function/permission'
 import storeMixin         from './libs/store/mixin/mixin'
 import initGlobalError    from './libs/store/libs/error'
 import consoleLog         from './libs/install/console.log'
-import updateManager      from './libs/function/updateManager.js'
+import updateManager      from './libs/function/updateManager'
+import crypto             from './libs/function/vk.crypto'
 
 // #ifdef H5
 import h5                 from './libs/function/vk.h5'
@@ -121,7 +122,9 @@ var vk = {
 	// 导出云对象
 	importObject,
 	// 事件管理
-	...eventManager
+	...eventManager,
+	// 客户端加密函数
+	crypto
 };
 
 
@@ -146,7 +149,7 @@ vk.use = function(obj, util) {
 vk.install = (Vue, config) => {
 	// 全局混入
 	Vue.mixin(mixin);
-	// #ifndef VUE3
+	// #ifdef VUE2
 	// 加载全局过滤器开始
 	for (let i in filters) {
 		Vue.filter(i, filters[i]);
