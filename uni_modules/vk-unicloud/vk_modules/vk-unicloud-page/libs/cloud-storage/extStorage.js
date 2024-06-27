@@ -16,6 +16,8 @@ class CloudStorage {
 			cloudPath,
 			cloudPathRemoveChinese = true, // 删除文件名中的中文
 			cloudDirectory,
+			encrypt,
+			runCloud,
 		} = obj;
 		let vk = uni.vk;
 		// 生成文件名
@@ -26,6 +28,8 @@ class CloudStorage {
 			vk.callFunction({
 				url: cloudStorageConfig.authAction,
 				debug: false,
+				encrypt,
+				uniCloud: runCloud,
 				data: {
 					cloudPath,
 					provider: cloudStorageConfig.provider,
@@ -66,7 +70,7 @@ class CloudStorage {
 								fileID, // 文件ID
 								fileURL, // 云端文件URL
 								url: fileURL, // 云端文件URL，与fileURL一致
-								extendInfo
+								extendInfo,
 							};
 							resolve(res);
 						}
