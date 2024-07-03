@@ -1,4 +1,4 @@
 * 【升级】`vk-unicloud-admin-ui` 包升级至 `1.19.8`
-* 【升级】`vk依赖`
+* 【修复】已知问题
 
 ##### 框架更新步骤 [点击查看](https://vkdoc.fsq.pub/admin/1/update.html)
