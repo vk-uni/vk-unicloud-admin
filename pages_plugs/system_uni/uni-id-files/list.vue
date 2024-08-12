@@ -37,7 +37,7 @@
 					</el-popconfirm>
 				</view>
 			</view>
-			
+
 		</view>
 		<view class="main" v-loading="loading.main">
 			<!-- 内容详情 -->
@@ -367,7 +367,9 @@ export default {
 			if(cover_image){
 				src = cover_image;
 			}else{
-				src = `${url}?x-oss-process=video/snapshot,t_1000,f_jpg,w_${width},h_${height},m_fast`;
+				let aliyun = `x-oss-process=video/snapshot,t_1000,f_jpg,w_${width},h_${height},m_fast`;
+				let qiniu = `vframe/jpg/offset/1/w/${width}/h/${height}`;
+				src = `${url}?${aliyun}&${qiniu}`;
 			}
 			return src;
 		},
