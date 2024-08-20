@@ -1,9 +1,7 @@
-* 【升级】`vk-unicloud-admin-ui` 包升级至 `1.19.10`
+* 【升级】`vk-unicloud-admin-ui` 包升级至 `1.19.13`
 * 【升级】`vk依赖` [详情](https://ext.dcloud.net.cn/plugin?id=4157&update_log)
-* 【重要】新增WebSocket连接管理页面 `/pages_plugs/system_uni/vk-ws-connection.vue`
-* 【调整】云函数router默认的node版本调整为node18
-* 【修复】group内的元素tips属性不生效的问题
-* 【优化】素材选择组件，视频默认缩略图支持扩展存储
+* 【修复】万能表格导出数据时，字段 type 为 date 时，时间未正确格式化的问题
+* 【修复】补全 `1.19.11` 版本 `pages.json` 文件内遗漏的 `vk-ws-connection` 页面
 
 **特别注意：本次更新涉及框架内置文件，请注意合并对比**
 

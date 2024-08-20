@@ -83,13 +83,15 @@ export default {
 			if (!getApp().isAllowLoginBackground()) {
 				return false;
 			}
-			// 执行以下函数,主要是为了使云函数提前热启动
-			vk.userCenter.checkToken({
-				loading: true,
-				success: data => {
-					that.login_success(data);
-				}
-			});
+			// 如果本地token有效，则再从云端查询一次token是否有效，如果都有效，则直接视为登录成功
+			if (vk.checkToken()) {
+				vk.userCenter.checkToken({
+					loading: true,
+					success: data => {
+						that.login_success(data);
+					}
+				});
+			}
 		},
 		// 表单提交
 		submit() {
