@@ -369,7 +369,9 @@ export default {
 			}else{
 				let aliyun = `x-oss-process=video/snapshot,t_1000,f_jpg,w_${width},h_${height},m_fast`;
 				let qiniu = `vframe/jpg/offset/1/w/${width}/h/${height}`;
-				src = `${url}?${aliyun}&${qiniu}`;
+				src = url;
+				src += src.indexOf("?") === -1 ? '?' : "&";
+				src += `${aliyun}&${qiniu}`;
 			}
 			return src;
 		},
