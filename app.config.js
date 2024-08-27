@@ -13,7 +13,7 @@ export default {
 	login: {
 		url: "/pages/login/index",
 		testUser: {
-			show: true, // 是否显示
+			show: false, // 是否显示
 			list: [
 				{ username: "test11", password: "123456", nickname: "高级管理员" },
 				{ username: "test12", password: "123456", nickname: "初级管理员" },

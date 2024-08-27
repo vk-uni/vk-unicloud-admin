@@ -1,5 +1,5 @@
-//const debug = process.env.NODE_ENV !== 'production';
-const debug = true; // 强制debug，vk发布演示站时使用
+const debug = process.env.NODE_ENV !== 'production';
+//const debug = true; // 强制debug，vk发布演示站时使用
 var devPages;
 try {
 	// 只在开发环境中才会被HBX打包的页面
