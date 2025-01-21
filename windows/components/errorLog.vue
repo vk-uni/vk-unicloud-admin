@@ -40,8 +40,8 @@
 </template>
 
 <script>
-var that; // 当前页面对象
-var vk; // vk实例
+let that; // 当前页面对象
+let vk; // vk实例
 export default {
 	props: {
 		value: {

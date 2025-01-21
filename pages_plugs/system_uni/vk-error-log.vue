@@ -55,11 +55,11 @@
 </template>
 
 <script>
-var that; // 当前页面对象
-var vk = uni.vk; // vk实例
-var dcloudAppidData = [];
+let that; // 当前页面对象
+let vk = uni.vk; // vk实例
+let dcloudAppidData = [];
 
-var statusData = [
+let statusData = [
 	{ value: 0, label: "待处理", tagType:"danger" },
 	{ value: 1, label: "已处理", tagType:"success" },
 	{ value: 2, label: "不处理", tagType:"info" }

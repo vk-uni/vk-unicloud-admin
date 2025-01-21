@@ -25,9 +25,9 @@
 </template>
 
 <script>
-var that; // 当前页面对象
-var vk = uni.vk; // vk实例
-var dcloudAppidData = [];
+let that; // 当前页面对象
+let vk = uni.vk; // vk实例
+let dcloudAppidData = [];
 
 export default {
 	data() {

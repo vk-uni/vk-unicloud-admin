@@ -40,10 +40,10 @@
 </template>
 
 <script>
-var pageName = "";
-var vk = uni.vk; // vk实例
-var originalForms = {};						// 表单初始化数据
-var defaultFormData = {
+let pageName = "";
+let vk = uni.vk; // vk实例
+let originalForms = {};						// 表单初始化数据
+let defaultFormData = {
 	appid:"",
 	name:"",
 	title:"",

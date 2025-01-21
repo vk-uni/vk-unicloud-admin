@@ -65,8 +65,8 @@
 </template>
 
 <script>
-var vk = uni.vk; // vk实例
-var download = function(content, filename) {
+let vk = uni.vk; // vk实例
+let download = function(content, filename) {
 	let eleLink = document.createElement('a');
 	eleLink.download = filename;
 	eleLink.style.display = 'none';

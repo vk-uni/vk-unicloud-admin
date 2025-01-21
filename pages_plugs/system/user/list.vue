@@ -90,15 +90,15 @@
 </template>
 
 <script>
-	var that;													// 当前页面对象
-	var vk = uni.vk;									// vk实例
-	var originalForms = {};						// 表单初始化数据
-	var genderData = [
+	let that;													// 当前页面对象
+	let vk = uni.vk;									// vk实例
+	let originalForms = {};						// 表单初始化数据
+	let genderData = [
 		{ value:1, label:"男"},
 		{ value:2, label:"女"},
 		{ value:0, label:"保密"}
 	];
-	var dcloudAppidData = [];
+	let dcloudAppidData = [];
 
 	import bindRole from './form/bindRole'
 	import resetPassword from './form/resetPassword'

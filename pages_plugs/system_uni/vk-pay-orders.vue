@@ -36,9 +36,9 @@
 </template>
 
 <script>
-var that;													// 当前页面对象
-var vk = uni.vk;									// vk实例
-var originalForms = {}; 					// 表单初始化数据
+let that;													// 当前页面对象
+let vk = uni.vk;									// vk实例
+let originalForms = {}; 					// 表单初始化数据
 
 const payTypeData = [
 	{ label: "官方渠道 - 微信 - 小程序", value: "wxpay_mp-weixin", tagType: "success" },

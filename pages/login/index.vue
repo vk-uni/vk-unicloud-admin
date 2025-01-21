@@ -38,249 +38,264 @@
 </template>
 
 <script>
-var that; // 当前页面对象
-var vk = uni.vk; // vk实例
+	let vk = uni.vk; // vk实例
+	import config from "@/app.config.js";
+	export default {
+		data() {
+			return {
+				...config.staticUrl.navBar,
+				testUser: (config.login && config.login.testUser) || {}, // 体验账号信息
+				// 表单信息
+				form1: {
+					username: "",
+					password: "",
+					needPermission: true
+				},
+				checked: false, // 是否记录密码
+				// 表单验证规则
+				rules: {
 
-import config from "@/app.config.js";
-export default {
-	data() {
-		return {
-			...config.staticUrl.navBar,
-			testUser: (config.login && config.login.testUser) || {}, // 体验账号信息
-			// 表单信息
-			form1: {
-				username: "",
-				password: "",
-				needPermission: true
-			},
-			checked: false, // 是否记录密码
-			// 表单验证规则
-			rules: {
-
-			},
-		};
-	},
-	// 监听 - 页面每次【加载时】执行(如：前进)
-	onLoad(options = {}) {
-		that = this;
-		vk = that.vk;
-		that.options = options;
-		that.init(options);
-	},
-	mounted() {},
-	methods: {
-		// 页面初始化
-		init() {
-			let that = this;
-			let { login } = vk.getVuex("$user");
-			if (login) {
-				if (login.username) that.form1.username = login.username;
-				if (login.password) {
-					that.form1.password = login.password;
-					that.checked = true;
+				},
+			};
+		},
+		// 监听 - 页面每次【加载时】执行(如：前进)
+		onLoad(options = {}) {
+			vk = this.vk;
+			this.options = options;
+			this.init(options);
+		},
+		mounted() {},
+		methods: {
+			// 页面初始化
+			init() {
+				let that = this;
+				let { login } = vk.getVuex("$user");
+				if (login) {
+					if (login.username) that.form1.username = login.username;
+					if (login.password) {
+						that.form1.password = login.password;
+						that.checked = true;
+					}
 				}
-			}
-			if (!getApp().isAllowLoginBackground()) {
-				return false;
-			}
-			// 如果本地token有效，则再从云端查询一次token是否有效，如果都有效，则直接视为登录成功
-			if (vk.checkToken()) {
-				vk.userCenter.checkToken({
-					loading: true,
+				if (!getApp().isAllowLoginBackground()) {
+					return false;
+				}
+				// 如果本地token有效，则再从云端查询一次token是否有效，如果都有效，则直接视为登录成功
+				if (vk.checkToken()) {
+					vk.userCenter.checkToken({
+						loading: true,
+						success: data => {
+							that.loginSuccess(data);
+						}
+					});
+				}
+			},
+			// 表单提交
+			submit() {
+				let that = this;
+				vk.userCenter.login({
+					data: that.form1,
 					success: data => {
+						if (!getApp().isAllowLoginBackground(data.userInfo)) {
+							vk.alert("您的账户无登陆权限");
+							return false;
+						}
+						if (that.checked) {
+							// 账号密码保存本地缓存
+							vk.setVuex("$user.login.username", that.form1.username);
+							vk.setVuex("$user.login.password", that.form1.password);
+						} else {
+							// 删除本地缓存
+							vk.setVuex("$user.login.username", "");
+							vk.setVuex("$user.login.password", "");
+						}
 						that.loginSuccess(data);
 					}
 				});
-			}
-		},
-		// 表单提交
-		submit() {
-			let that = this;
-			vk.userCenter.login({
-				data: that.form1,
-				success: data => {
-					if (!getApp().isAllowLoginBackground(data.userInfo)) {
-						vk.alert("您的账户无登陆权限");
-						return false;
+			},
+			//登陆成功
+			loginSuccess(data = {}) {
+				let { userInfo = {} } = data;
+				// 先清空下菜单缓存
+				vk.setVuex("$app.inited", false);
+				vk.setVuex("$app.navMenu", []);
+				// 再执行init函数
+				getApp().init();
+				// 检查是否有指定跳转的页面
+				if (this.options.uniIdRedirectUrl) {
+					let uniIdRedirectUrl = decodeURIComponent(this.options.uniIdRedirectUrl);
+					if (uniIdRedirectUrl) {
+						vk.redirectTo(uniIdRedirectUrl);
+						return;
 					}
-					if (that.checked) {
-						// 账号密码保存本地缓存
-						vk.setVuex("$user.login.username", that.form1.username);
-						vk.setVuex("$user.login.password", that.form1.password);
-					} else {
-						// 删除本地缓存
-						vk.setVuex("$user.login.username", "");
-						vk.setVuex("$user.login.password", "");
-					}
-					that.loginSuccess(data);
 				}
-			});
-		},
-		//登陆成功
-		loginSuccess(data={}) {
-			let { userInfo={} } = data;
-			// 先清空下菜单缓存
-			vk.setVuex("$app.inited", false);
-			vk.setVuex("$app.navMenu", []);
-			// 再执行init函数
-			getApp().init();
-			// 检查是否有指定跳转的页面
-			if (this.options.uniIdRedirectUrl) {
-				let uniIdRedirectUrl = decodeURIComponent(this.options.uniIdRedirectUrl);
-				if (uniIdRedirectUrl) {
-					vk.redirectTo(uniIdRedirectUrl);
-					return;
+				// 最后跳转到首页或页面返回
+				let pages = getCurrentPages();
+				if (
+					pages.length >= 2 &&
+					pages[pages.length - 2] &&
+					pages[pages.length - 2].route &&
+					pages[pages.length - 2].route.indexOf("login/") == -1
+				) {
+					// 如果上一个页面不是login目录下的，则调上一个页面
+					vk.reLaunch("/" + pages[pages.length - 2].route);
+				} else {
+					// 否则进入首页
+					vk.navigateToHome();
 				}
+			},
+			forgetPassWord() {
+				console.log(`忘记密码了`);
+				vk.toast("暂不支持", "none");
+			},
+			shortMessageLogin() {
+				console.log(`短信登录`);
+			},
+			noCccount() {
+				console.log(`没有账号`);
+			},
+			register() {
+				console.log(`立即注册`);
+				vk.toast("暂不支持注册", "none");
 			}
-			// 最后跳转到首页或页面返回
-			let pages = getCurrentPages();
-			if (
-				pages.length >= 2 &&
-				pages[pages.length - 2] &&
-				pages[pages.length - 2].route &&
-				pages[pages.length - 2].route.indexOf("login/") == -1
-			) {
-				// 如果上一个页面不是login目录下的，则调上一个页面
-				vk.reLaunch("/" + pages[pages.length - 2].route);
-			} else {
-				// 否则进入首页
-				vk.navigateToHome();
-			}
-		},
-		forgetPassWord() {
-			console.log(`忘记密码了`);
-			vk.toast("暂不支持", "none");
-		},
-		shortMessageLogin() {
-			console.log(`短信登录`);
-		},
-		noCccount() {
-			console.log(`没有账号`);
-		},
-		register() {
-			console.log(`立即注册`);
-			vk.toast("暂不支持注册", "none");
 		}
-	}
-};
+	};
 </script>
 
 <style lang="scss" scoped>
-.page-body {
-	width: 100%;
-	height: 100vh;
-	background: #46d0e7 url(../../static/bg/007.jpg?t=2) no-repeat fixed center center;
-	background-size: cover;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-direction: column;
-	.login-view:hover {
-		background-color: rgba(255, 255, 255, 1);
-	}
-	.login-view {
+	.page-body {
 		width: 100%;
-		max-width: 420px;
-		border-radius: 7px;
-		background-color: rgba(255, 255, 255, 0.97);
-		padding: 40px 30px;
-		box-sizing: border-box;
-		border: 1px solid #f5f5f5;
-		box-shadow: 6px 6px 10px 0px #888888;
+		height: 100vh;
+		background: #46d0e7 url(../../static/bg/007.jpg?t=2) no-repeat fixed center center;
+		background-size: cover;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
 
-		::v-deep .input .el-input__inner {
-			border: 0 !important;
-			background-color: rgba(255, 255, 255, 0);
+		.login-view:hover {
+			background-color: rgba(255, 255, 255, 1);
 		}
-		.image {
-			display: block;
-			width: 64px;
-			height: 64px;
-			margin: 0 auto;
-			margin-bottom: 15px;
-			border-radius: 6px;
-		}
-		.form-view {
-			margin-top: 20px;
-			.form-item {
-				border-bottom: 1px solid #f5f5f5;
-			}
-		}
-		.login-title {
-			display: block;
-			text-align: center;
-			color: #121212;
-			font-size: 22px;
-			letter-spacing: 2px;
-		}
-		.login_but {
+
+		.login-view {
 			width: 100%;
-			letter-spacing: 4px;
-			font-size: 17px;
-		}
-		.password-box {
-			font-size: 13px;
-			color: #b1b1b1;
-			margin-bottom: 20px;
-			display: flex;
-			align-items: center;
-			.remember-password {
-				flex: 1;
-				cursor: pointer;
-				user-select: none;
-			}
-			.forget-password {
-				flex: 1;
-				text-align: right;
-				cursor: pointer;
-				user-select: none;
-				&:active {
-					color: #3a6ffd;
-				}
-			}
-		}
-		.tips {
-			color: #b1b1b1;
-		}
-		.btns-box {
-			font-size: 13px;
-			color: #b1b1b1;
-			padding-top: 25px;
-			display: flex;
+			max-width: 420px;
+			border-radius: 7px;
+			background-color: rgba(255, 255, 255, 0.97);
+			padding: 40px 30px;
 			box-sizing: border-box;
+			border: 1px solid #f5f5f5;
+			box-shadow: 6px 6px 10px 0px #888888;
 
-			text {
-				cursor: pointer;
+			::v-deep .input .el-input__inner {
+				border: 0 !important;
+				background-color: rgba(255, 255, 255, 0);
+			}
 
-				&:first-of-type {
+			.image {
+				display: block;
+				width: 64px;
+				height: 64px;
+				margin: 0 auto;
+				margin-bottom: 15px;
+				border-radius: 6px;
+			}
+
+			.form-view {
+				margin-top: 20px;
+
+				.form-item {
+					border-bottom: 1px solid #f5f5f5;
+				}
+			}
+
+			.login-title {
+				display: block;
+				text-align: center;
+				color: #121212;
+				font-size: 22px;
+				letter-spacing: 2px;
+			}
+
+			.login_but {
+				width: 100%;
+				letter-spacing: 4px;
+				font-size: 17px;
+			}
+
+			.password-box {
+				font-size: 13px;
+				color: #b1b1b1;
+				margin-bottom: 20px;
+				display: flex;
+				align-items: center;
+
+				.remember-password {
 					flex: 1;
+					cursor: pointer;
+					user-select: none;
 				}
 
-				&:nth-of-type(2) {
-					margin-right: 8px;
+				.forget-password {
+					flex: 1;
+					text-align: right;
+					cursor: pointer;
+					user-select: none;
+
+					&:active {
+						color: #3a6ffd;
+					}
 				}
 			}
-			.register {
-				color: #46d0e7;
+
+			.tips {
+				color: #b1b1b1;
+			}
+
+			.btns-box {
+				font-size: 13px;
+				color: #b1b1b1;
+				padding-top: 25px;
+				display: flex;
+				box-sizing: border-box;
+
+				text {
+					cursor: pointer;
+
+					&:first-of-type {
+						flex: 1;
+					}
+
+					&:nth-of-type(2) {
+						margin-right: 8px;
+					}
+				}
+
+				.register {
+					color: #46d0e7;
+				}
+			}
+		}
+
+		.test-user-list {
+			margin-top: 10px;
+			user-select: text;
+			font-size: 12px;
+			color: #606266;
+
+			.test-user-item {
+				margin: 5px 0;
+
+				.test-user-item-nickname {}
+
+				.test-user-item-username {
+					margin-left: 10px;
+				}
+
+				.test-user-item-password {
+					margin-left: 10px;
+				}
 			}
 		}
 	}
-	.test-user-list {
-		margin-top: 10px;
-		user-select: text;
-		font-size: 12px;
-		color: #606266;
-		.test-user-item {
-			margin: 5px 0;
-			.test-user-item-nickname {
-			}
-			.test-user-item-username {
-				margin-left: 10px;
-			}
-			.test-user-item-password {
-				margin-left: 10px;
-			}
-		}
-	}
-}
 </style>

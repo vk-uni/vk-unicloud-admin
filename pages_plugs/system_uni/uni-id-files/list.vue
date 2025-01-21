@@ -127,8 +127,8 @@
 </template>
 
 <script>
-var that; // 当前页面对象
-var vk = uni.vk; // vk实例
+let that; // 当前页面对象
+let vk = uni.vk; // vk实例
 
 import addCategory from "./form/addCategory";
 import updateCategory from "./form/updateCategory";

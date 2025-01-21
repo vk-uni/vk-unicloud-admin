@@ -16,8 +16,8 @@
 
 <script>
 	import icons from './js/vk-icons.js';
-	var that;													// 当前页面对象
-	var vk = uni.vk;									// vk实例
+	let that;													// 当前页面对象
+	let vk = uni.vk;									// vk实例
 	export default {
 		data() {
 			return {
