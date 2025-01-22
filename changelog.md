@@ -1,3 +1,9 @@
+## 1.19.24（2025-01-22）
+* 【升级】`vk-unicloud-admin-ui` 的npm包（执行`npm i vk-unicloud-admin-ui@1.19.28`）
+* 【升级】`vk依赖` [详情](https://ext.dcloud.net.cn/plugin?id=4157&update_log)
+* 【修复】运行报错 'localStorage' has already been declared 的问题
+
+##### 框架更新步骤 [点击查看](https://vkdoc.fsq.pub/admin/1/update.html)
 ## 1.19.23（2025-01-21）
 * 【升级】`vk-unicloud-admin-ui` 的npm包（执行`npm i vk-unicloud-admin-ui@1.19.28`）
 * 【升级】`vk依赖` [详情](https://ext.dcloud.net.cn/plugin?id=4157&update_log)
