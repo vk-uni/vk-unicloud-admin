@@ -72,52 +72,52 @@
 </template>
 
 <script>
-	let that;													// 当前页面对象
-	let vk = uni.vk;									// vk实例
-	let originalForms = {};						// 表单初始化数据
+	let that; // 当前页面对象
+	let vk = uni.vk; // vk实例
+	let originalForms = {}; // 表单初始化数据
 
 	export default {
 		data() {
 			// 页面数据变量
 			return {
 				// 页面是否请求中或加载中
-				loading:false,
+				loading: false,
 				// init请求返回的数据
-				data:{
+				data: {
 
 				},
 				// 表格相关开始 -----------------------------------------------------------
-				table1:{
+				table1: {
 					// 表格数据请求地址
-					action:"template/db_api/sys/getList",
+					action: "template/db_api/sys/getList",
 					// 表格字段显示规则
-					columns:[
-						{ key:"_id", title:"id", type:"text", width:220 },
-						{ key:"money", title:"金额", type:"money", width:80, sortable:"custom" },
-						{ key:"remark", title:"备注", type:"text", width:80 },
-						{ key:"_add_time", title:"添加时间", type:"time", width:160, sortable:"custom"  },
-						{ key:"_add_time", title:"距离现在", type:"dateDiff", width:120 },
+					columns: [
+						{ key: "_id", title: "id", type: "text", width: 220 },
+						{ key: "money", title: "金额", type: "money", width: 80, sortable: "custom" },
+						{ key: "remark", title: "备注", type: "text", width: 80 },
+						{ key: "_add_time", title: "添加时间", type: "time", width: 160, sortable: "custom" },
+						{ key: "_add_time", title: "距离现在", type: "dateDiff", width: 120 },
 					],
 					// 多选框选中的值
-					multipleSelection:[],
+					multipleSelection: [],
 					// 当前高亮的记录
-					selectItem:""
+					selectItem: ""
 				},
 				// 表格相关结束 -----------------------------------------------------------
 				// 表单相关开始 -----------------------------------------------------------
 				// 查询表单请求数据
-				queryForm1:{
+				queryForm1: {
 					// 查询表单数据源，可在此设置默认值
-					formData:{
+					formData: {
 
 					},
 					// 查询表单的字段规则 fieldName:指定数据库字段名,不填默认等于key
-					columns:[
-						{ key:"remark", title:"备注", type:"text", width:160, mode:"%%" },
-						{ key:"_add_time", title:"添加时间", type:"datetimerange", width:400, mode:"[]" },
+					columns: [
+						{ key: "remark", title: "备注", type: "text", width: 160, mode: "%%" },
+						{ key: "_add_time", title: "添加时间", type: "datetimerange", width: 400, mode: "[]" },
 					]
 				},
-				form1:{
+				form1: {
 					// 表单请求数据，此处可以设置默认值
 					data: {
 
@@ -125,23 +125,25 @@
 					// 表单属性
 					props: {
 						// 表单请求地址
-						action:"",
+						action: "",
 						// 表单字段显示规则
-						columns:[
-							{ key:"text", title:"金额", type:"text", placeholder:"请输入xxx" },
+						columns: [
+							{ key: "text", title: "金额", type: "text", placeholder: "请输入xxx" },
 						],
 						// 表单验证规则
-						rules:{
+						rules: {
 
 						},
 						// add 代表添加 update 代表修改
-						formType:"",
+						formType: "",
+						// 弹窗标题
+						title: "",
 						// 是否显示表单的弹窗
-						show:false
+						show: false
 					}
 				},
 				// 其他弹窗表单
-				formDatas:{},
+				formDatas: {},
 				// 表单相关结束 -----------------------------------------------------------
 			};
 		},
@@ -169,23 +171,23 @@
 				vk.navigateTo(path);
 			},
 			// 表单重置
-			resetForm(){
+			resetForm() {
 				vk.pubfn.resetForm(originalForms, that);
 			},
 			// 搜索
-			search(){
+			search() {
 				that.$refs.table1.search();
 			},
 			// 刷新
-			refresh(){
+			refresh() {
 				that.$refs.table1.refresh();
 			},
 			// 获取当前选中的行的数据
-			getCurrentRow(){
+			getCurrentRow() {
 				return that.$refs.table1.getCurrentRow();
 			},
 			// 监听 - 行的选中高亮事件
-			currentChange(val){
+			currentChange(val) {
 				that.table1.selectItem = val;
 			},
 			// 当选择项发生变化时会触发该事件
@@ -193,7 +195,7 @@
 				that.table1.multipleSelection = list;
 			},
 			// 显示添加页面
-			addBtn(){
+			addBtn() {
 				that.resetForm();
 				that.form1.props.action = 'template/db_api/sys/add';
 				that.form1.props.formType = 'add';
@@ -201,7 +203,7 @@
 				that.form1.props.show = true;
 			},
 			// 显示修改页面
-			updateBtn({ item }){
+			updateBtn({ item }) {
 				that.form1.props.action = 'template/db_api/sys/update';
 				that.form1.props.formType = 'update';
 				that.form1.props.title = '编辑';
@@ -209,20 +211,25 @@
 				that.form1.data = item;
 			},
 			// 删除按钮
-			deleteBtn({ item, deleteFn }){
+			deleteBtn({ item, deleteFn }) {
 				deleteFn({
-					action:"template/db_api/sys/delete",
-					data:{
+					action: "template/db_api/sys/delete",
+					data: {
 						_id: item._id
 					},
 				});
 			},
 			// 监听 - 批量操作的按钮点击事件
-			batchBtn(index){
-				switch(index){
-					case 1: vk.toast("批量操作按钮1"); break;
-					case 2: vk.toast("批量操作按钮2"); break;
-					default : break;
+			batchBtn(index) {
+				switch (index) {
+					case 1:
+						vk.toast("批量操作按钮1");
+						break;
+					case 2:
+						vk.toast("批量操作按钮2");
+						break;
+					default:
+						break;
 				}
 			}
 		},
@@ -238,6 +245,6 @@
 </script>
 <style lang="scss" scoped>
 	.page-body {
-
+		
 	}
 </style>
