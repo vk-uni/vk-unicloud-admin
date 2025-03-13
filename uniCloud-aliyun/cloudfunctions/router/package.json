@@ -1,7 +1,7 @@
 {
   "name": "router",
   "version": "1.0.0",
-  "description": "在router目录下执行 npm i",
+  "description": "【开箱即用】vk-uniCloud-router - 云函数路由模式 - uniCloud开发框架 - 已集成uni-id",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
