@@ -31,6 +31,14 @@ export default {
 	},
 	// 前端默认时区（中国为8）
 	targetTimezone:8, 
+	// 日志风格（注意：只在开发调试模式下生效，正式发布后不会打印日志）
+	logger: {
+		mode: 0, // 0 正常（默认展开） 1 简洁（默认折叠）
+		colorArr: [
+			"#0095f8",
+			"#67C23A"
+		]
+	},
 	globalError: true, // 是否开启全局错误提示
 	// 需要检查是否登录的页面列表
 	// let { mode, list } = config.checkTokenPages
