@@ -22,7 +22,7 @@
 export default {
 	props: {},
 	data: function() {
-		// 组件创建时,进行数据初始化
+		// 组件创建时，进行数据初始化
 		return {};
 	},
 	mounted() {},
