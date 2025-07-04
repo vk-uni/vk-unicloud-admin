@@ -29,7 +29,8 @@
 				{ "path": "system_uni/uni-id-files/list" },
 				{ "path": "system_uni/vk-pay-orders" },
 				{ "path": "system_uni/vk-ws-connection" },
-				{ "path": "system_uni/vk-error-log" }
+				{ "path": "system_uni/vk-error-log" },
+				{ "path": "system_uni/lucky-draw/list", "style": { "navigationBarTitleText": "抽奖活动" } }
 			]
 		}
 	],
