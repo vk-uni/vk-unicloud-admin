@@ -75,9 +75,19 @@
 				@success="form1.props.show = false;refresh();"
 			>
 				<template v-slot:qrcode="{ form, keyName, column }">
-					<view class="qrcode">
-						<image :src="qrcode" mode="aspectFit" class="image"></image>
-						<view class="tips">微信扫一扫上方小程序码可新建活动，然后在此处即可选择新建的活动</view>
+					<view class="qrcode-container">
+						<view class="qrcode-card">
+							<view class="qrcode-header">
+								<text class="qrcode-title">创建活动</text>
+							</view>
+							<view class="qrcode-image-wrapper">
+								<image :src="qrcode" mode="aspectFit" class="qrcode-image"></image>
+							</view>
+							<view class="qrcode-tips">
+								<text class="tips-text">微信扫一扫上方小程序码</text>
+								<text class="tips-sub">可创建活动，然后即可在此处选择</text>
+							</view>
+						</view>
 					</view>
 				</template>
 			</vk-data-form>
@@ -445,23 +455,73 @@
 		}
 	};
 </script>
+
 <style lang="scss" scoped>
-	.qrcode {
+	.qrcode-container {
 		display: flex;
-		flex-direction: column;
+		justify-content: center;
 		align-items: center;
-		margin: 0;
+		padding: 20px 0;
 
-		.image {
-			width: 150px;
-			height: 150px;
-			margin-bottom: 10px;
-		}
+		.qrcode-card {
+			border-radius: 16px;
+			padding: 24px;
+			border: 1px solid rgba(255, 255, 255, 0.8);
+			backdrop-filter: blur(10px);
+			transition: all 0.3s ease;
+			max-width: 280px;
+			width: 100%;
+			border: 1px solid #ebebeb;
 
-		.tips {
-			font-size: 14px;
-			color: #666;
-			text-align: center;
+			.qrcode-header {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin-bottom: 20px;
+
+				.qrcode-title {
+					font-size: 18px;
+					font-weight: 600;
+					color: #2c3e50;
+					letter-spacing: 0.5px;
+				}
+			}
+
+			.qrcode-image-wrapper {
+				position: relative;
+				display: flex;
+				justify-content: center;
+				margin-bottom: 20px;
+
+				.qrcode-image {
+					width: 160px;
+					height: 160px;
+					border-radius: 12px;
+					border: 1px solid #ebebeb;
+					padding: 5px;
+				}
+
+			}
+
+			.qrcode-tips {
+				text-align: center;
+
+				.tips-text {
+					display: block;
+					font-size: 15px;
+					font-weight: 500;
+					color: #34495e;
+					margin-bottom: 6px;
+					line-height: 1.4;
+				}
+
+				.tips-sub {
+					display: block;
+					font-size: 13px;
+					color: #7f8c8d;
+					line-height: 1.4;
+				}
+			}
 		}
 	}
 </style>
