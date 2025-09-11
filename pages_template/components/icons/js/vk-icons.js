@@ -464,5 +464,9 @@ export default [
 	"vk-icon-weixingongzhonghao",
 	"vk-icon-weixinxiaochengxu",
 	"vk-icon-heading-h5",
-	"vk-icon-shengji3-xianxing"
+	"vk-icon-shengji3-xianxing",
+	"vk-icon-zuanshi",
+	"vk-icon-vip-plus",
+	"vk-icon-douyin1",
+	"vk-icon-douyin"
 ];
