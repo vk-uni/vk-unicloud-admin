@@ -10,7 +10,7 @@
     "vk云开发",
     "vk-admin、element-ui",
     "内置众多API、工具包"
-],
+  ],
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -22,7 +22,7 @@
   "dependencies": {
     "element-ui": "2.15.14",
     "umy-ui": "1.1.6",
-    "vk-unicloud-admin-ui": "^1.20.15"
+    "vk-unicloud-admin-ui": "^1.20.36"
   },
   "engines": {
     "HBuilderX": "^3.1.10",
