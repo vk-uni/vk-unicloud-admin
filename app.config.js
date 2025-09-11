@@ -155,7 +155,17 @@ export default {
 	// 左侧菜单
 	sideBar: {
 		// 配置静态菜单列表
-		"staticMenu": staticMenu
+		staticMenu: staticMenu,
+		defaultOpeneds: ["components-admin"], // 默认展开的菜单项的menu_id
+	},
+	// 顶部菜单
+	topBar: {
+		// 是否启用 menuTabs
+		showMenuTabs: true,
+		// logo显示模式，1 纯图片模式 2 图片+文字模式
+		logoMode: 1,
+		// logo标题
+		logoTitle: "vk-admin后台管理",
 	},
 	// 主题配置
 	theme: {

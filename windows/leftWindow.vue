@@ -9,6 +9,7 @@
 			:theme="theme"
 			default-menu-icon="el-icon-folder-opened"
 			default-sub-menu-icon="el-icon-tickets"
+			:defaultOpeneds="defaultOpeneds"
 			@select="select"
 		></vk-data-menu-nav>
 	</scroll-view>
@@ -19,7 +20,8 @@
 	export default {
 		data() {
 			return {
-				theme: config.theme
+				theme: config.theme,
+				defaultOpeneds: config.sideBar.defaultOpeneds
 			}
 		},
 		methods: {
@@ -46,7 +48,15 @@
 			styleCom(){
 				let theme = this.theme;
 				if (theme && theme.use) {
-					return theme[theme.use].leftMenu;
+					let leftCollapse = vk.getVuex('$app.leftCollapse');
+					if (leftCollapse) {
+						return {
+							...theme[theme.use].leftMenu,
+							width: '64px',
+						}
+					} else {
+						return theme[theme.use].leftMenu;
+					}
 				} else {
 					return {};
 				}
