@@ -112,7 +112,7 @@
 				:total="data.content.total"
 				:current-page="queryForm1.pageIndex"
 				:page-size="queryForm1.pageSize"
-				:page-sizes="[48, 96]"
+				:page-sizes="[50, 100]"
 				:pager-count="5"
 				layout="total, sizes, prev, pager, next, jumper"
 				@size-change=" val => { queryForm1.pageSize = val; getList(); } "
@@ -181,7 +181,7 @@
 				// 查询表单
 				queryForm1: {
 					pageIndex: 1,
-					pageSize: 30,
+					pageSize: 50,
 					formData: {
 						display_name: "",
 						category_id: "",
