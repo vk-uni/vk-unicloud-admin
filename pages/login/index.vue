@@ -125,8 +125,15 @@
 				if (this.options.uniIdRedirectUrl) {
 					let uniIdRedirectUrl = decodeURIComponent(this.options.uniIdRedirectUrl);
 					if (uniIdRedirectUrl) {
-						vk.redirectTo(uniIdRedirectUrl);
-						return;
+						if (uniIdRedirectUrl.indexOf("http") === 0) {
+							// #ifdef WEB
+							window.location.href = uniIdRedirectUrl;
+							return;
+							// #endif
+						} else {
+							vk.redirectTo(uniIdRedirectUrl);
+							return;
+						}
 					}
 				}
 				// 最后跳转到首页或页面返回
