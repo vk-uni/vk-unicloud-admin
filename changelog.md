@@ -1,4 +1,4 @@
-## 1.21.1（2025-09-25）
+## 1.21.1（2025-09-26）
 * 【升级】`vk-unicloud-admin-ui` 的npm包（执行`npm i vk-unicloud-admin-ui@1.21.0 --registry https://registry.npmjs.org/`）
 * 【升级】`vk依赖` [详情](https://ext.dcloud.net.cn/plugin?id=4157&update_log)
 * 【重要】万能表单 text、textarea 新增属性 trimMode，可以设置过滤空格的模式，默认为 trim（过滤前后空格）[传送门](https://vkdoc.fsq.pub/admin/components/1%E3%80%81text.html#trim-mode)
