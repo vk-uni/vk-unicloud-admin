@@ -1,6 +1,7 @@
-* 【升级】`vk-unicloud-admin-ui` 的npm包（执行`npm i vk-unicloud-admin-ui@1.20.42 --registry https://registry.npmjs.org/`）
+* 【升级】`vk-unicloud-admin-ui` 的npm包（执行`npm i vk-unicloud-admin-ui@1.21.0 --registry https://registry.npmjs.org/`）
 * 【升级】`vk依赖` [详情](https://ext.dcloud.net.cn/plugin?id=4157&update_log)
 * 【重要】万能表单 text、textarea 新增属性 trimMode，可以设置过滤空格的模式，默认为 trim（过滤前后空格）[传送门](https://vkdoc.fsq.pub/admin/components/1%E3%80%81text.html#trim-mode)
+* 【修复】权限管理添加父权限可能会报url不能为空的问题
 * 【优化】素材库管理页面新增幻灯片播放模式 [传送门](https://vkdoc.fsq.pub/admin/6/uni-id-files.html#slideshow)
 * 【优化】素材库支持并发上传文件，提升上传速度 [传送门](https://vkdoc.fsq.pub/admin/6/uni-id-files.html#concurrency)
 * 【优化】素材库支持上传远程图片和视频 [传送门](https://vkdoc.fsq.pub/admin/6/uni-id-files.html#remotefile)
