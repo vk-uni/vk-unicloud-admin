@@ -14,7 +14,7 @@
 						<text style="margin-right: 20px;">{{ scope.row.name }}</text>
 						<el-button type="success" @click="upload(scope.row)" size="mini" plain> {{ scope.row.content ? '已' : ''}}选择 {{ scope.row.file }} </el-button>
 						<text style="margin-left: 20px;color: #c2e7b0;" v-if="scope.row.content && scope.row.file === scope.row.name"> √ </text>
-						<text style="margin-left: 20px;color: red;" v-if="scope.row.content && scope.row.file !== scope.row.name"> × </text>
+						<text style="margin-left: 20px;color: red;" v-if="scope.row.content && scope.row.file !== scope.row.name" @click="upload(scope.row)"> × </text>
 					</template>
 				</el-table-column>
 				<el-table-column prop="key4" label="选择后可复制" minWidth="200" >
@@ -69,6 +69,13 @@
 						key: 'wxpay.appPrivateKeyContent'
 					},
 					{
+						name: 'pub_key.pem',
+						tips: '微信支付v3需要用到的证书（wxpay.wxpayPublicKeyContent）的值',
+						file: '',
+						content: '',
+						key: 'wxpay.wxpayPublicKeyContent'
+					},
+					{
 						name: 'alipayCertPublicKey_RSA2.crt',
 						tips: '支付宝支付 - 支付宝公钥证书（alipay.alipayPublicCertContent）的值',
 						file: '',
@@ -96,6 +103,7 @@
 						pfx: "",
 						appCertContent: "",
 						appPrivateKeyContent: "",
+						wxpayPublicKeyContent: ""
 					},
 					alipay: {
 						alipayPublicCertContent: "",
