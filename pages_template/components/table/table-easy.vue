@@ -275,7 +275,10 @@
 			},
 			// 导出xls表格文件（表格当前页数据）
 			exportExcel(){
-				that.$refs.table1.exportExcel();
+				that.$refs.table1.exportExcel({
+					freezeHeader: true,
+					autoFilter: true
+				});
 			},
 			// 导出xls表格文件（全部数据）
 			exportExcelAll(){
@@ -284,6 +287,8 @@
 					title: "正在导出数据...",
 					pageIndex: 1,
 					pageSize: -1, // 此值为-1，代表导出所有数据
+					freezeHeader: true,
+					autoFilter: true
 				});
 			}
 		},
