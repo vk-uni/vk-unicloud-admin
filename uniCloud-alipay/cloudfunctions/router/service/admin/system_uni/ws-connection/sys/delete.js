@@ -28,13 +28,14 @@ module.exports = {
 				cid
 			});
 		} catch (err) {
-			// 关闭失败一般都是死链接，故直接删除数据库内保存的连接信息
+			console.error('err: ', err);
+		} finally {
+			// 无论关闭是否成功，均删除数据库内保存的连接信息
 			await vk.baseDao.deleteById({
 				dbName: "vk-ws-connection",
 				id: cid
 			});
 		}
-
 		return res;
 	}
 

@@ -19,7 +19,7 @@
     "concurrency": 1,
     "memorySize": 512,
     "path": "",
-    "timeout": 60,
+    "timeout": 900,
     "triggers": [],
     "runtime": "Nodejs18",
     "keepRunningAfterReturn": false

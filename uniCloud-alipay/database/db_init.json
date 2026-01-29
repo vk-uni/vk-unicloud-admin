@@ -70,6 +70,10 @@
 				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "inviter_uid", "Direction": "1", "Type": "array" }], "MgoIsUnique": false }
 			},
 			{
+				"IndexName": "inviter_uid.0",
+				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "inviter_uid.0", "Direction": "1", "Type": "array" }], "MgoIsUnique": false }
+			},
+			{
 				"IndexName": "invite_time",
 				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "invite_time", "Direction": "-1", "Type": "long" }], "MgoIsUnique": false }
 			},
