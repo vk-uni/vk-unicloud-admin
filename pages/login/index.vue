@@ -68,23 +68,13 @@
 		methods: {
 			// 页面初始化
 			init() {
-				if (this.options) {
-					if (this.options.token) {
-						let tokenExpired = this.options.tokenExpired || Date.now() + 6 * 60 * 60 * 1000;
-						vk.saveToken({
-							token: this.options.token,
-							tokenExpired
-						});
-					}
-
-					// 处理URL参数中的username和password
-					if (this.options.username && this.options.password) {
-						this.form1.username = this.options.username;
-						this.form1.password = this.options.password;
-						this.checked = true;
-						this.submit();
-						return;
-					}
+				// 处理URL参数中的username和password
+				if (this.options && this.options.username && this.options.password) {
+					this.form1.username = this.options.username;
+					this.form1.password = this.options.password;
+					this.checked = true;
+					this.submit();
+					return;
 				}
 				// 从缓存中读取记住的密码
 				let { login } = vk.getVuex("$user");
@@ -99,10 +89,17 @@
 					return false;
 				}
 				// 如果本地token有效，则再从云端查询一次token是否有效，如果都有效，则直接视为登录成功
-				if (vk.checkToken()) {
+				if (vk.checkToken() || (this.options && this.options.token)) {
 					vk.userCenter.checkToken({
+						data: {
+							uniIdToken: this.options.token
+						},
 						loading: true,
 						success: data => {
+							vk.saveToken({
+								token: this.options.token,
+								tokenExpired: this.options.tokenExpired || Date.now() + 6 * 60 * 60 * 1000
+							});
 							this.loginSuccess(data);
 						}
 					});
