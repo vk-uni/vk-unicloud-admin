@@ -38,8 +38,8 @@
 </template>
 
 <script>
-	let vk = uni.vk; // vk实例
 	import config from "@/app.config.js";
+	let vk = uni.vk; // vk实例
 	export default {
 		data() {
 			return {
@@ -68,13 +68,31 @@
 		methods: {
 			// 页面初始化
 			init() {
-				let that = this;
+				if (this.options) {
+					if (this.options.token) {
+						let tokenExpired = this.options.tokenExpired || Date.now() + 6 * 60 * 60 * 1000;
+						vk.saveToken({
+							token: this.options.token,
+							tokenExpired
+						});
+					}
+
+					// 处理URL参数中的username和password
+					if (this.options.username && this.options.password) {
+						this.form1.username = this.options.username;
+						this.form1.password = this.options.password;
+						this.checked = true;
+						this.submit();
+						return;
+					}
+				}
+				// 从缓存中读取记住的密码
 				let { login } = vk.getVuex("$user");
 				if (login) {
-					if (login.username) that.form1.username = login.username;
+					if (login.username) this.form1.username = login.username;
 					if (login.password) {
-						that.form1.password = login.password;
-						that.checked = true;
+						this.form1.password = login.password;
+						this.checked = true;
 					}
 				}
 				if (!getApp().isAllowLoginBackground()) {
@@ -85,31 +103,30 @@
 					vk.userCenter.checkToken({
 						loading: true,
 						success: data => {
-							that.loginSuccess(data);
+							this.loginSuccess(data);
 						}
 					});
 				}
 			},
 			// 表单提交
 			submit() {
-				let that = this;
 				vk.userCenter.login({
-					data: that.form1,
+					data: this.form1,
 					success: data => {
 						if (!getApp().isAllowLoginBackground(data.userInfo)) {
 							vk.alert("您的账户无登陆权限");
 							return false;
 						}
-						if (that.checked) {
+						if (this.checked) {
 							// 账号密码保存本地缓存
-							vk.setVuex("$user.login.username", that.form1.username);
-							vk.setVuex("$user.login.password", that.form1.password);
+							vk.setVuex("$user.login.username", this.form1.username);
+							vk.setVuex("$user.login.password", this.form1.password);
 						} else {
 							// 删除本地缓存
 							vk.setVuex("$user.login.username", "");
 							vk.setVuex("$user.login.password", "");
 						}
-						that.loginSuccess(data);
+						this.loginSuccess(data);
 					}
 				});
 			},
