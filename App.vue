@@ -121,7 +121,10 @@
 		},
 		// 监听 - 应用启动时
 		onLaunch: function(options) {
-			this.appOptions = options;
+			let that = this;
+			that.appOptions = options;
+			// 接收页面token参数，用于实现自动登录
+			that.vk.handleAutoLoginToken(options);
 			if (config.debug) {
 				console.log(
 					`%c vk-admin %c v${version} `,
@@ -130,7 +133,6 @@
 				);
 				console.log('App Launch');
 			}
-			let that = this;
 			that.vk.pubfn.needInit({
 				that,
 				config,
