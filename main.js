@@ -25,14 +25,14 @@ Vue.use(vkAdminUI);
 // 自动注册全局组件（必须加在Vue.use(vkAdminUI);的后面）
 const modulesFiles = require.context('./components', true, /\.vue$/);
 modulesFiles.keys().map((modulePath, index) => {
-	const moduleNames = modulePath.replace(/^\.\/(.*)\.\w+$/, '$1');
-	const moduleSplit = moduleNames.split("/");
-	const moduleName = moduleSplit[0];
-	if (moduleSplit.length === 2 && moduleName === moduleSplit[1]) {
-		const value = modulesFiles(modulePath);
-		let moduleItem = value.default;
-		Vue.component(moduleName, moduleItem);
-	}
+  const moduleNames = modulePath.replace(/^\.\/(.*)\.\w+$/, '$1');
+  const moduleSplit = moduleNames.split("/");
+  const moduleName = moduleSplit[0];
+  if (moduleSplit.length === 2 && moduleName === moduleSplit[1]) {
+    const value = modulesFiles(modulePath);
+    let moduleItem = value.default;
+    Vue.component(moduleName, moduleItem);
+  }
 });
 
 // 引入 自定义全局css 样式
@@ -43,7 +43,7 @@ Vue.config.productionTip = false
 App.mpType = 'app'
 
 const app = new Vue({
-	store,
-	...App
+  store,
+  ...App
 })
 app.$mount()

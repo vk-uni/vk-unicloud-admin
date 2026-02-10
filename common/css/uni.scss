@@ -86,19 +86,19 @@ $top-window-bg-color: #fff;													// 顶部窗口背景色
 $top-window-text-color: #999;												// 顶部窗口前景色
 // 水平垂直居中
 @mixin flex_center_center {
-	display: flex;
-	justify-content: center;
-	align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 // 换行居中
 @mixin  flex_direction_center {
-	display: flex;
-	justify-content: center;
-	flex-direction: column;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 // 水平可换行居中
 @mixin flex_justify_center{
-	display: flex;
-	align-items: center;
-	flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
