@@ -23,11 +23,11 @@ class TestDao extends BaseDao {
 
   // 查询单条记录（完整版，支持事务）
   let testInfo = await vk.daoCenter.testDao.findById({
-  	db, // 指定db对象
-  	id: id,
-  	fieldJson: {
+    db, // 指定db对象
+    id: id,
+    fieldJson: {
 
-  	}
+    }
   });
 
   // 根据条件查询单条记录
@@ -43,20 +43,20 @@ class TestDao extends BaseDao {
 
   // 根据ID修改
   await vk.daoCenter.testDao.updateById({
-  	id: id,
-  	dataJson: {
+    id: id,
+    dataJson: {
 
-  	}
+    }
   });
 
   // 批量修改
   await vk.daoCenter.testDao.update({
-  	whereJson: {
+    whereJson: {
 
-  	},
-  	dataJson: {
+    },
+    dataJson: {
 
-  	}
+    }
   });
 
   // 删除记录
@@ -79,51 +79,51 @@ class TestDao extends BaseDao {
 
   // select 查询列表（不支持联表查询，性能比selects高）
   res = await vk.daoCenter.testDao.select({
-  	pageIndex: 1,
-  	pageSize: 20,
-  	getCount: false,
-  	whereJson: {
+    pageIndex: 1,
+    pageSize: 20,
+    getCount: false,
+    whereJson: {
 
-  	},
-  	sortArr: [{ name: "_id", type: "desc" }]
+    },
+    sortArr: [{ name: "_id", type: "desc" }]
   });
 
   // selects 查询列表（支持联表查询）
   res = await vk.daoCenter.testDao.selects({
-  	pageIndex: 1,
-  	pageSize: 20,
-  	getCount: false,
-  	whereJson: {
+    pageIndex: 1,
+    pageSize: 20,
+    getCount: false,
+    whereJson: {
 
-  	},
-  	fieldJson: {},
-  	sortArr: [{ name: "_id", type: "desc" }],
-  	// 副表列表
-  	foreignDB: [{
-  		dbName: "副表表名",
-  		localKey: "主表外键名",
-  		foreignKey: "副表外键名",
-  		as: "副表连表结果的别名",
-  		limit: 1,	// 当limit为1时，以对象形式返回
-  		// 副表查询条件
-  		whereJson: {},
-  		// 副表字段显示规则
-  		fieldJson: {}
-  	}]
+    },
+    fieldJson: {},
+    sortArr: [{ name: "_id", type: "desc" }],
+    // 副表列表
+    foreignDB: [{
+      dbName: "副表表名",
+      localKey: "主表外键名",
+      foreignKey: "副表外键名",
+      as: "副表连表结果的别名",
+      limit: 1,	// 当limit为1时，以对象形式返回
+      // 副表查询条件
+      whereJson: {},
+      // 副表字段显示规则
+      fieldJson: {}
+    }]
   });
 
   // 获取表格数据（与selects参数一致，也支持连表，默认 getCount 为 true）
   res = await vk.daoCenter.testDao.getTableData({
-  	data
+    data
   });
 
   // 设置强制查询条件
   res = await vk.daoCenter.testDao.getTableData({
-  	data,
-  	// 强制where条件
-  	whereJson: {
+    data,
+    // 强制where条件
+    whereJson: {
 
-  	}
+    }
   });
 
    */
