@@ -1763,7 +1763,7 @@ let item = that.$refs.table1.getCurrentRow(true);
 ```js
 {
   key:"user_id", title:"用户选择器", type:"remote-select", placeholder:"请输入用户账号/昵称",
-  action:"admin/select/kh/user",
+  action:"admin/system/user/kh/select",
   onChange:function(val, formData, column, index, option){
     // option内的值为与val匹配的选项的数据源完整数据
     console.log(1,val, formData, column, index, option);

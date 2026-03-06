@@ -75,7 +75,7 @@
 					columns:[
             {
               key:"user_id", title:"选择用户", type:"remote-select", placeholder:"请输入用户账号/昵称",
-              action:"admin/select/kh/user",
+              action:"admin/system/user/kh/select",
             },
 						{ key:"money_1", type:"money", title:"最小金额", width:160, placeholder:"请输入最小金额",
 							mode:">=", fieldName:"money"

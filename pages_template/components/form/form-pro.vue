@@ -301,7 +301,7 @@
 							},
 							// 数据库联动字段
 							{ key: "", title: "数据库联动字段", type: "bar-title" },
-							{ key: "user_id", title: "用户选择器", type: "remote-select", placeholder: "请输入用户账号/昵称", action: "admin/select/kh/user" },
+							{ key: "user_id", title: "用户选择器", type: "remote-select", placeholder: "请输入用户账号/昵称", action: "admin/system/user/kh/select" },
 							{
 								key: "user_id", title: "选择用户", type: "table-select", placeholder: "选择",
 								action: "admin/system/user/sys/getList",

@@ -175,7 +175,7 @@
 			"<vk-data-input-remote-select",
 			"\tv-model=\"form1.user_id\"",
 			"\tplaceholder=\"请输入用户名\"",
-			"\taction=\"admin/select/kh/user\"",
+			"\taction=\"admin/system/user/kh/select\"",
 			"\twidth=\"300px\"",
 			"></vk-data-input-remote-select>"
 		],

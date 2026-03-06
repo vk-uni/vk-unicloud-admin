@@ -56,7 +56,7 @@
 						columns:[
 							{ key: "text", title:"text类型字段", type:"text" },
 							{ key: "user_id", title:"用户选择器", type:"remote-select", placeholder:"请输入用户账号",
-								action:"admin/select/kh/user"
+								action:"admin/system/user/kh/select"
 							},
 
 							{ key: "money", title:"money类型字段", type:"money" },

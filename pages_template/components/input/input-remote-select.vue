@@ -13,7 +13,7 @@
 				<vk-data-input-remote-select
 					v-model="form1.user_id"
 					placeholder="请输入用户名"
-					action="admin/select/kh/user"
+					action="admin/system/user/kh/select"
 					width="300px"
 				></vk-data-input-remote-select>
 			</view>
