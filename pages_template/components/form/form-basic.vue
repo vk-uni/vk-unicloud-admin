@@ -54,7 +54,7 @@
 						columns:[
 							{
 							  key: "role", title: "通过表格选择(单选)", type: "table-select", placeholder:"请选择",
-							  action:"template/db_api/sys/getList",
+							  action:"template/sys.table.getList",
 							  multiple:true,
 							  columns:[
 							    { key:"_id", title:"id", type:"text", width:260, idKey:true },

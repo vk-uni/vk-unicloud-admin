@@ -48,7 +48,7 @@
 				// 表格相关开始 -----------------------------------------------------------
 				table1:{
 					// 表格数据请求地址
-					action:"template/db_api/sys/getList",
+					action:"template/sys.table.getList",
 					// 表格字段显示规则
 					columns:[
 						{ key:"_id", title:"id", type:"text", width:220 },

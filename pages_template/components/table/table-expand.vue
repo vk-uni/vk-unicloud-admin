@@ -97,7 +97,7 @@
 				// 表格相关开始 -----------------------------------------------------------
 				table1:{
 					// 表格数据请求地址
-					action:"template/db_api/sys/getList",
+					action:"template/sys.table.getList",
 					// 表格字段显示规则
 					columns:[
 						{ key:"_id", title:"id", type:"text", width:220, show:["expand","detail"] },
@@ -247,14 +247,14 @@
 			// 显示添加页面
 			addBtn(){
 				that.resetForm();
-				that.form1.props.action = 'template/db_api/sys/add';
+				that.form1.props.action = 'template/sys.table.save';
 				that.form1.props.formType = 'add';
 				that.form1.props.title = '添加';
 				that.form1.props.show = true;
 			},
 			// 显示修改页面
 			updateBtn({ item }){
-				that.form1.props.action = 'template/db_api/sys/update';
+				that.form1.props.action = 'template/sys.table.save';
 				that.form1.props.formType = 'update';
 				that.form1.props.title = '编辑';
 				that.form1.props.show = true;
@@ -263,7 +263,7 @@
 			// 删除按钮
 			deleteBtn({ item, deleteFn }){
 				deleteFn({
-					action: "template/db_api/sys/delete",
+					action: "template/sys.table.delete",
 					data:{
 						_id: item._id
 					},
