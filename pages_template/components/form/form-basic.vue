@@ -49,7 +49,7 @@
 					// 表单属性
 					props: {
 						// 表单请求地址
-						action:"template/test/sys/test",
+						action:"template/pub.db.test",
 						// 表单字段显示规则
 						columns:[
 							{

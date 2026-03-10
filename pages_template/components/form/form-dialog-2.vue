@@ -69,7 +69,7 @@
 					// 表单属性
 					props: {
 						// 表单请求地址
-						action:"template/test/sys/test",
+						action:"template/pub.db.test",
 						// 表单字段显示规则
 						columns:[
 							{ key: "text", title:"text类型字段", type:"text", show:["add"] },
@@ -150,12 +150,12 @@
 					form1.props.title = '添加表单';
 					form1.props.submitText = '添加';
 					// 此处添加的action和修改的action可以不一致
-					form1.props.action = "template/test/sys/test";
+					form1.props.action = "template/pub.db.test";
 				}else{
 					form1.props.title = '修改表单';
 					form1.props.submitText = '修改';
 					// 此处添加的action和修改的action可以不一致
-					form1.props.action = "template/test/sys/test";
+					form1.props.action = "template/pub.db.test";
 					// 如果是修改 可以在此赋值
 					form1.data = {
 						checkbox: [1],
