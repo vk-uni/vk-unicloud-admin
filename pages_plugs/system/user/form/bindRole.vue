@@ -36,123 +36,123 @@
 </template>
 
 <script>
-let that; // 当前页面对象
-let vk = uni.vk; // vk实例
-export default {
-	props: {
-		value: {
-			type: Object,
-			default: function() {
-				return {
-					show: false,
-					mode: "",
-					item: ""
-				};
-			}
-		}
-	},
-	data: function() {
-		// 组件创建时，进行数据初始化
-		return {
-			// 页面基础数据
-			page: {
-				title: "角色绑定",
-				submitText: "绑定",
-				cancelText: "关闭",
-				showCancel: true,
-				top: "7vh",
-				width:"820px",
-				loading: false
-			},
-			data:{
+  let vk = uni.vk; // vk实例
+  export default {
+    props: {
+      value: {
+        type: Object,
+        default: function() {
+          return {
+            show: false,
+            mode: "",
+            item: ""
+          };
+        }
+      }
+    },
+    data: function() {
+      // 组件创建时，进行数据初始化
+      return {
+        // 页面基础数据
+        page: {
+          title: "角色绑定",
+          submitText: "绑定",
+          cancelText: "关闭",
+          showCancel: true,
+          top: "7vh",
+          width: "820px",
+          loading: false
+        },
+        data: {
 
-			},
-			form1: {
-				// 表单请求数据，此处可以设置默认值
-				data: {
-					user_id: "",
-					roleList: [],
-					reset: true
-				},
-				// 表单属性
-				props: {
-					// 表单请求地址
-					action: "admin/system/user/sys/bindRole",
-					// 表单字段显示规则
-					columns: [
-						{ key:"user_id", title:"用户", type:"text" },
-						{
-							key: "roleList", title: "角色列表", type: "table-select", placeholder:"选择角色",
-							action:"admin/system/role/sys/getList",
-							columns:[
-								{ key:"role_name", title:"角色昵称", type:"text", nameKey:true },
-								{ key:"role_id", title:"角色标识", type:"text", idKey:true },
-								{ key:"comment", title:"备注", type:"text" },
-							],
-							formData:{
-								enable:true
-							},
-							queryColumns:[
-								{ key: "role_name", title: "角色昵称", type: "text", width: 150, mode: "%%" },
-								{ key: "role_id", title: "角色标识", type: "text", width: 150, mode: "%%" },
-								{ key: "enable", type: "text", mode: "=", hidden:true }
-							],
-							multiple:true,
-							pageSize:10, // 只有5和10可以选
-						},
-					],
-					// 表单验证规则
-					rules: {
-						user_id: [
-							{ "required": true, "message": "user_id不能为空", "trigger": "change" }
-						]
-					},
-					// label宽度
-					labelWidth:"100px",
-					// label对其方式
-					labelPosition:"left",
-				}
-			}
-		};
-	},
-	mounted() {
-		that = this;
-		that.init();
-	},
-	methods: {
-		// 初始化
-		init() {
-			let { value } = that;
-			that.$emit("input", value);
-		},
-		// 监听 - 页面打开
-		onOpen() {
-			that = this;
-			let { value } = that;
-			let { role = [], _id } = value.item;
-			that.data = value.item;
-			that.form1.props.show = true;
-			that.form1.data.user_id = _id;
-			that.form1.data.roleList = role;
-		},
-		// 监听 - 页面关闭
-		onClose() {
-			that.$refs.form1.resetForm(); // 关闭时，重置表单
-		},
-		// 表单提交成功后
-		onFormSuccess() {
-			that.$set(that.value.item, "role", that.form1.data.roleList);
-			that.value.show = false; // 关闭页面
-			that.$emit("success");
-		}
-	},
-	// 监听属性
-	watch: {
+        },
+        form1: {
+          // 表单请求数据，此处可以设置默认值
+          data: {
+            user_id: "",
+            roleList: [],
+            reset: true
+          },
+          // 表单属性
+          props: {
+            // 表单请求地址
+            action: "admin/system/user/sys/bindRole",
+            // 表单字段显示规则
+            columns: [
+              { key: "user_id", title: "用户", type: "text" },
+              {
+                key: "roleList",
+                title: "角色列表",
+                type: "table-select",
+                placeholder: "选择角色",
+                action: "admin/system/role/sys/getList",
+                columns: [
+                  { key: "role_name", title: "角色昵称", type: "text", nameKey: true },
+                  { key: "role_id", title: "角色标识", type: "text", idKey: true },
+                  { key: "comment", title: "备注", type: "text" },
+                ],
+                formData: {
+                  enable: true
+                },
+                queryColumns: [
+                  { key: "role_name", title: "角色昵称", type: "text", width: 150, mode: "%%" },
+                  { key: "role_id", title: "角色标识", type: "text", width: 150, mode: "%%" },
+                  { key: "enable", type: "text", mode: "=", hidden: true }
+                ],
+                multiple: true,
+                pageSize: 10, // 只有5和10可以选
+              },
+            ],
+            // 表单验证规则
+            rules: {
+              user_id: [
+                { "required": true, "message": "user_id不能为空", "trigger": "change" }
+              ]
+            },
+            // label宽度
+            labelWidth: "100px",
+            // label对其方式
+            labelPosition: "left",
+          }
+        }
+      };
+    },
+    mounted() {
+      this.init();
+    },
+    methods: {
+      // 初始化
+      init() {
+        let { value } = this;
+        this.$emit("input", value);
+      },
+      // 监听 - 页面打开
+      onOpen() {
+        let { value } = this;
+        let { role = [], _id } = value.item;
+        this.data = value.item;
+        this.form1.props.show = true;
+        this.form1.data.user_id = _id;
+        this.form1.data.roleList = role;
+      },
+      // 监听 - 页面关闭
+      onClose() {
+        this.$refs.form1.resetForm(); // 关闭时，重置表单
+      },
+      // 表单提交成功后
+      onFormSuccess() {
+        this.$set(this.value.item, "role", this.form1.data.roleList);
+        this.value.show = false; // 关闭页面
+        this.$emit("success");
+      }
+    },
+    // 监听属性
+    watch: {
 
-	},
-	// 计算属性
-	computed: {}
-};
+    },
+    // 计算属性
+    computed: {}
+  };
 </script>
 
 <style lang="scss" scoped>
