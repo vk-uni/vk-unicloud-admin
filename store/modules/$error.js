@@ -8,14 +8,12 @@ export default {
    * vuex的基本数据，用来存储变量
    */
   state: {
-    logs: []
+    logs: [],
   },
   /**
    * 从基本数据(state)派生的数据，相当于state的计算属性
    */
-  getters: {
-
-  },
+  getters: {},
   /**
    * 提交更新数据的方法，必须是同步的(如果需要异步使用action)。
    * 每个 mutation 都有一个字符串的 事件类型 (type) 和 一个 回调函数 (handler)。
@@ -23,11 +21,11 @@ export default {
    */
   mutations: {
     add: (state, log) => {
-      state.logs.unshift(log)
+      state.logs.unshift(log);
     },
     clear: (state) => {
       state.logs.splice(0);
-    }
+    },
   },
   /**
    * 和mutation的功能大致相同，不同之处在于 ==》
@@ -49,6 +47,6 @@ export default {
     // vk.vuex.dispatch('$error/clear');
     clear({ commit }) {
       commit('clear');
-    }
-  }
-}
+    },
+  },
+};

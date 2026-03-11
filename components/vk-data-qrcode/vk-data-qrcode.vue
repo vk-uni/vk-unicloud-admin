@@ -1,106 +1,106 @@
 <template xlang="wxml" minapp="mpvue">
   <view class="vk-data-qrcode" v-if="canvasId && text !== '' && !loading">
     <!-- #ifndef MP-ALIPAY -->
-    <canvas class="vk-data-qrcode-canvas" :canvas-id="canvasId" :style="{width:cpSize+'px',height:cpSize+'px'}" />
+    <canvas class="vk-data-qrcode-canvas" :canvas-id="canvasId" :style="{ width: cpSize + 'px', height: cpSize + 'px' }" />
     <!-- #endif -->
     <!-- #ifdef MP-ALIPAY -->
     <canvas :id="canvasId" :width="cpSize" :height="cpSize" class="vk-data-qrcode-canvas" />
     <!-- #endif -->
-    <image class="image" v-show="show" :src="result" :style="{width:cpSize+'px',height:cpSize+'px'}" v-if="result"/>
-    <view class="loading-text" :style="'width: '+size+unit+';height: '+size+unit+';'" v-else>
+    <image class="image" v-show="show" :src="result" :style="{ width: cpSize + 'px', height: cpSize + 'px' }" v-if="result" />
+    <view class="loading-text" :style="'width: ' + size + unit + ';height: ' + size + unit + ';'" v-else>
       {{ loadingText }}
     </view>
   </view>
-  <view class="loading-text" :style="'width: '+size+unit+';height: '+size+unit+';'" v-else>
+  <view class="loading-text" :style="'width: ' + size + unit + ';height: ' + size + unit + ';'" v-else>
     {{ loadingText }}
   </view>
 </template>
 
 <script>
-  import QRCode from "./qrcode.js"
+  import QRCode from './qrcode.js';
   let qrcode;
 
   export default {
-    name: "vk-data-qrcode",
+    name: 'vk-data-qrcode',
     props: {
       value: {
         type: String,
       },
       text: {
         type: String,
-        default: ''
+        default: '',
       },
       size: {
         type: Number,
-        default: 200
+        default: 200,
       },
       unit: {
         type: String,
-        default: 'rpx'
+        default: 'rpx',
       },
       show: {
         type: Boolean,
-        default: true
+        default: true,
       },
       background: {
         type: String,
-        default: '#ffffff'
+        default: '#ffffff',
       },
       foreground: {
         type: String,
-        default: '#000000'
+        default: '#000000',
       },
       pdground: {
         type: String,
-        default: '#000000'
+        default: '#000000',
       },
       image: {
         type: String,
-        default: ''
+        default: '',
       },
       imageSize: {
         type: Number,
-        default: 40
+        default: 40,
       },
       lv: {
         type: Number,
-        default: 3
+        default: 3,
       },
       onval: {
         type: Boolean,
-        default: true
+        default: true,
       },
       loadMake: {
         type: Boolean,
-        default: true
+        default: true,
       },
       usingComponents: {
         type: Boolean,
-        default: true
+        default: true,
       },
       showLoading: {
         type: Boolean,
-        default: false
+        default: false,
       },
       loadingText: {
         type: String,
-        default: '二维码生成中'
+        default: '二维码生成中',
       },
       // 让组件强制进入loading状态
       loading: {
         type: Boolean,
-        default: false
+        default: false,
       },
     },
     data() {
       return {
         result: '',
-        canvasId: "",
-      }
+        canvasId: '',
+      };
     },
     methods: {
       _makeCode() {
-        let that = this
+        let that = this;
         if (!this._empty(this.text)) {
           qrcode = new QRCode({
             context: that, // 上下文环境
@@ -116,7 +116,8 @@
             correctLevel: that.lv, // 容错级别
             image: that.image, // 二维码图标
             imageSize: that.imageSize, // 二维码图标大小
-            cbResult: function(res) { // 生成二维码的回调
+            cbResult: function (res) {
+              // 生成二维码的回调
               that._result(res);
             },
           });
@@ -124,97 +125,97 @@
           uni.showToast({
             title: '二维码内容不能为空',
             icon: 'none',
-            duration: 2000
+            duration: 2000,
           });
         }
       },
       _clearCode() {
-        this._result('')
-        qrcode.clear()
+        this._result('');
+        qrcode.clear();
       },
       _saveCode() {
         let that = this;
-        if (this.result != "") {
+        if (this.result != '') {
           uni.saveImageToPhotosAlbum({
             filePath: that.result,
-            success: function() {
+            success: function () {
               uni.showToast({
                 title: '二维码保存成功',
                 icon: 'success',
-                duration: 2000
+                duration: 2000,
               });
-            }
+            },
           });
         }
       },
       _result(res) {
         this.result = res;
         this.$emit('result', res);
-        this.$emit('input', res)
+        this.$emit('input', res);
       },
       _empty(v) {
         let tp = typeof v,
           rt = false;
-        if (tp == "number" && String(v) == "") {
-          rt = true
-        } else if (tp == "undefined") {
-          rt = true
-        } else if (tp == "object") {
-          if (JSON.stringify(v) == "{}" || JSON.stringify(v) == "[]" || v == null) rt = true
-        } else if (tp == "string") {
-          if (v == "" || v == "undefined" || v == "null" || v == "{}" || v == "[]") rt = true
-        } else if (tp == "function") {
-          rt = false
+        if (tp == 'number' && String(v) == '') {
+          rt = true;
+        } else if (tp == 'undefined') {
+          rt = true;
+        } else if (tp == 'object') {
+          if (JSON.stringify(v) == '{}' || JSON.stringify(v) == '[]' || v == null) rt = true;
+        } else if (tp == 'string') {
+          if (v == '' || v == 'undefined' || v == 'null' || v == '{}' || v == '[]') rt = true;
+        } else if (tp == 'function') {
+          rt = false;
         }
-        return rt
+        return rt;
       },
       getBase64() {
         return this.result;
-      }
+      },
     },
     watch: {
-      size: function(n, o) {
+      size: function (n, o) {
         if (n != o && !this._empty(n)) {
-          this.cSize = n
+          this.cSize = n;
           if (!this._empty(this.text)) {
             setTimeout(() => {
-              this._makeCode()
+              this._makeCode();
             }, 100);
           }
         }
       },
-      text: function(n, o) {
+      text: function (n, o) {
         let that = this;
         if (that.onval) {
           if (n != o && !that._empty(n)) {
             if (that.textTimer) clearTimeout(that.textTimer);
             that.textTimer = setTimeout(() => {
-              that._makeCode()
+              that._makeCode();
             }, 300);
           }
         }
-      }
+      },
     },
     computed: {
       cpSize() {
-        if (this.unit == "rpx") {
-          return uni.upx2px(this.size)
+        if (this.unit == 'rpx') {
+          return uni.upx2px(this.size);
         } else {
-          return this.size
+          return this.size;
         }
-      }
+      },
     },
-    mounted: function() {
-      this.canvasId = "vk-data-qrcode-canvas-" + Math.floor(Math.random() * 1000000);
+    mounted: function () {
+      this.canvasId = 'vk-data-qrcode-canvas-' + Math.floor(Math.random() * 1000000);
       if (this.loadMake) {
         if (!this._empty(this.text)) {
           setTimeout(() => {
-            this._makeCode()
+            this._makeCode();
           }, 100);
         }
       }
     },
-  }
+  };
 </script>
 <style lang="scss" scoped>
   .vk-data-qrcode {

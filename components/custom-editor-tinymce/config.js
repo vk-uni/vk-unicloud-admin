@@ -27,33 +27,33 @@ const config = {
     'table',
     'visualblocks',
     'visualchars',
-    'wordcount'
+    'wordcount',
   ],
   // 工具栏
   toolbar: [
     'bold italic underline strikethrough alignleft aligncenter alignright outdent indent blockquote undo redo removeformat subscript superscript',
-    'hr bullist numlist image images media link table insertdatetime forecolor backcolor codesample code preview fullscreen'
+    'hr bullist numlist image images media link table insertdatetime forecolor backcolor codesample code preview fullscreen',
   ],
   // 菜单栏
-  menubar: "file edit insert view format table tools",
-  body_class: "panel-body",
+  menubar: 'file edit insert view format table tools',
+  body_class: 'panel-body',
   object_resizing: false,
   end_container_on_empty_block: true,
-  powerpaste_word_import: "clean",
+  powerpaste_word_import: 'clean',
   code_dialog_height: 450,
   code_dialog_width: 1000,
-  advlist_bullet_styles: "square",
-  advlist_number_styles: "default",
-  default_link_target: "_blank",
-  font_size_formats: "12px 13px 14px 15px 16px 18px 20px 24px 36px 48px",
-  line_height_formats: "1 1.2 1.5 1.6 1.8 2 2.4",
+  advlist_bullet_styles: 'square',
+  advlist_number_styles: 'default',
+  default_link_target: '_blank',
+  font_size_formats: '12px 13px 14px 15px 16px 18px 20px 24px 36px 48px',
+  line_height_formats: '1 1.2 1.5 1.6 1.8 2 2.4',
   link_title: false,
   branding: false,
   nonbreaking_force_tab: true, // inserting nonbreaking space &nbsp; need Nonbreaking Space Plugin
   image_advtab: false,
   insertdatetime_element: false,
-  insertdatetime_formats: ["%H:%M:%S", "%H时%M分%S秒", "%Y-%m-%d", "%Y年%m月%d日", "%Y-%m-%d %H:%M:%S", "%Y年%m月%d日 %H时%M分%S秒"],
-  file_picker_types: "file image media",
+  insertdatetime_formats: ['%H:%M:%S', '%H时%M分%S秒', '%Y-%m-%d', '%Y年%m月%d日', '%Y-%m-%d %H:%M:%S', '%Y年%m月%d日 %H时%M分%S秒'],
+  file_picker_types: 'file image media',
   // autosave_ask_before_unload: false, // 当关闭或跳转URL时，弹出提示框提醒用户仍未保存变更内容。默认开启提示。
   // autosave_interval: "30s", // 自动存稿的世界间隔 只支持秒为单位
   // autosave_prefix: "tinymce-autosave-{path}{query}-{id}-",
@@ -74,12 +74,12 @@ const config = {
     { text: 'Ruby', value: 'ruby' },
     { text: 'C', value: 'c' },
     { text: 'C#', value: 'csharp' },
-    { text: 'C++', value: 'cpp' }
+    { text: 'C++', value: 'cpp' },
   ],
   codesample_global_prismjs: true,
   mobile: {
     menubar: true,
-    toolbar_mode: "floating"
+    toolbar_mode: 'floating',
   },
 };
-export default config
+export default config;

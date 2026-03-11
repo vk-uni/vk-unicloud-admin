@@ -1,12 +1,5 @@
 <template>
-  <vk-data-dialog
-    v-model="value.show"
-    :title="page.title"
-    :top="page.top"
-    :width="page.width"
-    :close-on-click-modal="false"
-    mode="form"
-  >
+  <vk-data-dialog v-model="value.show" :title="page.title" :top="page.top" :width="page.width" :close-on-click-modal="false" mode="form">
     <!-- 页面主体内容开始 -->
     <div class="body">
       <!-- URL输入区域 -->
@@ -22,13 +15,7 @@
             @input="onUrlInput"
             clearable
           >
-            <el-button
-              slot="append"
-              icon="el-icon-download"
-              :loading="isLoading"
-              :disabled="!form1.data.url.trim() || isLoading"
-              @click="fetchRemoteFile"
-            >
+            <el-button slot="append" icon="el-icon-download" :loading="isLoading" :disabled="!form1.data.url.trim() || isLoading" @click="fetchRemoteFile">
               {{ isLoading ? '抓取中...' : '抓取' }}
             </el-button>
           </el-input>
@@ -45,12 +32,7 @@
         <!-- 文件预览 -->
         <div class="preview-area">
           <div class="preview-container" v-if="fileInfo.type === 'image'">
-            <el-image
-              :src="fileInfo.url"
-              fit="contain"
-              class="preview-image"
-              :preview-src-list="[fileInfo.url]"
-            >
+            <el-image :src="fileInfo.url" fit="contain" class="preview-image" :preview-src-list="[fileInfo.url]">
               <div slot="error" class="image-slot">
                 <i class="el-icon-picture-outline"></i>
                 <div>图片加载失败</div>
@@ -58,17 +40,8 @@
             </el-image>
           </div>
           <div class="preview-container" v-else-if="fileInfo.type === 'video'">
-            <iframe
-              v-if="['html', 'htm'].indexOf(getFileFormatFromUrl(fileInfo.url)) > -1"
-              :src="fileInfo.url"
-              class="preview-iframe"
-            ></iframe>
-            <video
-              v-else
-              :src="fileInfo.url"
-              controls
-              class="preview-video"
-            ></video>
+            <iframe v-if="['html', 'htm'].indexOf(getFileFormatFromUrl(fileInfo.url)) > -1" :src="fileInfo.url" class="preview-iframe"></iframe>
+            <video v-else :src="fileInfo.url" controls class="preview-video"></video>
           </div>
           <div class="preview-container" v-else>
             <div class="preview-other">
@@ -121,80 +94,79 @@
     props: {
       value: {
         type: Object,
-        default: function() {
+        default: function () {
           return {
             show: false,
-            mode: "",
-            item: {}
+            mode: '',
+            item: {},
           };
-        }
-      }
+        },
+      },
     },
-    data: function() {
+    data: function () {
       return {
         page: {
-          title: "上传远程文件",
-          submitText: "确定上传",
-          cancelText: "取消",
+          title: '上传远程文件',
+          submitText: '确定上传',
+          cancelText: '取消',
           showCancel: true,
-          top: "5vh",
-          width: "800px"
+          top: '5vh',
+          width: '800px',
         },
         isLoading: false,
         fileInfo: null, // 文件信息
         autoFetchTimer: null, // 自动抓取定时器
         form1: {
           data: {
-            type: "",
-            url: "",
-            name: "",
-            description: "",
+            type: '',
+            url: '',
+            name: '',
+            description: '',
             clone_image: false,
-            category_id: "",
-            category_name: "",
+            category_id: '',
+            category_name: '',
             width: 0,
-            height: 0
+            height: 0,
           },
           props: {
-            action: "admin/system_uni/uni-id-files/files/sys/addRemote",
-            columns: [{
-                key: "url",
-                title: "文件地址",
-                type: "text",
+            action: 'admin/system_uni/uni-id-files/files/sys/addRemote',
+            columns: [
+              {
+                key: 'url',
+                title: '文件地址',
+                type: 'text',
                 disabled: true,
-                placeholder: "远程文件地址"
+                placeholder: '远程文件地址',
               },
               {
-                key: "name",
-                title: "文件名",
-                type: "text",
-                placeholder: "请输入文件名"
+                key: 'name',
+                title: '文件名',
+                type: 'text',
+                placeholder: '请输入文件名',
               },
               {
-                key: "description",
-                title: "描述",
-                type: "text",
-                placeholder: "请输入文件描述（可选）"
+                key: 'description',
+                title: '描述',
+                type: 'text',
+                placeholder: '请输入文件描述（可选）',
               },
               {
-                key: "clone_image",
-                title: "克隆图片",
-                type: "switch",
-                show: false // 默认隐藏，根据文件类型动态显示
-              }
+                key: 'clone_image',
+                title: '克隆图片',
+                type: 'switch',
+                show: false, // 默认隐藏，根据文件类型动态显示
+              },
             ],
             rules: {
               name: [
                 { required: true, message: '文件名不能为空', trigger: 'change' },
-                { max: 50, message: '文件名最多50字', trigger: 'change' }
+                { max: 50, message: '文件名最多50字', trigger: 'change' },
               ],
-              category_id: [
-                { required: true, message: '请选择分类', trigger: 'change' }
-              ]
+              category_id: [{ required: true, message: '请选择分类', trigger: 'change' }],
             },
-            labelWidth: "80px"
-          }
-        }
+            labelWidth: '80px',
+          },
+        },
       };
     },
     mounted() {
@@ -204,7 +176,7 @@
       // 初始化
       init() {
         let { value } = this;
-        this.$emit("input", value);
+        this.$emit('input', value);
       },
 
       // URL输入处理
@@ -216,7 +188,8 @@
           this.autoFetchTimer = setTimeout(() => {
             if (!this.isLoading) {
               // 如果URL发生变化，清除之前的文件信息并重新抓取
-              if (this.fileInfo && this.fileInfo.url !== value.trim()) {}
+              if (this.fileInfo && this.fileInfo.url !== value.trim()) {
+              }
               this.fetchRemoteFile();
             }
           }, 300);
@@ -285,7 +258,7 @@
             duration: 0, // 前端无法直接获取视频时长
             width: null,
             height: null,
-            format: this.getFileFormatFromUrl(url)
+            format: this.getFileFormatFromUrl(url),
           };
 
           // 如果是图片，尝试获取尺寸
@@ -351,13 +324,13 @@
       getImageDimensions(url) {
         return new Promise((resolve, reject) => {
           let img = new Image();
-          img.onload = function() {
+          img.onload = function () {
             resolve({
               width: img.naturalWidth,
-              height: img.naturalHeight
+              height: img.naturalHeight,
             });
           };
-          img.onerror = function() {
+          img.onerror = function () {
             reject(new Error('图片加载失败'));
           };
           img.src = url;
@@ -381,7 +354,7 @@
       updateFormColumns() {
         if (this.fileInfo) {
           // 根据文件类型显示/隐藏克隆图片选项
-          let cloneColumn = this.form1.props.columns.find(col => col.key === 'clone_image');
+          let cloneColumn = this.form1.props.columns.find((col) => col.key === 'clone_image');
           if (cloneColumn) {
             cloneColumn.show = this.fileInfo.type === 'image';
           }
@@ -416,12 +389,12 @@
       // 获取文件类型文本
       getFileTypeText(type) {
         const typeMap = {
-          'image': '图片',
-          'video': '视频',
-          'audio': '音频',
-          'document': '文档',
-          'archive': '压缩包',
-          'other': '其他'
+          image: '图片',
+          video: '视频',
+          audio: '音频',
+          document: '文档',
+          archive: '压缩包',
+          other: '其他',
         };
         return typeMap[type] || '未知';
       },
@@ -491,12 +464,12 @@
       // 重置表单
       resetForm() {
         this.form1.data = {
-          url: "",
-          name: "",
-          description: "",
+          url: '',
+          name: '',
+          description: '',
           clone_image: false,
-          category_id: "",
-          category_name: ""
+          category_id: '',
+          category_name: '',
         };
         this.fileInfo = null;
         this.isLoading = false;
@@ -508,21 +481,21 @@
       // 监听 - 提交成功后
       onFormSuccess() {
         this.value.show = false;
-        this.$emit("success");
-      }
+        this.$emit('success');
+      },
     },
     watch: {
-      "value.show": {
+      'value.show': {
         handler(newValue, oldValue) {
           if (newValue) {
             this.onOpen();
           } else {
             this.onClose();
           }
-        }
-      }
+        },
+      },
     },
-    computed: {}
+    computed: {},
   };
 </script>
 

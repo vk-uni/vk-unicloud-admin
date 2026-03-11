@@ -3,11 +3,7 @@
     <!-- 页面内容开始 -->
 
     <!-- 表格搜索组件开始 -->
-    <vk-data-table-query
-      v-model="queryForm1.formData"
-      :columns="queryForm1.columns"
-      @search="search"
-    ></vk-data-table-query>
+    <vk-data-table-query v-model="queryForm1.formData" :columns="queryForm1.columns" @search="search"></vk-data-table-query>
     <!-- 表格搜索组件结束 -->
     <!-- 表格组件开始 -->
     <vk-data-table
@@ -39,63 +35,64 @@
         // 表格相关开始 -----------------------------------------------------------
         table1: {
           // 表格数据请求地址
-          action: "admin/system_uni/uni-id-log/sys/getList",
+          action: 'admin/system_uni/uni-id-log/sys/getList',
           // 表格字段显示规则
-          columns: [{
-              key: "appList",
-              title: "登录的应用",
-              type: "html",
+          columns: [
+            {
+              key: 'appList',
+              title: '登录的应用',
+              type: 'html',
               width: 220,
-              formatter: function(val, row, column, index) {
-                if (typeof row.dcloud_appid === "undefined") return "全部应用";
-                if (row.dcloud_appid.length === 0) return "未绑定任何应用";
+              formatter: function (val, row, column, index) {
+                if (typeof row.dcloud_appid === 'undefined') return '全部应用';
+                if (row.dcloud_appid.length === 0) return '未绑定任何应用';
                 if (val.length === 0 && row.dcloud_appid.length > 0) return row.dcloud_appid;
-                let str = "";
+                let str = '';
                 val.map((item, index) => {
                   str += `、${item.name}`;
                 });
                 if (str) str = str.substring(1);
                 return str;
-              }
+              },
             },
-            { key: "userInfo", title: "用户信息", type: "userInfo", width: 150 },
-            { key: "ip", title: "ip地址", type: "text", width: 150 },
-            { key: "type", title: "日志类型", type: "text", width: 120 },
+            { key: 'userInfo', title: '用户信息', type: 'userInfo', width: 150 },
+            { key: 'ip', title: 'ip地址', type: 'text', width: 150 },
+            { key: 'type', title: '日志类型', type: 'text', width: 120 },
             {
-              key: "login_type",
-              title: "登录类型",
-              type: "select",
+              key: 'login_type',
+              title: '登录类型',
+              type: 'select',
               width: 120,
-              defaultValue: "未知",
+              defaultValue: '未知',
               data: [
-                { value: "password", label: "账号密码" },
-                { value: "email", label: "邮箱验证码" },
-                { value: "sms", label: "手机短信" },
-                { value: "token", label: "token" },
-                { value: "apple", label: "苹果登录" },
-                { value: "univerify", label: "本机号码一键登录" },
-                { value: "weixin", label: "微信登录" },
-                { value: "weixinPhoneNumber", label: "微信手机号一键登录" },
-                { value: "alipay", label: "支付宝登录" },
-                { value: "qq", label: "QQ登录" },
-                { value: "douyin", label: "抖音登录" },
-                { value: "douyinPhoneNumber", label: "抖音手机号一键登录" },
-                { value: "huawei", label: "华为登录" },
-                { value: "huaweiPhoneNumber", label: "华为手机号一键登录" }
-              ]
+                { value: 'password', label: '账号密码' },
+                { value: 'email', label: '邮箱验证码' },
+                { value: 'sms', label: '手机短信' },
+                { value: 'token', label: 'token' },
+                { value: 'apple', label: '苹果登录' },
+                { value: 'univerify', label: '本机号码一键登录' },
+                { value: 'weixin', label: '微信登录' },
+                { value: 'weixinPhoneNumber', label: '微信手机号一键登录' },
+                { value: 'alipay', label: '支付宝登录' },
+                { value: 'qq', label: 'QQ登录' },
+                { value: 'douyin', label: '抖音登录' },
+                { value: 'douyinPhoneNumber', label: '抖音手机号一键登录' },
+                { value: 'huawei', label: '华为登录' },
+                { value: 'huaweiPhoneNumber', label: '华为手机号一键登录' },
+              ],
             },
-            { key: "os", title: "操作系统", type: "text", width: 120 },
-            { key: "platform", title: "平台信息", type: "text", width: 120 },
-            { key: "_add_time", title: "添加时间", type: "time", width: 160 },
-            { key: "_add_time", title: "距离现在", type: "dateDiff", width: 120 },
-            { key: "device_id", title: "设备唯一标识", type: "text", width: 200 },
-            { key: "ua", title: "userAgent", type: "text", width: 1280, align: "left" },
-            { key: "user_id", title: "用户ID", type: "text", width: 220 },
+            { key: 'os', title: '操作系统', type: 'text', width: 120 },
+            { key: 'platform', title: '平台信息', type: 'text', width: 120 },
+            { key: '_add_time', title: '添加时间', type: 'time', width: 160 },
+            { key: '_add_time', title: '距离现在', type: 'dateDiff', width: 120 },
+            { key: 'device_id', title: '设备唯一标识', type: 'text', width: 200 },
+            { key: 'ua', title: 'userAgent', type: 'text', width: 1280, align: 'left' },
+            { key: 'user_id', title: '用户ID', type: 'text', width: 220 },
           ],
           // 多选框选中的值
           multipleSelection: [],
           // 当前高亮的记录
-          selectItem: ""
+          selectItem: '',
         },
         // 表格相关结束 -----------------------------------------------------------
         // 表单相关开始 -----------------------------------------------------------
@@ -103,23 +100,24 @@
         queryForm1: {
           // 查询表单数据源，可在此设置默认值
           formData: {
-            dcloud_appid: ""
+            dcloud_appid: '',
           },
           // 查询表单的字段规则 fieldName:指定数据库字段名,不填默认等于key
-          columns: [{
-              key: "dcloud_appid",
-              title: "所属应用",
-              type: "select",
+          columns: [
+            {
+              key: 'dcloud_appid',
+              title: '所属应用',
+              type: 'select',
               width: 160,
-              mode: "custom",
+              mode: 'custom',
               data: [],
-              props: { value: "appid", label: "name" }
+              props: { value: 'appid', label: 'name' },
             },
-            { key: "user_id", title: "用户ID", type: "text", width: 140, mode: "=" },
-            { key: "ip", title: "ip地址", type: "text", width: 140, mode: "%%" },
-            { key: "device_id", title: "设备唯一标识", type: "text", width: 180, mode: "%%" },
-            { key: "_add_time", title: "添加时间", type: "datetimerange", width: 380, mode: "[]" }
-          ]
+            { key: 'user_id', title: '用户ID', type: 'text', width: 140, mode: '=' },
+            { key: 'ip', title: 'ip地址', type: 'text', width: 140, mode: '%%' },
+            { key: 'device_id', title: '设备唯一标识', type: 'text', width: 180, mode: '%%' },
+            { key: '_add_time', title: '添加时间', type: 'datetimerange', width: 380, mode: '[]' },
+          ],
         },
         // 表单相关结束 -----------------------------------------------------------
       };
@@ -152,25 +150,25 @@
             dcloudAppidData = data.rows;
             let dcloudAppidData2 = vk.pubfn.copyObject(data.rows);
             dcloudAppidData2.unshift({
-              appid: "___error___",
-              name: "不存在的应用"
+              appid: '___error___',
+              name: '不存在的应用',
             });
             dcloudAppidData2.unshift({
-              appid: "___empty-array___",
-              name: "未绑定应用"
+              appid: '___empty-array___',
+              name: '未绑定应用',
             });
             dcloudAppidData2.unshift({
-              appid: "___non-existent___",
-              name: "全部应用"
+              appid: '___non-existent___',
+              name: '全部应用',
             });
-            let index2 = vk.pubfn.getListIndex(this.queryForm1.columns, "key", "dcloud_appid");
+            let index2 = vk.pubfn.getListIndex(this.queryForm1.columns, 'key', 'dcloud_appid');
             this.queryForm1.columns[index2].data = dcloudAppidData2;
             let appids = [];
             dcloudAppidData.map((item, index) => {
               appids.push(item.appid);
             });
             this.queryForm1.formData.appids = appids;
-          }
+          },
         });
       },
       // 搜索
@@ -180,17 +178,11 @@
       // 刷新
       refresh() {
         this.$refs.table1.refresh();
-      }
+      },
     },
-    watch: {
-
-    },
+    watch: {},
     // 计算属性
-    computed: {
-
-    }
+    computed: {},
   };
 </script>
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

@@ -7,37 +7,37 @@
       <view class="tips">微信扫一扫上方小程序码查看抽奖小助手使用教程</view>
     </view>
     <template v-slot:footer>
-      <el-button :loading="page.loading" type="primary" size="medium" style="width: 80px;" @click="close">{{ page.submitText }}</el-button>
+      <el-button :loading="page.loading" type="primary" size="medium" style="width: 80px" @click="close">{{ page.submitText }}</el-button>
     </template>
   </vk-data-dialog>
 </template>
 
 <script>
   let vk = uni.vk; // vk实例
-  import { qrcodeHelp } from "../image.json"
+  import { qrcodeHelp } from '../image.json';
   export default {
     props: {
       value: {
         type: Object,
-        default: function() {
+        default: function () {
           return {
             show: false,
-            item: {}
+            item: {},
           };
-        }
-      }
+        },
+      },
     },
-    data: function() {
+    data: function () {
       // 组件创建时，进行数据初始化
       return {
         qrcode: qrcodeHelp,
         page: {
-          title: "抽奖小助手使用教程",
-          submitText: "关闭",
-          top: "7vh",
-          width: "600px",
-          loading: false
-        }
+          title: '抽奖小助手使用教程',
+          submitText: '关闭',
+          top: '7vh',
+          width: '600px',
+          loading: false,
+        },
       };
     },
     mounted() {
@@ -47,7 +47,7 @@
       // 初始化
       init() {
         let { value } = this;
-        this.$emit("input", value);
+        this.$emit('input', value);
       },
       // 监听 - 页面打开
       onOpen() {
@@ -56,20 +56,14 @@
         //this.form1 = vk.pubfn.copyObject(item);
       },
       // 监听 - 页面关闭
-      onClose() {
-
-      },
+      onClose() {},
       close() {
         this.value.show = false; // 关闭页面
-      }
+      },
     },
-    watch: {
-
-    },
+    watch: {},
     // 计算属性
-    computed: {
-
-    }
+    computed: {},
   };
 </script>
 

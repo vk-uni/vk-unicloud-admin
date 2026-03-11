@@ -10,7 +10,8 @@
       }
     }
   ],
-  "subPackages": [{
+  "subPackages": [
+    {
       "root": "pages_plugs",
       "pages": [
         { "path": "error/404", "style": { "navigationBarTitleText": "页面不存在" } },

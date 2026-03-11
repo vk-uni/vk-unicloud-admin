@@ -4,12 +4,7 @@
 
     <!-- 表格搜索组件开始 -->
 
-    <vk-data-table-query
-      v-model="queryForm1.formData"
-      :columns="queryForm1.columns"
-      @search="search"
-    >
-    </vk-data-table-query>
+    <vk-data-table-query v-model="queryForm1.formData" :columns="queryForm1.columns" @search="search"> </vk-data-table-query>
     <!-- 表格搜索组件结束 -->
 
     <!-- 表格组件开始 -->
@@ -18,7 +13,7 @@
       :action="table1.action"
       :columns="table1.columns"
       :query-form-param="queryForm1"
-      :right-btns="['detail_auto','more']"
+      :right-btns="['detail_auto', 'more']"
       :right-btns-more="table1.rightBtnsMore"
       :row-no="true"
       :pagination="true"
@@ -47,38 +42,39 @@
         // 表格相关开始 -----------------------------------------------------------
         table1: {
           // 表格数据请求地址
-          action: "admin/system_uni/ws-connection/sys/getList",
+          action: 'admin/system_uni/ws-connection/sys/getList',
           // 表格字段显示规则
           columns: [
-            { key: "appid", title: "DCloud appid", type: "text", width: 160 },
-            { key: "userInfo", title: "用户", type: "userInfo", width: 160, defaultValue: '-' },
-            { key: "device_id", title: "设备ID", type: "text", width: 180 },
-            { key: "url", title: "云对象URL", type: "text", width: 260 },
-            { key: "space_id", title: "空间ID", type: "text", width: 180 },
-            { key: "provider", title: "供应商", type: "text", width: 100 },
-            { key: "ip", title: "ip地址", type: "text", width: 120 },
-            { key: "_add_time", title: "连接时间", type: "time", width: 160 },
-            { key: "_add_time", title: "距离现在", type: "dateDiff", width: 100 },
-            { key: "_id", title: "连接ID（cid）", type: "text", width: 300 },
+            { key: 'appid', title: 'DCloud appid', type: 'text', width: 160 },
+            { key: 'userInfo', title: '用户', type: 'userInfo', width: 160, defaultValue: '-' },
+            { key: 'device_id', title: '设备ID', type: 'text', width: 180 },
+            { key: 'url', title: '云对象URL', type: 'text', width: 260 },
+            { key: 'space_id', title: '空间ID', type: 'text', width: 180 },
+            { key: 'provider', title: '供应商', type: 'text', width: 100 },
+            { key: 'ip', title: 'ip地址', type: 'text', width: 120 },
+            { key: '_add_time', title: '连接时间', type: 'time', width: 160 },
+            { key: '_add_time', title: '距离现在', type: 'dateDiff', width: 100 },
+            { key: '_id', title: '连接ID（cid）', type: 'text', width: 300 },
           ],
           // 多选框选中的值
           multipleSelection: [],
           // 当前高亮的记录
-          selectItem: "",
-          rightBtnsMore: [{
+          selectItem: '',
+          rightBtnsMore: [
+            {
               title: '强制断开连接',
               onClick: (item) => {
                 vk.callFunction({
                   url: 'admin/system_uni/ws-connection/sys/delete',
                   title: '请求中...',
                   data: {
-                    cid: item._id
+                    cid: item._id,
                   },
                   success: (data) => {
                     this.refresh();
-                  }
+                  },
                 });
-              }
+              },
             },
             {
               title: '强制该设备退出登录',
@@ -92,9 +88,9 @@
                   },
                   success: (data) => {
                     this.refresh();
-                  }
+                  },
                 });
-              }
+              },
             },
             {
               title: '强制该用户退出登录',
@@ -111,11 +107,11 @@
                   },
                   success: (data) => {
                     this.refresh();
-                  }
+                  },
                 });
-              }
-            }
-          ]
+              },
+            },
+          ],
         },
         // 表格相关结束 -----------------------------------------------------------
         // 表单相关开始 -----------------------------------------------------------
@@ -124,23 +120,24 @@
           // 查询表单数据源，可在此设置默认值
           formData: {},
           // 查询表单的字段规则 fieldName:指定数据库字段名,不填默认等于key
-          columns: [{
-              key: "appid",
-              title: "DCloud appid",
-              type: "select",
+          columns: [
+            {
+              key: 'appid',
+              title: 'DCloud appid',
+              type: 'select',
               filterable: true,
               clearable: true,
               width: 220,
-              data: []
+              data: [],
             },
-            { key: "_id", title: "连接ID", type: "text", width: 150, mode: "=" },
-            { key: "user_id", type: "text", title: "用户ID", width: 150, mode: "=" },
-            { key: "device_id", type: "text", title: "设备ID", width: 150, mode: "=" },
-            { key: "url", type: "text", title: "云对象URL", width: 150, mode: "=" },
-            { key: "space_id", title: "空间ID", type: "text", width: 150 },
-            { key: "ip", title: "ip地址", type: "text", width: 150 },
-            { key: "_add_time", type: "datetimerange", title: "连接时间", width: 350, mode: "[]" }
-          ]
+            { key: '_id', title: '连接ID', type: 'text', width: 150, mode: '=' },
+            { key: 'user_id', type: 'text', title: '用户ID', width: 150, mode: '=' },
+            { key: 'device_id', type: 'text', title: '设备ID', width: 150, mode: '=' },
+            { key: 'url', type: 'text', title: '云对象URL', width: 150, mode: '=' },
+            { key: 'space_id', title: '空间ID', type: 'text', width: 150 },
+            { key: 'ip', title: 'ip地址', type: 'text', width: 150 },
+            { key: '_add_time', type: 'datetimerange', title: '连接时间', width: 350, mode: '[]' },
+          ],
         },
         // 表单相关结束 -----------------------------------------------------------
       };
@@ -161,23 +158,21 @@
     methods: {
       // 页面数据初始化函数
       init(options) {
-        originalForms["form1"] = vk.pubfn.copyObject(this.form1);
+        originalForms['form1'] = vk.pubfn.copyObject(this.form1);
 
         vk.callFunction({
           url: 'admin/system/app/sys/getList',
-          data: {
-
-          },
+          data: {},
           success: (data) => {
-            let index = vk.pubfn.getListIndex(this.queryForm1.columns, "key", "appid");
-            let list = data.rows.map(item => {
+            let index = vk.pubfn.getListIndex(this.queryForm1.columns, 'key', 'appid');
+            let list = data.rows.map((item) => {
               return {
                 label: `${item.appid}（${item.name}）`,
-                value: item.appid
+                value: item.appid,
               };
             });
             this.queryForm1.columns[index].data = list;
-          }
+          },
         });
       },
       // 页面跳转
@@ -211,22 +206,16 @@
       // 删除按钮
       deleteBtn({ item, deleteFn }) {
         deleteFn({
-          action: "admin/system_uni/ws-connection/sys/delete",
+          action: 'admin/system_uni/ws-connection/sys/delete',
           data: {
-            _id: item._id
-          }
+            _id: item._id,
+          },
         });
-      }
+      },
     },
-    watch: {
-
-    },
+    watch: {},
     // 计算属性
-    computed: {
-
-    }
+    computed: {},
   };
 </script>
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

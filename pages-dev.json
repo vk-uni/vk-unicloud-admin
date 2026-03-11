@@ -1,5 +1,6 @@
 {
-  "subPackages": [{
+  "subPackages": [
+    {
       "root": "pages_template/components",
       "pages": [
         { "path": "icons/vk-icons" },

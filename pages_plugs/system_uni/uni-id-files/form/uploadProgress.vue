@@ -11,46 +11,37 @@
     mode="form"
   >
     <!-- 页面主体内容开始 -->
-      <div class="body" v-if="total>1">
-        <div class="total-progress">
-          <span class="span">总进度：{{ completedCount + failedCount }} / {{ total }} (成功: {{ completedCount }}, 失败: {{ failedCount }})</span>
-          <el-progress :percentage="totalPercentage"></el-progress>
-        </div>
+    <div class="body" v-if="total > 1">
+      <div class="total-progress">
+        <span class="span">总进度：{{ completedCount + failedCount }} / {{ total }} (成功: {{ completedCount }}, 失败: {{ failedCount }})</span>
+        <el-progress :percentage="totalPercentage"></el-progress>
+      </div>
 
-        <div class="progress-slots">
-          <div
-            v-for="(slot, index) in progressSlots"
-            :key="index"
-            class="progress-slot"
-            :class="slot.status"
-          >
-            <div class="slot-header">
-              <span class="slot-title">{{ slot.fileName || `文件 ${index + 1}` }}</span>
-              <span class="slot-status">{{ getStatusText(slot.status) }}</span>
-            </div>
-            <el-progress
-              :percentage="slot.progress || 0"
-              :status="getProgressStatus(slot.status) || undefined"
-              :show-text="false"
-            ></el-progress>
-            <span class="slot-progress-text">{{ slot.progress || 0 }}%</span>
+      <div class="progress-slots">
+        <div v-for="(slot, index) in progressSlots" :key="index" class="progress-slot" :class="slot.status">
+          <div class="slot-header">
+            <span class="slot-title">{{ slot.fileName || `文件 ${index + 1}` }}</span>
+            <span class="slot-status">{{ getStatusText(slot.status) }}</span>
           </div>
+          <el-progress :percentage="slot.progress || 0" :status="getProgressStatus(slot.status) || undefined" :show-text="false"></el-progress>
+          <span class="slot-progress-text">{{ slot.progress || 0 }}%</span>
         </div>
+      </div>
 
-        <div class="status-text">
-          <span v-if="isUploading">正在并发上传中...</span>
+      <div class="status-text">
+        <span v-if="isUploading">正在并发上传中...</span>
+        <span v-else>上传完成</span>
+      </div>
+    </div>
+    <div class="body" v-else>
+      <div style="text-align: center">
+        <el-progress :percentage="currentPercentage" type="circle"></el-progress>
+        <div style="margin-top: 10px">
+          <span v-if="isUploading">正在上传...</span>
           <span v-else>上传完成</span>
         </div>
       </div>
-      <div class="body" v-else>
-        <div style="text-align: center;">
-          <el-progress :percentage="currentPercentage" type="circle"></el-progress>
-          <div style="margin-top: 10px;">
-            <span v-if="isUploading">正在上传...</span>
-            <span v-else>上传完成</span>
-          </div>
-        </div>
-      </div>
+    </div>
     <!-- 页面主体内容结束 -->
   </vk-data-dialog>
 </template>
@@ -61,25 +52,25 @@
     props: {
       value: {
         type: Object,
-        default: function() {
+        default: function () {
           return {
             show: false,
-            mode: "",
-            item: {}
+            mode: '',
+            item: {},
           };
-        }
-      }
+        },
+      },
     },
-    data: function() {
+    data: function () {
       // 组件创建时，进行数据初始化
       return {
         page: {
-          title: "上传进度",
-          submitText: "确定",
-          cancelText: "关闭",
+          title: '上传进度',
+          submitText: '确定',
+          cancelText: '关闭',
           showCancel: true,
-          top: "10vh",
-          width: "800px"
+          top: '10vh',
+          width: '800px',
         },
         total: 0,
         totalPercentage: 0, // 总进度
@@ -106,7 +97,7 @@
       // 初始化
       init() {
         let { value } = this;
-        this.$emit("input", value);
+        this.$emit('input', value);
         // 初始化20个进度条槽位
         this.initProgressSlots();
       },
@@ -119,7 +110,7 @@
           fileName: '',
           progress: 0,
           status: 'idle', // idle, uploading, completed, failed
-          fileId: null
+          fileId: null,
         }));
       },
       // 监听 - 页面打开
@@ -140,7 +131,7 @@
 
         // 初始化上传状态
         this.total = tempFilePaths.length;
-        this.page.top = this.total === 1 ? "30vh" : "10vh";
+        this.page.top = this.total === 1 ? '30vh' : '10vh';
         this.totalPercentage = 0;
         this.completedCount = 0;
         this.failedCount = 0;
@@ -158,7 +149,7 @@
           index,
           fileId: `file_${index}_${Date.now()}`,
           progress: 0,
-          fileName: tempFiles[index].name || `文件${index + 1}`
+          fileName: tempFiles[index].name || `文件${index + 1}`,
         }));
 
         // 启动并发上传
@@ -184,7 +175,7 @@
         this.queueMonitorTimer = setInterval(() => {
           // 如果还有待上传文件且有空闲槽位，启动新的上传
           if (this.uploadQueue.length > 0 && this.activeUploads.size < this.CONCURRENT_LIMIT) {
-            const idleSlots = this.progressSlots.filter(slot => slot.status === 'idle');
+            const idleSlots = this.progressSlots.filter((slot) => slot.status === 'idle');
             if (idleSlots.length > 0) {
               this.startSingleUpload(item);
             }
@@ -212,7 +203,7 @@
         const uploadId = fileInfo.fileId;
 
         // 找到空闲的进度条槽位
-        const availableSlot = this.progressSlots.find(slot => slot.status === 'idle');
+        const availableSlot = this.progressSlots.find((slot) => slot.status === 'idle');
         if (!availableSlot) {
           // 如果没有空闲槽位，将文件放回队列
           this.uploadQueue.unshift(fileInfo);
@@ -234,7 +225,7 @@
           fileName: fileInfo.fileName,
           progress: 0,
           status: 'uploading',
-          slotIndex: availableSlot.index
+          slotIndex: availableSlot.index,
         };
 
         // 更新当前上传的文件索引
@@ -325,10 +316,10 @@
       // 获取状态文本
       getStatusText(status) {
         const statusMap = {
-          'idle': '空闲',
-          'uploading': '上传中',
-          'completed': '完成',
-          'failed': '失败'
+          idle: '空闲',
+          uploading: '上传中',
+          completed: '完成',
+          failed: '失败',
         };
         return statusMap[status] || '未知';
       },
@@ -336,10 +327,10 @@
       // 获取进度条状态
       getProgressStatus(status) {
         const statusMap = {
-          'idle': null,
-          'uploading': null,
-          'completed': 'success',
-          'failed': 'exception'
+          idle: null,
+          uploading: null,
+          completed: 'success',
+          failed: 'exception',
         };
         return statusMap[status] || null;
       },
@@ -347,22 +338,22 @@
       // 监听 - 提交成功后
       onSuccess() {
         this.value.show = false;
-        this.$emit("success");
-      }
+        this.$emit('success');
+      },
     },
     watch: {
-      "value.show": {
+      'value.show': {
         handler(newValue, oldValue) {
           if (newValue) {
             this.onOpen();
           } else {
             this.onClose();
           }
-        }
-      }
+        },
+      },
     },
     // 计算属性
-    computed: {}
+    computed: {},
   };
 </script>
 
@@ -383,7 +374,6 @@
       color: #333;
     }
   }
-
 
   .progress-slots {
     display: grid;

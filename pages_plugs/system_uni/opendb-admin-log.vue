@@ -3,11 +3,7 @@
     <!-- 页面内容开始 -->
 
     <!-- 表格搜索组件开始 -->
-    <vk-data-table-query
-      v-model="queryForm1.formData"
-      :columns="queryForm1.columns"
-      @search="search"
-    ></vk-data-table-query>
+    <vk-data-table-query v-model="queryForm1.formData" :columns="queryForm1.columns" @search="search"></vk-data-table-query>
     <!-- 表格搜索组件结束 -->
     <!-- 表格组件开始 -->
     <vk-data-table
@@ -38,24 +34,24 @@
         // 表格相关开始 -----------------------------------------------------------
         table1: {
           // 表格数据请求地址
-          action: "admin/system_uni/admin-log/sys/getList",
+          action: 'admin/system_uni/admin-log/sys/getList',
           // 表格字段显示规则
           columns: [
-            { key: "user_id", title: "操作者用户ID", type: "text", width: 120 },
-            { key: "user_name", title: "操作者用户昵称", type: "text", width: 120 },
-            { key: "title", title: "标题", type: "text", width: 140 },
-            { key: "url", title: "url", type: "text", width: 280 },
-            { key: "_add_time", title: "添加时间", type: "time", width: 140 },
-            { key: "_add_time", title: "距离现在", type: "dateDiff", width: 120 },
-            { key: "request_param", title: "请求参数", type: "json", width: 300 },
-            { key: "response", title: "返回参数", type: "json", width: 300 },
-            { key: "ip", title: "ip地址", type: "text", width: 140 },
-            { key: "request_id", title: "请求id", type: "text", width: 280 }
+            { key: 'user_id', title: '操作者用户ID', type: 'text', width: 120 },
+            { key: 'user_name', title: '操作者用户昵称', type: 'text', width: 120 },
+            { key: 'title', title: '标题', type: 'text', width: 140 },
+            { key: 'url', title: 'url', type: 'text', width: 280 },
+            { key: '_add_time', title: '添加时间', type: 'time', width: 140 },
+            { key: '_add_time', title: '距离现在', type: 'dateDiff', width: 120 },
+            { key: 'request_param', title: '请求参数', type: 'json', width: 300 },
+            { key: 'response', title: '返回参数', type: 'json', width: 300 },
+            { key: 'ip', title: 'ip地址', type: 'text', width: 140 },
+            { key: 'request_id', title: '请求id', type: 'text', width: 280 },
           ],
           // 多选框选中的值
           multipleSelection: [],
           // 当前高亮的记录
-          selectItem: ""
+          selectItem: '',
         },
         // 表格相关结束 -----------------------------------------------------------
         // 表单相关开始 -----------------------------------------------------------
@@ -65,12 +61,12 @@
           formData: {},
           // 查询表单的字段规则 fieldName:指定数据库字段名,不填默认等于key
           columns: [
-            { key: "user_id", title: "用户ID", type: "text", mode: "=" },
-            { key: "title", title: "标题", type: "text", mode: "%%" },
-            { key: "ip", title: "ip地址", type: "text", mode: "%%" },
-            { key: "_add_time", title: "添加时间", type: "datetimerange", width: 400, mode: "[]" }
-          ]
-        }
+            { key: 'user_id', title: '用户ID', type: 'text', mode: '=' },
+            { key: 'title', title: '标题', type: 'text', mode: '%%' },
+            { key: 'ip', title: 'ip地址', type: 'text', mode: '%%' },
+            { key: '_add_time', title: '添加时间', type: 'datetimerange', width: 400, mode: '[]' },
+          ],
+        },
         // 表单相关结束 -----------------------------------------------------------
       };
     },
@@ -97,17 +93,11 @@
       // 刷新
       refresh() {
         this.$refs.table1.refresh();
-      }
+      },
     },
-    watch: {
-
-    },
+    watch: {},
     // 计算属性
-    computed: {
-
-    }
+    computed: {},
   };
 </script>
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

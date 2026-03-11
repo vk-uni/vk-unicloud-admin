@@ -6,7 +6,7 @@
     <vk-data-table-query
       v-model="queryForm1.formData"
       :columns="queryForm1.columns"
-      :main-columns="['appid','title','type','stable_publish']"
+      :main-columns="['appid', 'title', 'type', 'stable_publish']"
       @search="search"
     ></vk-data-table-query>
     <!-- 表格搜索组件结束 -->
@@ -21,7 +21,6 @@
             <el-dropdown-item command="wgt">wgt资源包</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-
 
         <!-- 批量操作 -->
         <!-- <el-dropdown v-if="table1.multipleSelection" :split-button="false"	trigger="click" @command="batchBtn">
@@ -45,7 +44,7 @@
       :action="table1.action"
       :columns="table1.columns"
       :query-form-param="queryForm1"
-      :right-btns="['detail_auto','update','delete']"
+      :right-btns="['detail_auto', 'update', 'delete']"
       :selection="false"
       :row-no="true"
       :pagination="true"
@@ -65,113 +64,141 @@
 </template>
 
 <script>
-  let vk = uni.vk;									// vk实例
-  let originalForms = {};						// 表单初始化数据
+  let vk = uni.vk; // vk实例
+  let originalForms = {}; // 表单初始化数据
 
-  import addUpdate from './form/addUpdate.vue'
+  import addUpdate from './form/addUpdate.vue';
   export default {
-    components:{
+    components: {
       addUpdate,
     },
     data() {
       // 页面数据变量
       return {
-        appList:[],
+        appList: [],
         // 页面是否请求中或加载中
-        loading:false,
+        loading: false,
         // init请求返回的数据
-        data:{
-
-        },
+        data: {},
         // 表格相关开始 -----------------------------------------------------------
-        table1:{
+        table1: {
           // 表格数据请求地址
-          action:"admin/system/app-upgrade-center/sys/getList",
+          action: 'admin/system/app-upgrade-center/sys/getList',
           // 表格字段显示规则
-          columns:[
-            { key:"appid", title:"AppID", type:"text", width:140 },
-            { key:"title", title:"更新标题", type:"text", width:120 },
+          columns: [
+            { key: 'appid', title: 'AppID', type: 'text', width: 140 },
+            { key: 'title', title: '更新标题', type: 'text', width: 120 },
             {
-              key: "type", title: "安装包类型", type: "tag", width: 140, size: "small",
-              data:[
-                { value:"native_app", label:"原生App安装包", tagType:"primary", effect:"light" },
-                { value:"wgt", label:"Wgt资源包", tagType:"success", effect:"light" }
-              ]
-            },
-            {
-              key:"platform", title:"平台", type:"checkbox", width:100, align:"left",
-              itemWidth:80,
-              data:[
-                { value:"Android", label:"安卓" },
-                { value:"iOS", label:"苹果" }
+              key: 'type',
+              title: '安装包类型',
+              type: 'tag',
+              width: 140,
+              size: 'small',
+              data: [
+                { value: 'native_app', label: '原生App安装包', tagType: 'primary', effect: 'light' },
+                { value: 'wgt', label: 'Wgt资源包', tagType: 'success', effect: 'light' },
               ],
             },
-            { key:"store_list", title:"已上架应用市场", type:"text", width:120, align:"left",
-              formatter: (val=[], row, column, index) => {
-                let str = "";
+            {
+              key: 'platform',
+              title: '平台',
+              type: 'checkbox',
+              width: 100,
+              align: 'left',
+              itemWidth: 80,
+              data: [
+                { value: 'Android', label: '安卓' },
+                { value: 'iOS', label: '苹果' },
+              ],
+            },
+            {
+              key: 'store_list',
+              title: '已上架应用市场',
+              type: 'text',
+              width: 120,
+              align: 'left',
+              formatter: (val = [], row, column, index) => {
+                let str = '';
                 val.map((item, index) => {
                   str += item.name;
                   if (index !== val.length - 1) {
-                    str += "、";
+                    str += '、';
                   }
                 });
-                if (!str) str = "-";
+                if (!str) str = '-';
                 return str;
-              }
+              },
             },
-            { key:"version", title:"版本号", type:"text", width:100 },
+            { key: 'version', title: '版本号', type: 'text', width: 100 },
             {
-              key: "stable_publish", title: "安装包状态", type: "tag", width: 120, size: "small",
-              data:[
-                { value:true, label:"已上线", tagType:"success", effect:"light" },
-                { value:false, label:"已下线", tagType:"info", effect:"light" }
-              ]
+              key: 'stable_publish',
+              title: '安装包状态',
+              type: 'tag',
+              width: 120,
+              size: 'small',
+              data: [
+                { value: true, label: '已上线', tagType: 'success', effect: 'light' },
+                { value: false, label: '已下线', tagType: 'info', effect: 'light' },
+              ],
             },
-            { key:"create_date", title:"上传时间", type:"time", width:160, sortable:"custom"  },
-            { key:"create_date", title:"距离现在", type:"dateDiff", width:120 },
+            { key: 'create_date', title: '上传时间', type: 'time', width: 160, sortable: 'custom' },
+            { key: 'create_date', title: '距离现在', type: 'dateDiff', width: 120 },
           ],
           // 多选框选中的值
-          multipleSelection:[],
+          multipleSelection: [],
           // 当前高亮的记录
-          selectItem:""
+          selectItem: '',
         },
         // 表格相关结束 -----------------------------------------------------------
         // 表单相关开始 -----------------------------------------------------------
         // 查询表单请求数据
-        queryForm1:{
+        queryForm1: {
           // 查询表单数据源，可在此设置默认值
-          formData:{
-            appid:""
+          formData: {
+            appid: '',
           },
           // 查询表单的字段规则 fieldName:指定数据库字段名,不填默认等于key
-          columns:[
+          columns: [
             {
-              key:"appid", title:"所属应用", type:"select", placeholder:"请选择应用", width:140, mode:"=",
-              props:{ value:'appid', label:'name' },
-              data:()=>{
+              key: 'appid',
+              title: '所属应用',
+              type: 'select',
+              placeholder: '请选择应用',
+              width: 140,
+              mode: '=',
+              props: { value: 'appid', label: 'name' },
+              data: () => {
                 return this.appList;
-              }
+              },
             },
-            { key:"title", title:"标题", type:"text", width:140, mode:"%%" },
+            { key: 'title', title: '标题', type: 'text', width: 140, mode: '%%' },
             {
-              key: "type", title: "安装包类型", type: "select", width: 140, placeholder:"请选择类型",
-              data:[
-                { value:"native_app", label:"原生App安装包" },
-                { value:"wgt", label:"Wgt资源包" }
-              ]
+              key: 'type',
+              title: '安装包类型',
+              type: 'select',
+              width: 140,
+              placeholder: '请选择类型',
+              data: [
+                { value: 'native_app', label: '原生App安装包' },
+                { value: 'wgt', label: 'Wgt资源包' },
+              ],
             },
             {
-              key: "stable_publish", title: "安装包状态", type: "select", width: 140, placeholder:"请选择状态",
-              data:[
-                { value:true, label:"已上线" },
-                { value:false, label:"已下线" }
-              ]
+              key: 'stable_publish',
+              title: '安装包状态',
+              type: 'select',
+              width: 140,
+              placeholder: '请选择状态',
+              data: [
+                { value: true, label: '已上线' },
+                { value: false, label: '已下线' },
+              ],
             },
-            { key:"create_date", title:"上传时间", type:"datetimerange", width:360, mode:"[]" },
-          ]
+            { key: 'create_date', title: '上传时间', type: 'datetimerange', width: 360, mode: '[]' },
+          ],
         },
         // 其他弹窗表单
-        formDatas:{},
+        formDatas: {},
         // 表单相关结束 -----------------------------------------------------------
       };
     },
@@ -191,17 +218,15 @@
     methods: {
       // 页面数据初始化函数
       init(options) {
-        originalForms["form1"] = vk.pubfn.copyObject(this.form1);
+        originalForms['form1'] = vk.pubfn.copyObject(this.form1);
         vk.callFunction({
           url: 'admin/system/app/sys/getList',
-          loading:true,
+          loading: true,
           data: {
-            formData:{
-              enable_upgrade_center: true
+            formData: {
+              enable_upgrade_center: true,
             },
-            columns:[
-              { key:"enable_upgrade_center", type:"select", mode:"=" },
-            ]
+            columns: [{ key: 'enable_upgrade_center', type: 'select', mode: '=' }],
           },
           success: (data) => {
             this.appList = data.rows;
@@ -212,7 +237,7 @@
               this.queryForm1.formData.appid = data.rows[0].appid;
               this.search();
             }
-          }
+          },
         });
       },
       // 页面跳转
@@ -220,23 +245,23 @@
         vk.navigateTo(path);
       },
       // 表单重置
-      resetForm(){
+      resetForm() {
         vk.pubfn.resetForm(originalForms, this);
       },
       // 搜索
-      search(){
+      search() {
         this.$refs.table1.search();
       },
       // 刷新
-      refresh(){
+      refresh() {
         this.$refs.table1.refresh();
       },
       // 获取当前选中的行的数据
-      getCurrentRow(){
+      getCurrentRow() {
         return this.$refs.table1.getCurrentRow();
       },
       // 监听 - 行的选中高亮事件
-      currentChange(val){
+      currentChange(val) {
         this.table1.selectItem = val;
       },
       // 当选择项发生变化时会触发该事件
@@ -244,59 +269,59 @@
         this.table1.multipleSelection = list;
       },
       // 显示添加页面
-      addBtn(type){
+      addBtn(type) {
         let appid = this.queryForm1.formData.appid;
-        let appInfo = vk.pubfn.getListItem(this.appList, "appid", appid);
+        let appInfo = vk.pubfn.getListItem(this.appList, 'appid', appid);
         let item = {
           appid,
           type,
           name: appInfo.name,
-          store_list: appInfo.store_list
+          store_list: appInfo.store_list,
         };
-        vk.pubfn.openForm('addUpdate',{ mode:"add", item });
+        vk.pubfn.openForm('addUpdate', { mode: 'add', item });
       },
       // 显示修改页面
-      updateBtn({ item }){
-        vk.pubfn.openForm('addUpdate',{ mode:"update", item });
+      updateBtn({ item }) {
+        vk.pubfn.openForm('addUpdate', { mode: 'update', item });
       },
       // 删除按钮
-      deleteBtn({ item, deleteFn }){
+      deleteBtn({ item, deleteFn }) {
         if (item.stable_publish) {
           this.$message({
             showClose: true,
             message: '不可删除已上线的版本',
-            type: 'error'
+            type: 'error',
           });
           return false;
         }
         deleteFn({
-          action:"admin/system/app-upgrade-center/sys/delete",
-          data:{
-            _id: item._id
+          action: 'admin/system/app-upgrade-center/sys/delete',
+          data: {
+            _id: item._id,
           },
         });
       },
       // 监听 - 批量操作的按钮点击事件
-      batchBtn(index){
-        switch(index){
-          case 1: vk.toast("批量操作按钮1"); break;
-          case 2: vk.toast("批量操作按钮2"); break;
-          default : break;
+      batchBtn(index) {
+        switch (index) {
+          case 1:
+            vk.toast('批量操作按钮1');
+            break;
+          case 2:
+            vk.toast('批量操作按钮2');
+            break;
+          default:
+            break;
         }
-      }
+      },
     },
     // 监听属性
-    watch: {
-
-    },
+    watch: {},
     // 计算属性
-    computed: {
-
-    }
+    computed: {},
   };
 </script>
 <style lang="scss" scoped>
   .page-body {
-
   }
 </style>

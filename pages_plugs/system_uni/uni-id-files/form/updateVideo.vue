@@ -1,12 +1,5 @@
 <template>
-  <vk-data-dialog
-    v-model="value.show"
-    :title="page.title"
-    :top="page.top"
-    :width="page.width"
-    :close-on-click-modal="true"
-    mode="form"
-  >
+  <vk-data-dialog v-model="value.show" :title="page.title" :top="page.top" :width="page.width" :close-on-click-modal="true" mode="form">
     <!-- 页面主体内容开始 -->
     <vk-data-form
       ref="form1"
@@ -32,25 +25,25 @@
     props: {
       value: {
         type: Object,
-        default: function() {
+        default: function () {
           return {
             show: false,
-            mode: "",
-            item: {}
+            mode: '',
+            item: {},
           };
-        }
-      }
+        },
+      },
     },
-    data: function() {
+    data: function () {
       // 组件创建时，进行数据初始化
       return {
         page: {
-          title: "编辑视频信息",
-          submitText: "确定",
-          cancelText: "关闭",
+          title: '编辑视频信息',
+          submitText: '确定',
+          cancelText: '关闭',
           showCancel: true,
-          top: "14vh",
-          width: "450px"
+          top: '14vh',
+          width: '450px',
         },
         form1: {
           // 表单请求数据，此处可以设置默认值
@@ -58,22 +51,22 @@
           // 表单属性
           props: {
             // 表单请求地址
-            action: "admin/system_uni/uni-id-files/files/sys/update",
+            action: 'admin/system_uni/uni-id-files/files/sys/update',
             // 表单字段显示规则
             columns: [
-              { key: "display_name", title: "名称", type: "text" },
-              { key: "cover_image", title: "封面图", type: "image", limit: 1 },
+              { key: 'display_name', title: '名称', type: 'text' },
+              { key: 'cover_image', title: '封面图', type: 'image', limit: 1 },
             ],
             // 表单验证规则
             rules: {
               display_name: [
                 { required: true, message: '名称不能为空', trigger: 'change' },
-                { max: 32, message: '最多32字', trigger: 'change' }
+                { max: 32, message: '最多32字', trigger: 'change' },
               ],
             },
-            labelWidth: "60px"
-          }
-        }
+            labelWidth: '60px',
+          },
+        },
       };
     },
     mounted() {
@@ -83,7 +76,7 @@
       // 初始化
       init() {
         let { value } = this;
-        this.$emit("input", value);
+        this.$emit('input', value);
       },
       // 监听 - 页面打开
       onOpen() {
@@ -91,7 +84,7 @@
         this.form1.data = {
           _id: item._id,
           display_name: item.display_name,
-          cover_image: item.cover_image
+          cover_image: item.cover_image,
         };
       },
       // 监听 - 页面关闭
@@ -100,25 +93,25 @@
       },
       // 监听 - 提交成功后
       onFormSuccess() {
-        this.$set(this.value.item, "display_name", this.form1.data.display_name);
-        this.$set(this.value.item, "cover_image", this.form1.data.cover_image);
+        this.$set(this.value.item, 'display_name', this.form1.data.display_name);
+        this.$set(this.value.item, 'cover_image', this.form1.data.cover_image);
         this.value.show = false; // 关闭页面
-        this.$emit("success");
-      }
+        this.$emit('success');
+      },
     },
     watch: {
-      "value.show": {
+      'value.show': {
         handler(newValue, oldValue) {
           if (newValue) {
             this.onOpen();
           } else {
             this.onClose();
           }
-        }
-      }
+        },
+      },
     },
     // 计算属性
-    computed: {}
+    computed: {},
   };
 </script>
 

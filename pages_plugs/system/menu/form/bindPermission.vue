@@ -1,13 +1,5 @@
 <template>
-  <vk-data-dialog
-    v-model="value.show"
-    :title="page.title"
-    :top="page.top"
-    :width="page.width"
-    mode="form"
-    @open="onOpen"
-    @closed="onClose"
-  >
+  <vk-data-dialog v-model="value.show" :title="page.title" :top="page.top" :width="page.width" mode="form" @open="onOpen" @closed="onClose">
     <!-- 页面主体内容开始 -->
     <vk-data-form
       v-loading="page.loading"
@@ -26,8 +18,8 @@
       @success="onFormSuccess"
     >
       <template v-slot:refresh>
-        <view style="margin-left: 30px;">
-          <text style="color: #66b1ff;text-decoration: underline;cursor: pointer;" @click="getList()">刷新数据</text>
+        <view style="margin-left: 30px">
+          <text style="color: #66b1ff; text-decoration: underline; cursor: pointer" @click="getList()">刷新数据</text>
         </view>
       </template>
 
@@ -39,7 +31,7 @@
           :default-checked-keys="data.checkedKeys"
           :props="{
             children: 'children',
-            label: 'label'
+            label: 'label',
           }"
           show-checkbox
           default-expand-all
@@ -57,16 +49,16 @@
     props: {
       value: {
         type: Object,
-        default: function() {
+        default: function () {
           return {
             show: false,
-            mode: "",
-            item: ""
+            mode: '',
+            item: '',
           };
-        }
-      }
+        },
+      },
     },
-    data: function() {
+    data: function () {
       // 组件创建时，进行数据初始化
       return {
         data: {
@@ -77,39 +69,37 @@
           // 默认选中的权限列表
           checkedKeys: [],
           // 树的唯一标识
-          nodeKey: "permission_id",
+          nodeKey: 'permission_id',
         },
         page: {
-          title: "权限赋予",
-          submitText: "确定",
-          cancelText: "关闭",
+          title: '权限赋予',
+          submitText: '确定',
+          cancelText: '关闭',
           showCancel: true,
-          top: "7vh",
-          width: "800px",
-          loading: false
+          top: '7vh',
+          width: '800px',
+          loading: false,
         },
         form1: {
           // 表单请求数据，此处可以设置默认值
           data: {
-            menu_id: "",
+            menu_id: '',
             reset: true,
-            permissionList: []
+            permissionList: [],
           },
           // 表单属性
           props: {
             // 表单请求地址
-            action: "admin/system/menu/sys/bindPermission",
+            action: 'admin/system/menu/sys/bindPermission',
             // 表单字段显示规则
             columns: [
               // 常用字段类型
-              { key: "refresh", title: "", type: "text", showLabel: false },
-              { key: "permissionList", title: "权限列表", type: "text" }
+              { key: 'refresh', title: '', type: 'text', showLabel: false },
+              { key: 'permissionList', title: '权限列表', type: 'text' },
             ],
             // 表单验证规则
-            rules: {
-
-            },
-            labelWidth: "100px",
+            rules: {},
+            labelWidth: '100px',
             beforeAction: (formData) => {
               let checkedKeys = this.$refs.tree.getCheckedKeys();
               let halfCheckedKeys = this.$refs.tree.getHalfCheckedKeys();
@@ -123,9 +113,9 @@
               }
               formData.permissionList = allCheckedKeys;
               return formData;
-            }
-          }
-        }
+            },
+          },
+        },
       };
     },
     mounted() {
@@ -135,7 +125,7 @@
       // 初始化
       init() {
         let { value } = this;
-        this.$emit("input", value);
+        this.$emit('input', value);
       },
       // 监听 - 页面打开
       onOpen() {
@@ -157,18 +147,20 @@
         vk.callFunction({
           url: 'admin/system/permission/sys/getAll',
           data: {},
-          loading: { that: this, name: "page.loading" },
+          loading: { that: this, name: 'page.loading' },
           success: (data) => {
-            let rows = [{
-              label: "全选",
-              permission_id: "",
-              children: data.rows
-            }];
+            let rows = [
+              {
+                label: '全选',
+                permission_id: '',
+                children: data.rows,
+              },
+            ];
             // 渲染树
             this.data.treeData = rows;
             this.data.list = data.list;
             this.initData();
-          }
+          },
         });
       },
       initData() {
@@ -194,22 +186,16 @@
       },
       // 监听 - 提交成功后
       onFormSuccess(res) {
-        this.$set(this.value.item, "permission", this.form1.data.permissionList);
+        this.$set(this.value.item, 'permission', this.form1.data.permissionList);
         this.value.show = false; // 关闭页面
-        this.$emit("success");
-      }
+        this.$emit('success');
+      },
     },
     // 监听属性
-    watch: {
-
-    },
+    watch: {},
     // 计算属性
-    computed: {
-
-    }
+    computed: {},
   };
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

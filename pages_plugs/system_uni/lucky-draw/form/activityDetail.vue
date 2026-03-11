@@ -13,13 +13,9 @@
           <el-tag type="info">{{ activityData.lottery_type_text }}</el-tag>
         </view>
 
-        <view class="time-info" v-if="activityData.lottery_type === 1">
-          活动时间: {{ activityData.start_time_text }} - {{ activityData.end_time_text }}
-        </view>
+        <view class="time-info" v-if="activityData.lottery_type === 1"> 活动时间: {{ activityData.start_time_text }} - {{ activityData.end_time_text }} </view>
 
-        <view v-if="activityData.lottery_type === 2" class="people-limit">
-          开奖人数要求: {{ activityData.max_people }}
-        </view>
+        <view v-if="activityData.lottery_type === 2" class="people-limit"> 开奖人数要求: {{ activityData.max_people }} </view>
       </view>
 
       <!-- 数据统计 -->
@@ -56,7 +52,6 @@
         <vk-data-qrcode :text="activityData.qrcode" :size="400"></vk-data-qrcode>
         <view class="tips">使用微信扫一扫进入活动详情</view>
       </view>
-
     </view>
   </vk-data-drawer>
 </template>
@@ -67,33 +62,33 @@
     props: {
       value: {
         type: Object,
-        default: function() {
+        default: function () {
           return {
             show: false,
-            mode: "",
+            mode: '',
             item: {},
           };
-        }
-      }
+        },
+      },
     },
-    data: function() {
+    data: function () {
       // 组件创建时，进行数据初始化
       return {
         page: {
-          title: "活动详情",
-          submitText: "确定",
-          cancelText: "关闭",
+          title: '活动详情',
+          submitText: '确定',
+          cancelText: '关闭',
           showCancel: true,
-          width: "600px"
+          width: '600px',
         },
         activityData: {},
         loading: false,
         statItems: {
-          pv: { label: "浏览" },
-          sc: { label: "参与" },
-          uc: { label: "分享" },
-          wc: { label: "中奖" }
-        }
+          pv: { label: '浏览' },
+          sc: { label: '参与' },
+          uc: { label: '分享' },
+          wc: { label: '中奖' },
+        },
       };
     },
     mounted() {
@@ -103,7 +98,7 @@
       // 初始化
       init() {
         let { value } = this;
-        this.$emit("input", value);
+        this.$emit('input', value);
       },
       // 监听 - 页面打开
       onOpen() {
@@ -112,17 +107,11 @@
         this.activityData = item;
       },
       // 监听 - 页面关闭
-      onClose() {
-
-      }
+      onClose() {},
     },
-    watch: {
-
-    },
+    watch: {},
     // 计算属性
-    computed: {
-
-    }
+    computed: {},
   };
 </script>
 
@@ -188,6 +177,5 @@
       color: #666;
       font-size: 14px;
     }
-
   }
 </style>

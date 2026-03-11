@@ -1,12 +1,5 @@
 <template>
-  <vk-data-dialog
-    v-model="value.show"
-    :title="page.title"
-    :top="page.top"
-    :width="page.width"
-    :close-on-click-modal="true"
-    mode="form"
-  >
+  <vk-data-dialog v-model="value.show" :title="page.title" :top="page.top" :width="page.width" :close-on-click-modal="true" mode="form">
     <!-- 页面主体内容开始 -->
     <vk-data-form
       ref="form1"
@@ -27,7 +20,7 @@
           width="100%"
           v-model="form[keyName]"
           :localdata="value.list"
-          :props="{ value:'_id', label:'name' }"
+          :props="{ value: '_id', label: 'name' }"
           placeholder="请选择分组"
           border
           :item-width="300"
@@ -44,26 +37,26 @@
     props: {
       value: {
         type: Object,
-        default: function() {
+        default: function () {
           return {
             show: false,
-            mode: "",
+            mode: '',
             item: {},
-            list: []
+            list: [],
           };
-        }
-      }
+        },
+      },
     },
-    data: function() {
+    data: function () {
       // 组件创建时，进行数据初始化
       return {
         page: {
-          title: "修改分组",
-          submitText: "确定",
-          cancelText: "关闭",
+          title: '修改分组',
+          submitText: '确定',
+          cancelText: '关闭',
           showCancel: true,
-          top: "5vh",
-          width: "450px"
+          top: '5vh',
+          width: '450px',
         },
         form1: {
           // 表单请求数据，此处可以设置默认值
@@ -71,19 +64,21 @@
           // 表单属性
           props: {
             // 表单请求地址
-            action: "admin/system_uni/uni-id-files/files/sys/update",
+            action: 'admin/system_uni/uni-id-files/files/sys/update',
             // 表单字段显示规则
-            columns: [{
-              key: "category_id",
-              title: "分组",
-              type: "select",
-              placeholder: "请选择分组",
-            }],
+            columns: [
+              {
+                key: 'category_id',
+                title: '分组',
+                type: 'select',
+                placeholder: '请选择分组',
+              },
+            ],
             // 表单验证规则
             rules: {},
-            labelWidth: "60px"
-          }
-        }
+            labelWidth: '60px',
+          },
+        },
       };
     },
     mounted() {
@@ -93,14 +88,14 @@
       // 初始化
       init() {
         let { value } = this;
-        this.$emit("input", value);
+        this.$emit('input', value);
       },
       // 监听 - 页面打开
       onOpen() {
         let { item } = this.value;
         this.form1.data = {
           _id: item._id,
-          category_id: item.category_id
+          category_id: item.category_id,
         };
       },
       // 监听 - 页面关闭
@@ -110,22 +105,22 @@
       // 监听 - 提交成功后
       onFormSuccess() {
         this.value.show = false; // 关闭页面
-        this.$emit("success");
-      }
+        this.$emit('success');
+      },
     },
     watch: {
-      "value.show": {
+      'value.show': {
         handler(newValue, oldValue) {
           if (newValue) {
             this.onOpen();
           } else {
             this.onClose();
           }
-        }
-      }
+        },
+      },
     },
     // 计算属性
-    computed: {}
+    computed: {},
   };
 </script>
 

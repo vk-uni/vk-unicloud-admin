@@ -4,15 +4,9 @@
 
     <!-- 表格搜索组件开始 -->
 
-    <vk-data-table-query
-      v-model="queryForm1.formData"
-      :columns="queryForm1.columns"
-      @search="search"
-    >
+    <vk-data-table-query v-model="queryForm1.formData" :columns="queryForm1.columns" @search="search">
       <template slot="right-btns">
-        <el-button type="success" icon="el-icon-circle-plus-outline" @click="addBtn">
-          添加
-        </el-button>
+        <el-button type="success" icon="el-icon-circle-plus-outline" @click="addBtn"> 添加 </el-button>
       </template>
     </vk-data-table-query>
     <!-- 表格搜索组件结束 -->
@@ -34,21 +28,19 @@
     <!-- 表格组件结束 -->
 
     <!-- 添加或编辑的弹窗开始 -->
-    <vk-data-dialog
-      v-model="form1.props.show"
-      :title="form1.props.title"
-      width="800px"
-      mode="form"
-    >
+    <vk-data-dialog v-model="form1.props.show" :title="form1.props.title" width="800px" mode="form">
       <vk-data-form
         ref="form1"
         v-model="form1.data"
         :rules="form1.props.rules"
         :action="form1.props.action"
         :form-type="form1.props.formType"
-        :columns='form1.props.columns'
+        :columns="form1.props.columns"
         label-width="80px"
-        @success="form1.props.show = false;refresh();"
+        @success="
+          form1.props.show = false;
+          refresh();
+        "
       ></vk-data-form>
     </vk-data-dialog>
     <!-- 添加或编辑的弹窗结束 -->
@@ -71,20 +63,20 @@
         // 表格相关开始 -----------------------------------------------------------
         table1: {
           // 表格数据请求地址
-          action: "admin/system_uni/global-data/sys/getList",
+          action: 'admin/system_uni/global-data/sys/getList',
           // 表格字段显示规则
           columns: [
-            { key: "key", title: "键名", type: "text", width: 200 },
-            { key: "value", title: "键值", type: "json", width: 200 },
-            { key: "_add_time", title: "添加时间", type: "time", width: 160 },
-            { key: "_add_time", title: "距离现在", type: "dateDiff", width: 120 },
-            { key: "expired_at", title: "过期时间", type: "time", width: 160, defaultValue: "无" },
-            { key: "comment", title: "备注", type: "text", width: 300 }
+            { key: 'key', title: '键名', type: 'text', width: 200 },
+            { key: 'value', title: '键值', type: 'json', width: 200 },
+            { key: '_add_time', title: '添加时间', type: 'time', width: 160 },
+            { key: '_add_time', title: '距离现在', type: 'dateDiff', width: 120 },
+            { key: 'expired_at', title: '过期时间', type: 'time', width: 160, defaultValue: '无' },
+            { key: 'comment', title: '备注', type: 'text', width: 300 },
           ],
           // 多选框选中的值
           multipleSelection: [],
           // 当前高亮的记录
-          selectItem: ""
+          selectItem: '',
         },
         // 表格相关结束 -----------------------------------------------------------
         // 表单相关开始 -----------------------------------------------------------
@@ -94,37 +86,35 @@
           formData: {},
           // 查询表单的字段规则 fieldName:指定数据库字段名,不填默认等于key
           columns: [
-            { key: "key", type: "text", title: "键名搜索", mode: "%%" },
-            { key: "value", type: "text", title: "键值搜索", mode: "%%" },
-            { key: "_add_time", type: "datetimerange", title: "添加时间", width: 400, mode: "[]" }
-          ]
+            { key: 'key', type: 'text', title: '键名搜索', mode: '%%' },
+            { key: 'value', type: 'text', title: '键值搜索', mode: '%%' },
+            { key: '_add_time', type: 'datetimerange', title: '添加时间', width: 400, mode: '[]' },
+          ],
         },
         form1: {
           // 表单请求数据，此处可以设置默认值
-          data: {
-
-          },
+          data: {},
           // 表单属性
           props: {
             // 表单请求地址
-            action: "",
+            action: '',
             // 表单字段显示规则
             columns: [
-              { key: "key", title: "键名", type: "text", placeholder: "请输入键名", disabled: ["update"], tips: "键名唯一，且不能修改" },
-              { key: "value", title: "键值", type: "json", placeholder: "请输入键值" },
-              { key: "expired_at", title: "过期时间", type: "date", dateType: "datetime", placeholder: "请选择过期时间", tips: "若不设置过期时间则代表永不过期" },
-              { key: "comment", title: "备注", type: "textarea", placeholder: "请输入备注" }
+              { key: 'key', title: '键名', type: 'text', placeholder: '请输入键名', disabled: ['update'], tips: '键名唯一，且不能修改' },
+              { key: 'value', title: '键值', type: 'json', placeholder: '请输入键值' },
+              { key: 'expired_at', title: '过期时间', type: 'date', dateType: 'datetime', placeholder: '请选择过期时间', tips: '若不设置过期时间则代表永不过期' },
+              { key: 'comment', title: '备注', type: 'textarea', placeholder: '请输入备注' },
             ],
             // 表单验证规则
             rules: {
-              key: [{ required: true, message: "键名不能为空", trigger: "blur" }],
-              value: [{ required: true, message: "键值不能为空", trigger: "change" }]
+              key: [{ required: true, message: '键名不能为空', trigger: 'blur' }],
+              value: [{ required: true, message: '键值不能为空', trigger: 'change' }],
             },
             // add 代表添加 update 代表修改
-            formType: "",
+            formType: '',
             // 是否显示表单的弹窗
-            show: false
-          }
+            show: false,
+          },
         },
         // 表单相关结束 -----------------------------------------------------------
       };
@@ -145,7 +135,7 @@
     methods: {
       // 页面数据初始化函数
       init(options) {
-        originalForms["form1"] = vk.pubfn.copyObject(this.form1);
+        originalForms['form1'] = vk.pubfn.copyObject(this.form1);
       },
       // 页面跳转
       pageTo(path) {
@@ -178,38 +168,32 @@
       // 显示添加页面
       addBtn() {
         this.resetForm();
-        this.form1.props.action = "admin/system_uni/global-data/sys/add";
-        this.form1.props.formType = "add";
-        this.form1.props.title = "添加";
+        this.form1.props.action = 'admin/system_uni/global-data/sys/add';
+        this.form1.props.formType = 'add';
+        this.form1.props.title = '添加';
         this.form1.props.show = true;
       },
       // 显示修改页面
       updateBtn({ item }) {
-        this.form1.props.action = "admin/system_uni/global-data/sys/update";
-        this.form1.props.formType = "update";
-        this.form1.props.title = "编辑";
+        this.form1.props.action = 'admin/system_uni/global-data/sys/update';
+        this.form1.props.formType = 'update';
+        this.form1.props.title = '编辑';
         this.form1.props.show = true;
         this.form1.data = item;
       },
       // 删除按钮
       deleteBtn({ item, deleteFn }) {
         deleteFn({
-          action: "admin/system_uni/global-data/sys/delete",
+          action: 'admin/system_uni/global-data/sys/delete',
           data: {
-            _id: item._id
-          }
+            _id: item._id,
+          },
         });
-      }
+      },
     },
-    watch: {
-
-    },
+    watch: {},
     // 计算属性
-    computed: {
-
-    }
+    computed: {},
   };
 </script>
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

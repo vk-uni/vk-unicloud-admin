@@ -1,8 +1,7 @@
 <template>
-  <view class="header no-user-select" :class="showMenuTabs ? 'show-menu-tabs':'hide-menu-tabs'" v-loading="!vk.getVuex('$app.inited')" :style="'--textColor'+textColor">
+  <view class="header no-user-select" :class="showMenuTabs ? 'show-menu-tabs' : 'hide-menu-tabs'" v-loading="!vk.getVuex('$app.inited')" :style="'--textColor' + textColor">
     <!-- 左侧 -->
     <view class="left">
-
       <!-- 模式一：纯图片 -->
       <navigator class="logo-mode-1" open-type="reLaunch" url="/" v-if="mode === 1">
         <image :src="vk.getVuex('$app.staticUrl.navBar.logo1')" mode="aspectFill" class="logo-image" v-show="vk.getVuex('$app.leftCollapse')"></image>
@@ -19,19 +18,15 @@
           <image class="logo-image" :src="vk.getVuex('$app.staticUrl.navBar.logo')" mode="aspectFit"></image>
         </view>
       </navigator>
-
     </view>
     <!-- 右侧 -->
     <view class="right">
       <!-- 右上 -->
       <view class="right-top" :style="topMenuStyle">
-        <view
-          class="navbar"
-          :class="{ 'navbar-mini': !matchLeftWindow, 'popup-menu': popupMenuOpened }"
-        >
+        <view class="navbar" :class="{ 'navbar-mini': !matchLeftWindow, 'popup-menu': popupMenuOpened }">
           <vk-data-icon
             class="menu-collapse"
-            :name="vk.getVuex('$app.leftCollapse') ? 'vk-icon-zhankaicaidan':'vk-icon-shouqicaidan'"
+            :name="vk.getVuex('$app.leftCollapse') ? 'vk-icon-zhankaicaidan' : 'vk-icon-shouqicaidan'"
             size="17"
             :color="textColor"
             :pointer="true"
@@ -41,59 +36,32 @@
           <breadcrumb></breadcrumb>
 
           <view class="navbar-left pointer">
-            <vk-data-icon
-              @click="toggleSidebar"
-              class="menu-icon"
-              name="vk-icon-sortlight"
-              size="30"
-              :color="textColor"
-            ></vk-data-icon>
+            <vk-data-icon @click="toggleSidebar" class="menu-icon" name="vk-icon-sortlight" size="30" :color="textColor"></vk-data-icon>
           </view>
           <view class="navbar-middle">
             <text class="title-text">{{ navigationBarTitleText }}</text>
           </view>
           <view class="navbar-right pointer">
-            <view
-              @click="togglePopupMenu"
-              class="navbar-user"
-            >
+            <view @click="togglePopupMenu" class="navbar-user">
               <view class="username">
-                <text>{{ vk.getVuex("$user.userInfo.username") }}</text>
+                <text>{{ vk.getVuex('$user.userInfo.username') }}</text>
               </view>
-              <vk-data-icon
-                class="arrowdown"
-                name="vk-icon-unfold"
-                :color="textColor"
-                size="13"
-              ></vk-data-icon>
+              <vk-data-icon class="arrowdown" name="vk-icon-unfold" :color="textColor" size="13"></vk-data-icon>
             </view>
             <view class="vk-mask" @click="togglePopupMenu"></view>
             <view class="navbar-menu">
               <!-- #ifdef H5 -->
-              <view
-                v-if="vk.getVuex('$error.logs').length"
-                @click="openForm('errorLog')"
-                class="menu-item debug pointer"
-              >
+              <view v-if="vk.getVuex('$error.logs').length" @click="openForm('errorLog')" class="menu-item debug pointer">
                 <el-badge :value="vk.getVuex('$error.logs').length" class="item">
-                  <vk-data-icon
-                    name="el-icon-message-solid"
-                    size="22"
-                    :color="textColor"
-                  ></vk-data-icon>
+                  <vk-data-icon name="el-icon-message-solid" size="22" :color="textColor"></vk-data-icon>
                 </el-badge>
               </view>
               <!-- #endif -->
-              <view
-                v-if="vk.getVuex('$app.width') >= 1100 && debug"
-                v-for="link in links"
-                :key="link.url"
-                class="menu-item text-overflow"
-              >
+              <view v-if="vk.getVuex('$app.width') >= 1100 && debug" v-for="link in links" :key="link.url" class="menu-item text-overflow">
                 <vk-data-link :href="link.url" :text="link.text" />
               </view>
               <view class="menu-item text-overflow">
-                <text>{{ vk.getVuex("$user.userInfo.username") }}</text>
+                <text>{{ vk.getVuex('$user.userInfo.username') }}</text>
               </view>
               <view class="menu-item" @click="openForm('updatePassword')">
                 <text class="text-overflow">修改密码</text>
@@ -120,26 +88,26 @@
 </template>
 
 <script>
-  import config from "@/app.config.js";
-  import breadcrumb from "./components/breadcrumb";
-  import errorLog from "./components/errorLog";
-  import updatePassword from "./components/updatePassword";
+  import config from '@/app.config.js';
+  import breadcrumb from './components/breadcrumb';
+  import errorLog from './components/errorLog';
+  import updatePassword from './components/updatePassword';
   export default {
     components: {
       breadcrumb,
       errorLog,
-      updatePassword
+      updatePassword,
     },
     props: {
       navigationBarTitleText: {
-        type: String
+        type: String,
       },
       matchLeftWindow: {
-        type: Boolean
+        type: Boolean,
       },
       showLeftWindow: {
-        type: Boolean
-      }
+        type: Boolean,
+      },
     },
     data() {
       return {
@@ -147,21 +115,22 @@
         // 主题配置
         theme: config.theme,
         // 右侧链接，只在开发模式时显示
-        links: [{
-            text: "Admin框架文档",
-            url: "https://vkdoc.fsq.pub/admin/"
+        links: [
+          {
+            text: 'Admin框架文档',
+            url: 'https://vkdoc.fsq.pub/admin/',
           },
           {
-            text: "浏览更多VK插件",
-            url: "https://ext.dcloud.net.cn/search?q=vk"
-          }
+            text: '浏览更多VK插件',
+            url: 'https://ext.dcloud.net.cn/search?q=vk',
+          },
         ],
         popupMenuOpened: false,
-        tabCheck: "",
+        tabCheck: '',
         title: config.topBar.logoTitle,
         mode: config.topBar.logoMode,
         showMenuTabs: true,
-        formDatas: {}
+        formDatas: {},
       };
     },
     // 组件挂载完毕时
@@ -176,12 +145,12 @@
         let that = this;
         let { vk } = that;
         vk.userCenter.logout({
-          success: function(data) {
-            if (typeof that.$refs.menuTabs.clear === "function") that.$refs.menuTabs.clear();
+          success: function (data) {
+            if (typeof that.$refs.menuTabs.clear === 'function') that.$refs.menuTabs.clear();
             uni.reLaunch({
-              url: config.login.url
+              url: config.login.url,
             });
-          }
+          },
         });
       },
       // 左侧菜单显示和隐藏
@@ -203,7 +172,7 @@
         let that = this;
         let { vk } = that;
         that.formDatas[name] = {
-          show: true
+          show: true,
         };
       },
       // pc状态下菜单折叠
@@ -231,55 +200,52 @@
         if (config.topBar.showMenuTabs === false) {
           this.showMenuTabs = false;
           uni.setTopWindowStyle({
-            height: "60px"
+            height: '60px',
           });
         }
-      }
+      },
     },
     // 监听属性
     watch: {
       leftCollapseCom() {
         this.checkMenuCollapse();
-      }
+      },
     },
     // 计算属性
     computed: {
-      leftCollapseCom(){
+      leftCollapseCom() {
         return this.vk.getVuex('$app.leftCollapse');
       },
       topMenuStyle() {
         let theme = this.theme;
         if (theme && theme.use) {
           let topMenu = theme[theme.use].topMenu;
-          let {
-            backgroundColor,
-            textColor
-          } = topMenu;
+          let { backgroundColor, textColor } = topMenu;
           return {
             backgroundColor,
-            color: textColor
-          }
+            color: textColor,
+          };
         } else {
-          return {}
+          return {};
         }
       },
       textColor() {
         let theme = this.theme;
         if (theme && theme.use) {
-          return theme[theme.use].topMenu.textColor || "#999";
+          return theme[theme.use].topMenu.textColor || '#999';
         } else {
-          return "#999";
+          return '#999';
         }
       },
       leftWidth() {
         let theme = this.theme;
         if (theme && theme.use) {
-          return theme[theme.use].leftMenu.width || "240px";
+          return theme[theme.use].leftMenu.width || '240px';
         } else {
-          return "240px";
+          return '240px';
         }
-      }
-    }
+      },
+    },
   };
 </script>
 
@@ -410,7 +376,7 @@
       }
 
       .popup-menu__arrow::after {
-        content: " ";
+        content: ' ';
         position: absolute;
         display: block;
         width: 0;
@@ -540,7 +506,7 @@
           flex: 1;
           line-height: 50px;
           font-size: 20px;
-          background-image: -webkit-linear-gradient(left, #147B96, #E6D205 25%, #147B96 50%, #E6D205 75%, #147B96);
+          background-image: -webkit-linear-gradient(left, #147b96, #e6d205 25%, #147b96 50%, #e6d205 75%, #147b96);
           -webkit-text-fill-color: transparent;
           -webkit-background-clip: text;
           -webkit-background-size: 200% 100%;

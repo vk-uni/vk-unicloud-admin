@@ -1,13 +1,5 @@
 <template>
-  <vk-data-dialog
-    v-model="value.show"
-    :title="page.title"
-    :top="page.top"
-    :width="page.width"
-    mode="form"
-    @open="onOpen"
-    @closed="onClose"
-  >
+  <vk-data-dialog v-model="value.show" :title="page.title" :top="page.top" :width="page.width" mode="form" @open="onOpen" @closed="onClose">
     <!-- 页面主体内容开始 -->
     <vk-data-form
       ref="form1"
@@ -41,31 +33,31 @@
 
 <script>
   let vk = uni.vk; // vk实例
-  import { qrcodeKey } from "../image.json"
+  import { qrcodeKey } from '../image.json';
   export default {
     props: {
       value: {
         type: Object,
-        default: function() {
+        default: function () {
           return {
             show: false,
-            mode: "",
+            mode: '',
             item: {},
           };
-        }
-      }
+        },
+      },
     },
-    data: function() {
+    data: function () {
       // 组件创建时，进行数据初始化
       return {
         qrcode: qrcodeKey,
         page: {
-          title: "设置API Key",
-          submitText: "确定",
-          cancelText: "关闭",
+          title: '设置API Key',
+          submitText: '确定',
+          cancelText: '关闭',
           showCancel: true,
-          top: "7vh",
-          width: "600px"
+          top: '7vh',
+          width: '600px',
         },
         form1: {
           // 表单请求数据，此处可以设置默认值
@@ -73,22 +65,20 @@
           // 表单属性
           props: {
             // 表单请求地址
-            action: "plugs/lucky-draw/admin/sys.luckyDraw.setKey",
+            action: 'plugs/lucky-draw/admin/sys.luckyDraw.setKey',
             // 表单字段显示规则
-            columns: [
-              { key: "key", title: "API key", type: "text", tips: "请输入发起活动小助手的API Key" }
-            ],
+            columns: [{ key: 'key', title: 'API key', type: 'text', tips: '请输入发起活动小助手的API Key' }],
             // 表单验证规则
             rules: {
               key: [
-                { required: true, message: "请输入API Key", trigger: "blur" },
-                { min: 32, max: 32, message: "API Key长度必须是32位", trigger: "blur" }
-              ]
+                { required: true, message: '请输入API Key', trigger: 'blur' },
+                { min: 32, max: 32, message: 'API Key长度必须是32位', trigger: 'blur' },
+              ],
             },
             // 左侧label的宽度
-            labelWidth: "100px",
-          }
-        }
+            labelWidth: '100px',
+          },
+        },
       };
     },
     mounted() {
@@ -98,7 +88,7 @@
       // 初始化
       init() {
         let { value } = this;
-        this.$emit("input", value);
+        this.$emit('input', value);
       },
       // 监听 - 页面打开
       onOpen() {
@@ -113,16 +103,12 @@
       // 监听 - 提交成功后
       onFormSuccess() {
         this.value.show = false; // 关闭页面
-        this.$emit("success");
-      }
+        this.$emit('success');
+      },
     },
-    watch: {
-
-    },
+    watch: {},
     // 计算属性
-    computed: {
-
-    }
+    computed: {},
   };
 </script>
 

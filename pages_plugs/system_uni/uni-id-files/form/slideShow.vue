@@ -58,14 +58,8 @@
             </div>
             <div class="setting-item" v-if="autoPlay">
               <span class="setting-label">间隔</span>
-              <el-input-number
-                v-model="playInterval"
-                :min="1"
-                :max="99"
-                size="mini"
-                @change="onIntervalChange"
-              ></el-input-number>
-                          <span class="setting-label">秒</span>
+              <el-input-number v-model="playInterval" :min="1" :max="99" size="mini" @change="onIntervalChange"></el-input-number>
+              <span class="setting-label">秒</span>
             </div>
             <div class="setting-item">
               <span class="setting-label">循环播放</span>
@@ -77,7 +71,7 @@
           <template v-else>
             <div class="setting-item">
               <span class="setting-label">视频模式</span>
-              <span class="setting-label" style="opacity: 0.7;">手动控制</span>
+              <span class="setting-label" style="opacity: 0.7">手动控制</span>
             </div>
           </template>
         </div>
@@ -89,11 +83,7 @@
           </div>
 
           <div class="control-btn play-btn" @click="togglePlay">
-            <vk-data-icon
-              :name="isPlaying ? 'el-icon-video-pause' : 'el-icon-video-play'"
-              size="24"
-              color="#ffffff"
-            ></vk-data-icon>
+            <vk-data-icon :name="isPlaying ? 'el-icon-video-pause' : 'el-icon-video-play'" size="24" color="#ffffff"></vk-data-icon>
           </div>
 
           <div class="control-btn" @click="next" :disabled="!loopPlay && currentFileList.length <= 1">
@@ -125,10 +115,7 @@
 
       <!-- 进度条 -->
       <div class="progress-bar" v-if="currentFileList.length > 1">
-        <div
-          class="progress-fill"
-          :style="{ width: ((currentIndex + 1) / currentFileList.length * 100) + '%' }"
-        ></div>
+        <div class="progress-fill" :style="{ width: ((currentIndex + 1) / currentFileList.length) * 100 + '%' }"></div>
       </div>
     </div>
   </div>
@@ -139,15 +126,15 @@
     props: {
       value: {
         type: Object,
-        default: function() {
+        default: function () {
           return {
             show: false,
             fileList: [],
             currentIndex: 0,
-            autoPlay: true
+            autoPlay: true,
           };
-        }
-      }
+        },
+      },
     },
     data() {
       return {
@@ -170,7 +157,7 @@
         imageZoomScale: 1, // 当前缩放比例
         minZoomScale: 0.1, // 最小缩放比例
         maxZoomScale: 5, // 最大缩放比例
-        zoomStep: 0.2 // 每次缩放的步长
+        zoomStep: 0.2, // 每次缩放的步长
       };
     },
     computed: {
@@ -186,7 +173,7 @@
         if (this.currentFile) {
           return this.currentFile.tempFileURL || this.currentFile.url;
         }
-        return "";
+        return '';
       },
     },
     mounted() {
@@ -488,7 +475,7 @@
 
         return {
           width: `${showWidth}px`,
-          height: `${showHeight}px`
+          height: `${showHeight}px`,
         };
       },
 
@@ -532,7 +519,7 @@
 
         return {
           width: `${showWidth}px`,
-          height: `${showHeight}px`
+          height: `${showHeight}px`,
         };
       },
       // 从URL获取文件格式
@@ -544,7 +531,7 @@
         } catch (error) {
           return 'unknown';
         }
-      }
+      },
     },
     watch: {
       'value.show': {
@@ -565,26 +552,26 @@
             this.stopAutoPlay();
             this.clearControlTimer();
           }
-        }
+        },
       },
       'value.currentIndex': {
         handler() {
           this.updateCurrentFile();
-        }
+        },
       },
       'value.autoPlay': {
         handler(newValue) {
           if (newValue !== undefined) {
             this.autoPlay = newValue;
           }
-        }
-      }
+        },
+      },
     },
     beforeDestroy() {
       this.unbindKeyboardEvents();
       this.stopAutoPlay();
       this.clearControlTimer();
-    }
+    },
   };
 </script>
 

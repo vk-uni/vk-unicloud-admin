@@ -1,15 +1,15 @@
-import Vue from 'vue'
-import App from './App'
-import store from './store'
-import config from '@/app.config.js'
+import Vue from 'vue';
+import App from './App';
+import store from './store';
+import config from '@/app.config.js';
 
 // 引入 elementUI
-import elementUI from "element-ui";
+import elementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(elementUI);
 
 // 引入 高性能表格UI 组件
-import UmyUi from 'umy-ui'
+import UmyUi from 'umy-ui';
 import 'umy-ui/lib/theme-chalk/index.css';
 Vue.use(UmyUi);
 
@@ -26,7 +26,7 @@ Vue.use(vkAdminUI);
 const modulesFiles = require.context('./components', true, /\.vue$/);
 modulesFiles.keys().map((modulePath, index) => {
   const moduleNames = modulePath.replace(/^\.\/(.*)\.\w+$/, '$1');
-  const moduleSplit = moduleNames.split("/");
+  const moduleSplit = moduleNames.split('/');
   const moduleName = moduleSplit[0];
   if (moduleSplit.length === 2 && moduleName === moduleSplit[1]) {
     const value = modulesFiles(modulePath);
@@ -38,12 +38,12 @@ modulesFiles.keys().map((modulePath, index) => {
 // 引入 自定义全局css 样式
 import '@/common/css/app.scss';
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
-App.mpType = 'app'
+App.mpType = 'app';
 
 const app = new Vue({
   store,
-  ...App
-})
-app.$mount()
+  ...App,
+});
+app.$mount();

@@ -1,7 +1,10 @@
 /* 这里是你自己写的全局css样式 */
 
 /* 禁用双击缩放，直接触发点击，解决Web端点击响应延迟的问题 */
-a, button, view, text {
+a,
+button,
+view,
+text {
   touch-action: manipulation;
 }
 /* 滚动条美化方案开始 去掉下方css的注释即可 */
@@ -24,28 +27,28 @@ a, button, view, text {
 /* 滚动条美化方案结束 */
 
 /* 富文本编辑器样式开始 */
-.ql-indent-1{
+.ql-indent-1 {
   padding-left: 3em;
 }
-.ql-indent-2{
+.ql-indent-2 {
   padding-left: 6em;
 }
-.ql-indent-3{
+.ql-indent-3 {
   padding-left: 9em;
 }
-.ql-indent-4{
+.ql-indent-4 {
   padding-left: 12em;
 }
-.ql-indent-5{
+.ql-indent-5 {
   padding-left: 15em;
 }
-.ql-indent-6{
+.ql-indent-6 {
   padding-left: 18em;
 }
-.ql-indent-7{
+.ql-indent-7 {
   padding-left: 21em;
 }
-.ql-indent-8{
+.ql-indent-8 {
   padding-left: 24em;
 }
 /* 富文本编辑器样式结束 */

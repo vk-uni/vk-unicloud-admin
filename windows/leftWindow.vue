@@ -16,18 +16,16 @@
 </template>
 
 <script>
-  import config from "@/app.config.js";
+  import config from '@/app.config.js';
   export default {
     data() {
       return {
         theme: config.theme,
-        defaultOpeneds: config.sideBar.defaultOpeneds
-      }
+        defaultOpeneds: config.sideBar.defaultOpeneds,
+      };
     },
     methods: {
-      select(e){
-
-      },
+      select(e) {},
     },
     // 监听属性
     watch: {
@@ -36,16 +34,16 @@
         handler(newRoute, oldRoute) {
           let that = this;
           let { vk } = that;
-          let { path , query } = newRoute;
+          let { path, query } = newRoute;
           let url = path + vk.pubfn.queryParams(query);
           let route = { path, query, url };
           vk.setVuex('$app.route', route);
-        }
-      }
+        },
+      },
     },
     // 计算属性
     computed: {
-      styleCom(){
+      styleCom() {
         let theme = this.theme;
         if (theme && theme.use) {
           let leftCollapse = vk.getVuex('$app.leftCollapse');
@@ -53,7 +51,7 @@
             return {
               ...theme[theme.use].leftMenu,
               width: '64px',
-            }
+            };
           } else {
             return theme[theme.use].leftMenu;
           }
@@ -61,16 +59,16 @@
           return {};
         }
       },
-      classCom(){
+      classCom() {
         let obj = {
           pc: vk.getVuex('$app.isPC'),
           mobile: !vk.getVuex('$app.isPC'),
           collapse: vk.getVuex('$app.leftCollapse'),
         };
         return obj;
-      }
-    }
-  }
+      },
+    },
+  };
 </script>
 
 <style lang="scss">
@@ -80,20 +78,20 @@
     width: 240px;
     height: calc(100vh - (var(--window-top)) + 50px);
     box-sizing: border-box;
-    box-shadow: var(--boxShadow, 2px 0 0px rgba(0,21,4,0.2));
+    box-shadow: var(--boxShadow, 2px 0 0px rgba(0, 21, 4, 0.2));
     border-top: var(--borderTop);
     background-color: $left-window-bg-color;
     padding-bottom: 10px;
     top: 50px;
     z-index: 998;
   }
-  .sidebar.collapse{
+  .sidebar.collapse {
     width: 64px;
   }
   .title {
     margin-left: 5px;
   }
-  .center{
+  .center {
     text-align: center;
     margin-top: 100px;
   }

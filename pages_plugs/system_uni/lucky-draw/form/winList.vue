@@ -5,7 +5,8 @@
         <el-button size="mini" type="primary" @click="batchdDeliveryPrize">提交发货信息</el-button>
         <el-button size="mini" @click="refresh">刷新</el-button>
       </view>
-      <vk-data-table ref="table1"
+      <vk-data-table
+        ref="table1"
         :action="table1.action"
         :columns="table1.columns"
         :query-form-param="queryForm1"
@@ -16,31 +17,57 @@
         :page-sizes="[1, 10, 50, 100, 500]"
         :left-fixed="false"
         :right-fixed="false"
-        :default-sort="{ name:'_add_time', type:'desc' }"
+        :default-sort="{ name: '_add_time', type: 'desc' }"
         size="mini"
         @current-change="currentChange"
         @selection-change="selectionChange"
       >
         <template v-slot:receiver_name="{ row, column, index }">
-          <el-input v-if="row.prize && !row.prize.delivery_method && row.express_info" v-model="row.express_info[column.key]" size="mini" @input="inputValue(row, column.key, $event)"/>
+          <el-input
+            v-if="row.prize && !row.prize.delivery_method && row.express_info"
+            v-model="row.express_info[column.key]"
+            size="mini"
+            @input="inputValue(row, column.key, $event)"
+          />
           <view v-else>-</view>
         </template>
         <template v-slot:receiver_mobile="{ row, column, index }">
-          <el-input v-if="row.prize && !row.prize.delivery_method && row.express_info" v-model="row.express_info[column.key]" size="mini" @input="inputValue(row, column.key, $event)"/>
+          <el-input
+            v-if="row.prize && !row.prize.delivery_method && row.express_info"
+            v-model="row.express_info[column.key]"
+            size="mini"
+            @input="inputValue(row, column.key, $event)"
+          />
           <view v-else>-</view>
         </template>
         <template v-slot:formatted_address="{ row, column, index }">
-          <el-input v-if="row.prize && !row.prize.delivery_method && row.express_info" v-model="row.express_info[column.key]" size="mini" @input="inputValue(row, column.key, $event)"/>
+          <el-input
+            v-if="row.prize && !row.prize.delivery_method && row.express_info"
+            v-model="row.express_info[column.key]"
+            size="mini"
+            @input="inputValue(row, column.key, $event)"
+          />
           <view v-else>-</view>
         </template>
         <template v-slot:express_name="{ row, column, index }">
-          <el-select v-if="row.prize && !row.prize.delivery_method && row.express_info" v-model="row.express_info[column.key]" placeholder="请选择" size="mini" @change="expressNameChange">
+          <el-select
+            v-if="row.prize && !row.prize.delivery_method && row.express_info"
+            v-model="row.express_info[column.key]"
+            placeholder="请选择"
+            size="mini"
+            @change="expressNameChange"
+          >
             <el-option v-for="item in expressOptions" :key="item.label" :label="item.label" :value="item.label"> </el-option>
           </el-select>
           <view v-else>-</view>
         </template>
         <template v-slot:express_no="{ row, column, index }">
-          <el-input v-if="row.prize && !row.prize.delivery_method && row.express_info" v-model="row.express_info[column.key]" size="mini" @input="inputValue(row, column.key, $event)" />
+          <el-input
+            v-if="row.prize && !row.prize.delivery_method && row.express_info"
+            v-model="row.express_info[column.key]"
+            size="mini"
+            @input="inputValue(row, column.key, $event)"
+          />
           <view v-else>-</view>
         </template>
       </vk-data-table>
@@ -54,90 +81,94 @@
     props: {
       value: {
         type: Object,
-        default: function() {
+        default: function () {
           return {
             show: false,
-            mode: "",
+            mode: '',
             item: {},
           };
-        }
-      }
+        },
+      },
     },
-    data: function() {
+    data: function () {
       // 组件创建时，进行数据初始化
       return {
         page: {
-          title: "中奖列表",
-          submitText: "确定",
-          cancelText: "关闭",
+          title: '中奖列表',
+          submitText: '确定',
+          cancelText: '关闭',
           showCancel: true,
-          width: "85%"
+          width: '85%',
         },
         loading: false,
         table1: {
           // 表格数据请求地址
-          action: "plugs/lucky-draw/admin/sys.luckyDraw.getActivityWinList",
+          action: 'plugs/lucky-draw/admin/sys.luckyDraw.getActivityWinList',
           // 表格字段显示规则
           columns: [
-            { key: "userInfo", title: "中奖人", type: "userInfo", width: 120 },
+            { key: 'userInfo', title: '中奖人', type: 'userInfo', width: 120 },
             {
-              key: "", title: "奖品信息", type: "group", minWidth: 280, align: "left",
+              key: '',
+              title: '奖品信息',
+              type: 'group',
+              minWidth: 280,
+              align: 'left',
               columns: [
-                { key: "prize.name", title: "奖品名称", type: "text", width: 180, align: "left" },
-                { key: "status_text", title: "状态", type: "text", width: 120 },
-                { key: "prize.delivery_method_text", title: "领取方式", type: "text", width: 140, defaultValue: "快递邮寄" },
-                { key: "express_info.express_time", title: "发货时间", type: "time", width: 160, defaultValue: "-" },
+                { key: 'prize.name', title: '奖品名称', type: 'text', width: 180, align: 'left' },
+                { key: 'status_text', title: '状态', type: 'text', width: 120 },
+                { key: 'prize.delivery_method_text', title: '领取方式', type: 'text', width: 140, defaultValue: '快递邮寄' },
+                { key: 'express_info.express_time', title: '发货时间', type: 'time', width: 160, defaultValue: '-' },
               ],
             },
             {
-              key: "confirm_address",
-              title: "地址确认?",
-              type: "text",
+              key: 'confirm_address',
+              title: '地址确认?',
+              type: 'text',
               width: 100,
               formatter: (val, row, column, index) => {
                 if (row.prize && !row.prize.delivery_method) {
-                  let str = val ? "是" : "否";
+                  let str = val ? '是' : '否';
                   return str;
                 } else {
-                  return "无需快递";
+                  return '无需快递';
                 }
-              }
+              },
             },
-            { key: "receiver_name", title: "收货人", type: "text", minWidth: 120 },
-            { key: "receiver_mobile", title: "手机号", type: "text", minWidth: 120 },
-            { key: "formatted_address", title: "收货地址", type: "text", minWidth: 240, align: "left" },
-            { key: "express_name", title: "快递公司", type: "text", minWidth: 130 },
-            { key: "express_no", title: "快递单号", type: "text", minWidth: 150 },
-            { key: "_add_time", title: "中奖时间", type: "time", width: 160, sortable: "custom" },
+            { key: 'receiver_name', title: '收货人', type: 'text', minWidth: 120 },
+            { key: 'receiver_mobile', title: '手机号', type: 'text', minWidth: 120 },
+            { key: 'formatted_address', title: '收货地址', type: 'text', minWidth: 240, align: 'left' },
+            { key: 'express_name', title: '快递公司', type: 'text', minWidth: 130 },
+            { key: 'express_no', title: '快递单号', type: 'text', minWidth: 150 },
+            { key: '_add_time', title: '中奖时间', type: 'time', width: 160, sortable: 'custom' },
           ],
           // 多选框选中的值
           multipleSelection: [],
           // 当前高亮的记录
-          selectItem: ""
+          selectItem: '',
         },
         queryForm1: {
           formData: {
-            _id: "",
-          }
+            _id: '',
+          },
         },
         expressOptions: [
-          { label: "中通快递" },
-          { label: "申通快递" },
-          { label: "圆通快递" },
-          { label: "顺丰速运" },
-          { label: "天天快递" },
-          { label: "中国邮政" },
-          { label: "韵达速递" },
-          { label: "德邦快递/物流" },
-          { label: "其他/智能识别" }
-        ]
+          { label: '中通快递' },
+          { label: '申通快递' },
+          { label: '圆通快递' },
+          { label: '顺丰速运' },
+          { label: '天天快递' },
+          { label: '中国邮政' },
+          { label: '韵达速递' },
+          { label: '德邦快递/物流' },
+          { label: '其他/智能识别' },
+        ],
       };
     },
     methods: {
       // 初始化
       init() {
         let { value } = this;
-        this.$emit("input", value);
+        this.$emit('input', value);
       },
       // 监听 - 页面打开
       onOpen() {
@@ -146,9 +177,7 @@
         this.queryForm1.formData._id = item._id;
       },
       // 监听 - 页面关闭
-      onClose() {
-
-      },
+      onClose() {},
       // 搜索
       search() {
         this.$refs.table1.search();
@@ -173,7 +202,7 @@
         setTimeout(() => {
           let list = this.$refs.table1.getTableData();
           let rows = [];
-          list.forEach(item => {
+          list.forEach((item) => {
             if (item.express_info && (!item.express_info.express_name || !item.express_info.express_no)) {
               let express_info = item.express_info;
               express_info.express_name = val;
@@ -181,25 +210,28 @@
             }
           });
           this.$refs.table1.updateRows({
-            mode: "update", // update 局部字段更新 set 覆盖字段更新
-            rows
+            mode: 'update', // update 局部字段更新 set 覆盖字段更新
+            rows,
           });
         }, 100);
       },
-      inputValue(item, key, value){
+      inputValue(item, key, value) {
         if (item && item.express_info) {
           item.express_info[key] = value;
           this.$refs.table1.updateRows({
-            mode: "update", // update 局部字段更新 set 覆盖字段更新
-            rows: [{ _id: item._id, express_info: item.express_info }]
+            mode: 'update', // update 局部字段更新 set 覆盖字段更新
+            rows: [{ _id: item._id, express_info: item.express_info }],
           });
         }
       },
       batchdDeliveryPrize() {
         let tableData = this.$refs.table1.getTableData();
         let list = [];
-        tableData.forEach(item => {
-          if (item.express_info && (item.express_info.express_name && item.express_info.express_no) || (item.express_info.receiver_name && item.express_info.receiver_mobile && item.express_info.formatted_address)) {
+        tableData.forEach((item) => {
+          if (
+            (item.express_info && item.express_info.express_name && item.express_info.express_no) ||
+            (item.express_info.receiver_name && item.express_info.receiver_mobile && item.express_info.formatted_address)
+          ) {
             list.push({
               _id: item._id,
               receiver_name: item.express_info.receiver_name,
@@ -207,7 +239,7 @@
               formatted_address: item.express_info.formatted_address,
               express_name: item.express_info.express_name,
               express_no: item.express_info.express_no,
-            })
+            });
           }
         });
         vk.callFunction({
@@ -215,21 +247,17 @@
           title: '请求中...',
           data: {
             _id: this.queryForm1.formData._id,
-            list
+            list,
           },
           success: (data) => {
-            this.$message.success("发货成功");
-          }
+            this.$message.success('发货成功');
+          },
         });
-      }
+      },
     },
-    watch: {
-
-    },
+    watch: {},
     // 计算属性
-    computed: {
-
-    }
+    computed: {},
   };
 </script>
 

@@ -11,9 +11,9 @@
         </el-form-item>
         <view class="password-box">
           <view class="remember-password">
-            <el-checkbox v-model="checked"><text class="tips" style="font-size: 12px;">记住密码</text></el-checkbox>
+            <el-checkbox v-model="checked"><text class="tips" style="font-size: 12px">记住密码</text></el-checkbox>
           </view>
-          <view class="forget-password"><text @click="forgetPassWord" style="font-size: 12px;">忘记密码？</text></view>
+          <view class="forget-password"><text @click="forgetPassWord" style="font-size: 12px">忘记密码？</text></view>
         </view>
         <el-button class="login_but" type="primary" @click="submit">登录</el-button>
       </el-form>
@@ -32,13 +32,12 @@
         <text @click="noCccount">没有账号？</text>
         <text class="register" @click="register">立即注册</text>
       </view> -->
-
     </view>
   </view>
 </template>
 
 <script>
-  import config from "@/app.config.js";
+  import config from '@/app.config.js';
   let vk = uni.vk; // vk实例
   export default {
     data() {
@@ -47,15 +46,13 @@
         testUser: (config.login && config.login.testUser) || {}, // 体验账号信息
         // 表单信息
         form1: {
-          username: "",
-          password: "",
-          needPermission: true
+          username: '',
+          password: '',
+          needPermission: true,
         },
         checked: false, // 是否记录密码
         // 表单验证规则
-        rules: {
-
-        },
+        rules: {},
       };
     },
     // 监听 - 页面每次【加载时】执行(如：前进)
@@ -77,7 +74,7 @@
           return;
         }
         // 从缓存中读取记住的密码
-        let { login } = vk.getVuex("$user");
+        let { login } = vk.getVuex('$user');
         if (login) {
           if (login.username) this.form1.username = login.username;
           if (login.password) {
@@ -92,9 +89,9 @@
         if (vk.checkToken()) {
           vk.userCenter.checkToken({
             loading: true,
-            success: data => {
+            success: (data) => {
               this.loginSuccess(data);
-            }
+            },
           });
         }
       },
@@ -102,37 +99,37 @@
       submit() {
         vk.userCenter.login({
           data: this.form1,
-          success: data => {
+          success: (data) => {
             if (!getApp().isAllowLoginBackground(data.userInfo)) {
-              vk.alert("您的账户无登陆权限");
+              vk.alert('您的账户无登陆权限');
               return false;
             }
             if (this.checked) {
               // 账号密码保存本地缓存
-              vk.setVuex("$user.login.username", this.form1.username);
-              vk.setVuex("$user.login.password", this.form1.password);
+              vk.setVuex('$user.login.username', this.form1.username);
+              vk.setVuex('$user.login.password', this.form1.password);
             } else {
               // 删除本地缓存
-              vk.setVuex("$user.login.username", "");
-              vk.setVuex("$user.login.password", "");
+              vk.setVuex('$user.login.username', '');
+              vk.setVuex('$user.login.password', '');
             }
             this.loginSuccess(data);
-          }
+          },
         });
       },
       //登陆成功
       loginSuccess(data = {}) {
         let { userInfo = {} } = data;
         // 先清空下菜单缓存
-        vk.setVuex("$app.inited", false);
-        vk.setVuex("$app.navMenu", []);
+        vk.setVuex('$app.inited', false);
+        vk.setVuex('$app.navMenu', []);
         // 再执行init函数
         getApp().init();
         // 检查是否有指定跳转的页面
         if (this.options.uniIdRedirectUrl) {
           let uniIdRedirectUrl = decodeURIComponent(this.options.uniIdRedirectUrl);
           if (uniIdRedirectUrl) {
-            if (uniIdRedirectUrl.indexOf("http") === 0) {
+            if (uniIdRedirectUrl.indexOf('http') === 0) {
               // #ifdef WEB
               window.location.href = uniIdRedirectUrl;
               return;
@@ -145,14 +142,9 @@
         }
         // 最后跳转到首页或页面返回
         let pages = getCurrentPages();
-        if (
-          pages.length >= 2 &&
-          pages[pages.length - 2] &&
-          pages[pages.length - 2].route &&
-          pages[pages.length - 2].route.indexOf("login/") == -1
-        ) {
+        if (pages.length >= 2 && pages[pages.length - 2] && pages[pages.length - 2].route && pages[pages.length - 2].route.indexOf('login/') == -1) {
           // 如果上一个页面不是login目录下的，则调上一个页面
-          vk.reLaunch("/" + pages[pages.length - 2].route);
+          vk.reLaunch('/' + pages[pages.length - 2].route);
         } else {
           // 否则进入首页
           vk.navigateToHome();
@@ -160,7 +152,7 @@
       },
       forgetPassWord() {
         console.log(`忘记密码了`);
-        vk.toast("暂不支持", "none");
+        vk.toast('暂不支持', 'none');
       },
       shortMessageLogin() {
         console.log(`短信登录`);
@@ -170,9 +162,9 @@
       },
       register() {
         console.log(`立即注册`);
-        vk.toast("暂不支持注册", "none");
-      }
-    }
+        vk.toast('暂不支持注册', 'none');
+      },
+    },
   };
 </script>
 
@@ -300,7 +292,8 @@
       .test-user-item {
         margin: 5px 0;
 
-        .test-user-item-nickname {}
+        .test-user-item-nickname {
+        }
 
         .test-user-item-username {
           margin-left: 10px;

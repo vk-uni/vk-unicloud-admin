@@ -1,13 +1,5 @@
 <template>
-  <vk-data-dialog
-    v-model="value.show"
-    :title="page.title"
-    :top="page.top"
-    :width="page.width"
-    mode="form"
-    @open="onOpen"
-    @closed="onClose"
-  >
+  <vk-data-dialog v-model="value.show" :title="page.title" :top="page.top" :width="page.width" mode="form" @open="onOpen" @closed="onClose">
     <!-- 页面主体内容开始 -->
     <vk-data-form
       ref="form1"
@@ -25,9 +17,9 @@
       @success="onFormSuccess"
     >
       <template v-slot:user_id>
-        <view style="display: flex;align-items: center;">
+        <view style="display: flex; align-items: center">
           <el-avatar v-if="data.avatar" :src="data.avatar" fit="cover"></el-avatar>
-          <text style="margin-left: 10px;">{{ data.nickname }}（ID：{{ data._id }}）</text>
+          <text style="margin-left: 10px">{{ data.nickname }}（ID：{{ data._id }}）</text>
         </view>
       </template>
     </vk-data-form>
@@ -41,62 +33,58 @@
     props: {
       value: {
         type: Object,
-        default: function() {
+        default: function () {
           return {
             show: false,
-            mode: "",
-            item: ""
+            mode: '',
+            item: '',
           };
-        }
-      }
+        },
+      },
     },
-    data: function() {
+    data: function () {
       // 组件创建时，进行数据初始化
       return {
         // 页面基础数据
         page: {
-          title: "重置密码",
-          submitText: "修改",
-          cancelText: "关闭",
+          title: '重置密码',
+          submitText: '修改',
+          cancelText: '关闭',
           showCancel: true,
-          top: "7vh",
-          width: "600px",
-          loading: false
+          top: '7vh',
+          width: '600px',
+          loading: false,
         },
-        data: {
-
-        },
+        data: {},
         form1: {
           // 表单请求数据，此处可以设置默认值
           data: {
-            user_id: "",
-            password: ""
+            user_id: '',
+            password: '',
           },
           // 表单属性
           props: {
             // 表单请求地址
-            action: "admin/system/user/sys/resetPassword",
+            action: 'admin/system/user/sys/resetPassword',
             // 表单字段显示规则
             columns: [
-              { key: "user_id", title: "用户", type: "text" },
-              { key: "password", title: "新密码", type: "password", showPassword: true },
+              { key: 'user_id', title: '用户', type: 'text' },
+              { key: 'password', title: '新密码', type: 'password', showPassword: true },
             ],
             // 表单验证规则
             rules: {
-              user_id: [
-                { "required": true, "message": "user_id不能为空", "trigger": "change" }
-              ],
+              user_id: [{ required: true, message: 'user_id不能为空', trigger: 'change' }],
               password: [
                 { required: true, message: '新密码不能为空', trigger: 'change' },
-                { validator: vk.pubfn.validator("password"), message: '密码长度在6~18之间，只能包含字母、数字和下划线', trigger: 'change' }
+                { validator: vk.pubfn.validator('password'), message: '密码长度在6~18之间，只能包含字母、数字和下划线', trigger: 'change' },
               ],
             },
             // label宽度
-            labelWidth: "100px",
+            labelWidth: '100px',
             // label对其方式
-            labelPosition: "left",
-          }
-        }
+            labelPosition: 'left',
+          },
+        },
       };
     },
     mounted() {
@@ -106,7 +94,7 @@
       // 初始化
       init() {
         let { value } = this;
-        this.$emit("input", value);
+        this.$emit('input', value);
       },
       // 监听 - 页面打开
       onOpen() {
@@ -115,7 +103,7 @@
         this.data = data;
         this.form1.data = {
           user_id: data._id,
-          password: ""
+          password: '',
         };
       },
       // 监听 - 页面关闭
@@ -125,19 +113,14 @@
       // 表单提交成功后
       onFormSuccess() {
         this.value.show = false; // 关闭页面
-        this.$emit("success");
+        this.$emit('success');
       },
-
     },
     // 监听属性
-    watch: {
-
-    },
+    watch: {},
     // 计算属性
-    computed: {}
+    computed: {},
   };
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
