@@ -13,7 +13,7 @@
           <text>可作为面向用户的统一业务名片，在一个页面集中展现：App下载地址、小程序二维码、H5访问链接等信息。</text>
         </view>
 
-        <!-- #ifdef H5 -->
+        <!-- #ifdef WEB -->
         <view class="text-separated">
           <text style="font-size: 16px"
             >uni-app 官方示例的发布页就是基于<text class="strong">uni-portal </text> 制作的，<a href="https://hellouniapp.dcloud.net.cn/portal" target="_blank" class="a-label"

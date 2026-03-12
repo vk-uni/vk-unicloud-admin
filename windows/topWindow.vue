@@ -50,7 +50,7 @@
             </view>
             <view class="vk-mask" @click="togglePopupMenu"></view>
             <view class="navbar-menu">
-              <!-- #ifdef H5 -->
+              <!-- #ifdef WEB -->
               <view v-if="vk.getVuex('$error.logs').length" @click="openForm('errorLog')" class="menu-item debug pointer">
                 <el-badge :value="vk.getVuex('$error.logs').length" class="item">
                   <vk-data-icon name="el-icon-message-solid" size="22" :color="textColor"></vk-data-icon>

@@ -7,7 +7,7 @@ html {
 	font-size: 16px;
 } */
 
-/* #ifdef H5 */
+/* #ifdef WEB */
 
 .uni-app--showleftwindow uni-main {
   position: relative;
@@ -64,7 +64,7 @@ uni-page-head .uni-btn-icon {
 
 /* #endif */
 
-/* #ifndef H5 */
+/* #ifndef WEB */
 .uni-nav-menu {
   height: 100vh;
 }
@@ -527,7 +527,7 @@ button:after {
 
 /* #endif */
 
-/* #ifndef H5 */
+/* #ifndef WEB */
 .fix-top-window {
   margin-top: 85px;
 }
