@@ -17,10 +17,11 @@
 
 **相关链接**
 
-|          | client 端                                            | admin 端                                                            |
-| -------- | ---------------------------------------------------- | ------------------------------------------------------------------- |
-| 插件市场 | [查看插件](https://ext.dcloud.net.cn/plugin?id=2204) | [查看插件](https://ext.dcloud.net.cn/plugin?name=vk-unicloud-admin) |
-| 在线文档 | [查看文档](https://vkdoc.fsq.pub/client/)            | [查看文档](https://vkdoc.fsq.pub/admin/)                            |
+|          | client 端                                                | admin 端（本插件）                                                  |
+| -------- | -------------------------------------------------------- | ------------------------------------------------------------------- |
+| 插件市场 | [查看插件](https://ext.dcloud.net.cn/plugin?id=2204)     | [查看插件](https://ext.dcloud.net.cn/plugin?name=vk-unicloud-admin) |
+| 在线文档 | [查看文档](https://vkdoc.fsq.pub/client/)                | [查看文档](https://vkdoc.fsq.pub/admin/)                            |
+| 安装教程 | [查看教程](https://vkdoc.fsq.pub/client/quickstart.html) | [查看教程](https://vkdoc.fsq.pub/admin/1/quickstart.html)           |
 
 ---
 
