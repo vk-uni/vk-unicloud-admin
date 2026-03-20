@@ -1,4 +1,4 @@
-- 【升级】`vk-unicloud-admin-ui` 的 npm 包（执行`npm i vk-unicloud-admin-ui@1.21.11 --registry https://registry.npmjs.org/`）
+- 【升级】`vk-unicloud-admin-ui` 的 npm 包（执行`npm i vk-unicloud-admin-ui@1.23.0 --registry https://registry.npmjs.org/`）
 - 【升级】`vk依赖` [详情](https://ext.dcloud.net.cn/plugin?id=4157&update_log)
 - 【重要】项目使用 `Prettier` 进行统一代码格式化 [传送门](https://vkdoc.fsq.pub/client/codeFormat.html)
 - 【新增】admin 内置组件（涉及云函数请求的组件）新增属性 `encryptAction` 控制请求是否需要加密
