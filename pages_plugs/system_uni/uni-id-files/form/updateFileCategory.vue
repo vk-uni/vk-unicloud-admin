@@ -21,7 +21,7 @@
           v-model="form[keyName]"
           :localdata="value.list"
           :props="{ value: '_id', label: 'name' }"
-          placeholder="请选择分组"
+          :placeholder="$t('vk.assetLibrary.updateFileCategory.selectCategory')"
           border
           :item-width="300"
         ></vk-data-input-radio>
@@ -51,9 +51,9 @@
       // 组件创建时，进行数据初始化
       return {
         page: {
-          title: '修改分组',
-          submitText: '确定',
-          cancelText: '关闭',
+          title: `${this.$t('vk.common.update')}${this.$t('vk.assetLibrary.updateFileCategory.category')}`,
+          submitText: this.$t('vk.form.submit'),
+          cancelText: this.$t('vk.form.close'),
           showCancel: true,
           top: '5vh',
           width: '450px',
@@ -69,14 +69,14 @@
             columns: [
               {
                 key: 'category_id',
-                title: '分组',
+                title: this.$t('vk.assetLibrary.updateFileCategory.category'),
                 type: 'select',
-                placeholder: '请选择分组',
+                placeholder: this.$t('vk.assetLibrary.updateFileCategory.selectCategory'),
               },
             ],
             // 表单验证规则
             rules: {},
-            labelWidth: '60px',
+            labelWidth: '80px',
           },
         },
       };

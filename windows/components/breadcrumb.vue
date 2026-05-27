@@ -1,14 +1,14 @@
 <template>
-  <view class="mini-none">
-    <view style="display: flex">
-      <view v-for="(item, index) in vk.getVuex('$app.menuMap')" :key="index" @click="pageTo(item)" class="top-bar">
-        <view class="item-content" v-if="item.name">
+  <div class="mini-none">
+    <div style="display: flex">
+      <div v-for="(item, index) in menuMapCom" :key="index" @click="pageTo(item)" class="top-bar">
+        <div class="item-content" v-if="item.name">
           {{ item.name }}
-          <text v-if="index !== vk.getVuex('$app.menuMap').length - 1" class="item-content-text"> / </text>
-        </view>
-      </view>
-    </view>
-  </view>
+          <span v-if="index !== menuMapCom.length - 1" class="item-content-text"> / </span>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -28,10 +28,12 @@
       },
     },
     watch: {},
-    // 过滤器
-    filters: {},
     // 计算属性
-    computed: {},
+    computed: {
+      menuMapCom() {
+        return this.vk.getVuex('$app.menuMap');
+      },
+    },
   };
 </script>
 

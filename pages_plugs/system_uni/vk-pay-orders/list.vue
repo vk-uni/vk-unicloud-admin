@@ -1,7 +1,7 @@
 <template>
-  <view>
+  <div>
     <!-- 搜索区域卡片 -->
-    <view class="vk-page-card vk-page-search-card">
+    <div class="vk-page-card vk-page-search-card">
       <vk-data-table-query
         v-model="queryForm1.formData"
         :columns="queryForm1.columns"
@@ -11,19 +11,19 @@
         @search="search"
         @collapse-change="collapseChange"
       ></vk-data-table-query>
-    </view>
+    </div>
 
     <!-- 表格内容卡片 -->
-    <view class="vk-page-card">
-      <view class="vk-page-card-toolbar">
-        <view class="vk-page-card-title">支付订单列表</view>
-        <view class="vk-page-card-actions">
+    <div class="vk-page-card">
+      <div class="vk-page-card-toolbar">
+        <div class="vk-page-card-title">支付订单列表</div>
+        <div class="vk-page-card-actions">
           <el-button :size="$global.size" icon="el-icon-download" @click="exportExcel">导出Excel</el-button>
-        </view>
-      </view>
+        </div>
+      </div>
 
       <!-- 表格区域 -->
-      <view class="vk-page-card-table">
+      <div class="vk-page-card-table">
         <vk-data-table
           ref="table1"
           :action="table1.action"
@@ -38,19 +38,19 @@
           @detail="onDetail"
         >
           <template v-slot:button1="{ row }">
-            <view v-if="row.status <= 0">-</view>
+            <div v-if="row.status <= 0">-</div>
             <el-tag type="success" effect="dark" v-else-if="row.user_order_success">成功</el-tag>
             <el-button type="danger" size="mini" v-else-if="row.status === 1" @click="afreshNotice(row)">重新推送</el-button>
-            <view v-else-if="row.refund_fee > 0">失败，但已退款</view>
-            <view v-else>未知</view>
+            <div v-else-if="row.refund_fee > 0">失败，但已退款</div>
+            <div v-else>未知</div>
           </template>
         </vk-data-table>
-      </view>
-    </view>
+      </div>
+    </div>
 
     <!-- 自定义详情弹窗 -->
     <vk-pay-orders-detail ref="detailDialog" @afresh-notice="afreshNotice" @refresh="refresh"></vk-pay-orders-detail>
-  </view>
+  </div>
 </template>
 
 <script>

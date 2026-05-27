@@ -1,13 +1,13 @@
 <template>
-  <view class="page-body">
+  <div class="page-body">
     <image src="../../static/icon/icon-500.svg"></image>
-    <view class="title">
-      <text class="code">500</text>
-      <text class="tips">抱歉，服务器出错了</text>
-      <text class="tips">{{ errMsg }}</text>
-      <text class="btn" @tap="to_index_page">返回首页</text>
-    </view>
-  </view>
+    <div class="title">
+      <span class="code">500</span>
+      <span class="tips">抱歉，服务器出错了</span>
+      <span class="tips">{{ errMsg }}</span>
+      <span class="btn" @tap="to_index_page">返回首页</span>
+    </div>
+  </div>
 </template>
 
 <script>

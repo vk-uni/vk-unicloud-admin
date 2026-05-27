@@ -17,9 +17,9 @@
       @success="onFormSuccess"
     >
       <template v-slot:menus="{ form, keyName }">
-        <view>
+        <div>
           <vk-data-table style="margin-top: 0" :data="table1.data" :columns="table1.columns" row-key="menu_id" :default-expand-all="true"></vk-data-table>
-        </view>
+        </div>
       </template>
     </vk-data-form>
     <!-- 页面主体内容结束 -->
@@ -95,7 +95,7 @@
               formatter: function (val, row, column, index) {
                 let icon = row.icon || 'el-icon-tickets';
                 if (icon.indexOf('vk-icon') > -1) icon = 'vk-icon ' + icon;
-                return `<i class="${icon}" style="margin-right: 10px;"></i><text>${row.name}</text>`;
+                return `<i class="${icon}" style="margin-right: 10px;"></i><span>${row.name}</span>`;
               },
             },
             { key: 'url', title: '菜单URL', type: 'text', minWidth: 300, align: 'left' },

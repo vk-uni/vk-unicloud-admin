@@ -53,16 +53,16 @@
           <!-- 图片模式下的控制项 -->
           <template v-if="!currentFile || currentFile.type !== 'video'">
             <div class="setting-item">
-              <span class="setting-label">自动播放</span>
+              <span class="setting-label">{{ $t('vk.assetLibrary.slideShow.autoPlay') }}</span>
               <el-switch v-model="autoPlay" size="mini" @change="onAutoPlayChange"></el-switch>
             </div>
             <div class="setting-item" v-if="autoPlay">
-              <span class="setting-label">间隔</span>
+              <span class="setting-label">{{ $t('vk.assetLibrary.slideShow.interval') }}</span>
               <el-input-number v-model="playInterval" :min="1" :max="99" size="mini" @change="onIntervalChange"></el-input-number>
-              <span class="setting-label">秒</span>
+              <span class="setting-label">{{ $t('vk.assetLibrary.slideShow.seconds') }}</span>
             </div>
             <div class="setting-item">
-              <span class="setting-label">循环播放</span>
+              <span class="setting-label">{{ $t('vk.assetLibrary.slideShow.loopPlay') }}</span>
               <el-switch v-model="loopPlay" size="mini"></el-switch>
             </div>
           </template>
@@ -70,8 +70,8 @@
           <!-- 视频模式下的控制项 -->
           <template v-else>
             <div class="setting-item">
-              <span class="setting-label">视频模式</span>
-              <span class="setting-label" style="opacity: 0.7">手动控制</span>
+              <span class="setting-label">{{ $t('vk.assetLibrary.slideShow.videoMode') }}</span>
+              <span class="setting-label" style="opacity: 0.7">{{ $t('vk.assetLibrary.slideShow.manualControl') }}</span>
             </div>
           </template>
         </div>
@@ -432,12 +432,12 @@
 
       // 媒体加载错误
       onMediaError() {
-        this.$message.error('媒体文件加载失败');
+        this.$message.error(this.$t('vk.assetLibrary.slideShow.mediaLoadFailed'));
       },
 
       // 切换全屏
       toggleFullscreen() {
-        this.$message.info('全屏功能待实现');
+        this.$message.info(this.$t('vk.assetLibrary.slideShow.fullscreenNotImplemented'));
       },
 
       // 关闭幻灯片

@@ -12,6 +12,7 @@ export default {
   // 登录页面路径
   login: {
     url: '/pages/login/index',
+    // 显示在login页面的测试用户列表
     testUser: {
       show: false, // 是否显示
       list: [
@@ -140,14 +141,15 @@ export default {
   },
   // 页面风格
   pageStyle: {
-    // 表单组件和表格组件的size
+    // 表单组件和表格组件的size，设为auto时，屏幕像素大于1600，则使用medium，否则使用small，且全局变量 `this.$global.size` 可获得实际生效的值
     size: 'auto', // medium / small / mini / auto
   },
   // 左侧菜单
   sideBar: {
     // 配置静态菜单列表
     staticMenu: staticMenu,
-    defaultOpeneds: ['components-admin'], // 默认展开的菜单项的menu_id
+    defaultOpeneds: ['components-admin'], // 默认展开的菜单项的 menu_id
+    navigateMode: 'redirectTo', // 默认 redirectTo，可选项为 navigateTo
   },
   // 顶部菜单
   topBar: {

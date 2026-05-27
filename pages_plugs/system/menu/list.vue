@@ -1,39 +1,48 @@
 <template>
-  <view class="page-body">
-    <!-- 页面内容开始 -->
-    <!-- 自定义按钮区域开始 -->
-    <view class="vk-table-button-box">
-      <el-button type="success" size="small" icon="el-icon-circle-plus-outline" @click="addBtn">添加</el-button>
-      <el-button type="primary" size="small" icon="el-icon-s-tools" :disabled="!table1.selectItem" @click="bindPermissionBtn">设置内置权限</el-button>
-      <el-button type="success" size="small" icon="el-icon-circle-plus-outline" @click="addMenuByJsonBtn">通过JSON数组批量导入菜单</el-button>
-      <el-badge v-if="pluginMenus && pluginMenus.length > 0" :value="pluginMenus.length" class="item">
-        <el-button type="warning" size="small" icon="el-icon-circle-plus-outline" style="margin-right: 0" @click="addPluginMenuMenu">待添加的插件菜单</el-button>
-      </el-badge>
-    </view>
-    <!-- 自定义按钮区域结束 -->
+  <div>
+    <!-- 表格内容卡片 -->
+    <div class="vk-page-card">
+      <!-- 操作按钮与表格标题区域 -->
+      <div class="vk-page-card-toolbar">
+        <div class="vk-page-card-title">菜单列表</div>
+        <div class="vk-page-card-actions">
+          <el-button type="primary" :size="$global.size" icon="el-icon-plus" @click="addBtn">添加菜单</el-button>
+          <el-tooltip :disabled="!!table1.selectItem" content="请先点击需要操作的菜单" placement="top">
+            <el-button type="success" :size="$global.size" icon="el-icon-key" :disabled="!table1.selectItem" @click="bindPermissionBtn">设置内置权限</el-button>
+          </el-tooltip>
+          <el-button type="warning" :size="$global.size" icon="el-icon-upload2" @click="addMenuByJsonBtn">通过JSON批量导入</el-button>
+          <el-badge v-if="pluginMenus && pluginMenus.length > 0" :value="pluginMenus.length" class="item">
+            <el-button type="warning" :size="$global.size" icon="el-icon-plus" style="margin-right: 0" @click="addPluginMenuMenu">待添加的插件菜单</el-button>
+          </el-badge>
+        </div>
+      </div>
 
-    <!-- 表格组件开始 -->
-    <vk-data-table
-      ref="table1"
-      :action="table1.action"
-      :columns="table1.columns"
-      :query-form-param="queryForm1"
-      :right-btns="['detail_auto', 'update', 'delete']"
-      :default-expand-all="false"
-      @update="updateBtn"
-      @delete="deleteBtn"
-      @current-change="currentChange"
-      @selection-change="selectionChange"
-      @success="tableSuccess"
-    >
-      <!-- 排序值 -->
-      <template v-slot:sort="{ row, column, index }">
-        <el-input v-model="row.sort" size="mini" @change="sortChange($event, row)" />
-      </template>
-    </vk-data-table>
-    <!-- 表格组件结束 -->
+      <!-- 表格区域 -->
+      <div class="vk-page-card-table">
+        <vk-data-table
+          ref="table1"
+          :action="table1.action"
+          :columns="table1.columns"
+          :query-form-param="queryForm1"
+          :right-btns="['detail_auto', 'update', 'delete']"
+          :default-expand-all="false"
+          :fullscreen="true"
+          :top="0"
+          @update="updateBtn"
+          @delete="deleteBtn"
+          @current-change="currentChange"
+          @selection-change="selectionChange"
+          @success="tableSuccess"
+        >
+          <!-- 排序值 -->
+          <template v-slot:sort="{ row, column, index }">
+            <el-input v-model="row.sort" size="mini" @change="sortChange($event, row)" />
+          </template>
+        </vk-data-table>
+      </div>
+    </div>
 
-    <!-- 添加或编辑的弹窗开始 -->
+    <!-- 添加或编辑的弹窗 -->
     <vk-data-dialog v-model="form1.props.show" :title="form1.props.title" width="700px" mode="form">
       <vk-data-form
         v-model="form1.data"
@@ -45,7 +54,6 @@
         @success="formSuccess"
       ></vk-data-form>
     </vk-data-dialog>
-    <!-- 添加或编辑的弹窗结束 -->
 
     <!-- 设置角色权限组件 -->
     <bindPermission v-model="formDatas.bindPermission"></bindPermission>
@@ -55,8 +63,7 @@
 
     <!-- 添加插件菜单 -->
     <addPluginMenu v-model="formDatas.addPluginMenu" @success="refresh"></addPluginMenu>
-    <!-- 页面内容结束 -->
-  </view>
+  </div>
 </template>
 
 <script>
@@ -120,7 +127,7 @@
               formatter: function (val, row, column, index) {
                 let icon = row.icon || 'el-icon-tickets';
                 if (icon.indexOf('vk-icon') > -1) icon = 'vk-icon ' + icon;
-                return `<i class="${icon}" style="margin-right: 10px;"></i><text>${row.name}</text>`;
+                return `<i class="${icon}" style="margin-right: 10px;"></i><span>${row.name}</span>`;
               },
             },
             { key: 'menu_id', title: '菜单唯一标识', type: 'text', width: 350, align: 'left' },
@@ -396,4 +403,8 @@
     computed: {},
   };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  page {
+    background-color: var(--bgcolor);
+  }
+</style>

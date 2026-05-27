@@ -1,50 +1,52 @@
+<!-- 请不要修改此页面的代码，因为更新后会覆盖，你自己系统的用户管理不应该在这个页面上开发，你应该复制整个页面，在别的目录创建用户管理。 -->
+<!-- 请不要修改此页面的代码，因为更新后会覆盖，你自己系统的用户管理不应该在这个页面上开发，你应该复制整个页面，在别的目录创建用户管理。 -->
+<!-- 请不要修改此页面的代码，因为更新后会覆盖，你自己系统的用户管理不应该在这个页面上开发，你应该复制整个页面，在别的目录创建用户管理。 -->
 <template>
-  <view class="page-body">
-    <!-- 请不要修改此页面的代码，因为更新后会覆盖，你自己系统的用户管理不应该在这个页面上开发，你应该复制整个页面，在别的目录创建用户管理。 -->
-    <!-- 请不要修改此页面的代码，因为更新后会覆盖，你自己系统的用户管理不应该在这个页面上开发，你应该复制整个页面，在别的目录创建用户管理。 -->
-    <!-- 请不要修改此页面的代码，因为更新后会覆盖，你自己系统的用户管理不应该在这个页面上开发，你应该复制整个页面，在别的目录创建用户管理。 -->
+  <div>
+    <!-- 搜索区域卡片 -->
+    <div class="vk-page-card vk-page-search-card">
+      <vk-data-table-query v-model="queryForm1.formData" :columns="queryForm1.columns" :span="3" @search="search" @collapse-change="collapseChange"></vk-data-table-query>
+    </div>
 
-    <!-- 页面内容开始 -->
+    <!-- 表格内容卡片 -->
+    <div class="vk-page-card">
+      <!-- 操作按钮与表格标题区域 -->
+      <div class="vk-page-card-toolbar">
+        <!-- 左侧标题 -->
+        <div class="vk-page-card-title">用户列表</div>
+        <!-- 右侧操作栏 -->
+        <div class="vk-page-card-actions">
+          <el-button type="primary" :size="$global.size" icon="el-icon-plus" @click="addBtn">添加用户</el-button>
+          <el-tooltip :disabled="!!table1.selectItem" content="请先点击需要操作的用户" placement="top">
+            <el-button type="warning" :size="$global.size" icon="el-icon-user" :disabled="!table1.selectItem" @click="bindRoleBtn">绑定角色</el-button>
+          </el-tooltip>
+          <el-button :size="$global.size" icon="el-icon-download" @click="exportExcel">导出Excel</el-button>
+        </div>
+      </div>
 
-    <!-- 表格搜索组件开始 -->
-    <vk-data-table-query v-model="queryForm1.formData" :columns="queryForm1.columns" @search="search"></vk-data-table-query>
-    <!-- 表格搜索组件结束 -->
+      <!-- 表格区域 -->
+      <div class="vk-page-card-table">
+        <vk-data-table
+          ref="table1"
+          :action="table1.action"
+          :columns="table1.columns"
+          :query-form-param="queryForm1"
+          :right-btns="['detail', 'update', 'delete', 'more']"
+          :right-btns-more="table1.rightBtnsMore"
+          :batch-btns="table1.batchBtns"
+          :selection="true"
+          :row-no="true"
+          :pagination="true"
+          :top="0"
+          @detail="detailBtn"
+          @update="updateBtn"
+          @delete="deleteBtn"
+          @current-change="currentChange"
+        ></vk-data-table>
+      </div>
+    </div>
 
-    <!-- 自定义按钮区域开始 -->
-    <view class="vk-table-button-box">
-      <el-button type="success" size="small" icon="el-icon-circle-plus-outline" @click="addBtn">添加</el-button>
-      <!-- 批量操作 -->
-      <el-dropdown v-if="table1.multipleSelection" :split-button="false" trigger="click" @command="batchBtn">
-        <el-button type="danger" size="small" :disabled="table1.multipleSelection.length === 0"> 批量操作<i class="el-icon-arrow-down el-icon--right"></i> </el-button>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item :command="1">账号批量解冻</el-dropdown-item>
-          <el-dropdown-item :command="2">账号批量冻结</el-dropdown-item>
-          <el-dropdown-item :command="3">批量设置可登录的应用</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
-    </view>
-    <!-- 自定义按钮区域结束 -->
-
-    <!-- 表格组件开始 -->
-    <vk-data-table
-      ref="table1"
-      :action="table1.action"
-      :columns="table1.columns"
-      :query-form-param="queryForm1"
-      :right-btns="['detail_auto', 'update', 'delete', 'more']"
-      :custom-right-btns="table1.customRightBtns"
-      :right-btns-more="table1.rightBtnsMore"
-      :selection="true"
-      :row-no="true"
-      :pagination="true"
-      @update="updateBtn"
-      @delete="deleteBtn"
-      @current-change="currentChange"
-      @selection-change="selectionChange"
-    ></vk-data-table>
-    <!-- 表格组件结束 -->
-
-    <!-- 添加或编辑的弹窗开始 -->
+    <!-- 添加或编辑的弹窗 -->
     <vk-data-dialog v-model="form1.props.show" :title="form1.props.title" width="580px" top="4vh" mode="form">
       <vk-data-form
         ref="form1"
@@ -58,20 +60,38 @@
         @success="
           form1.props.show = false;
           refresh();
+          $refs.detailRef.refresh();
         "
-      ></vk-data-form>
+      >
+        <template v-slot:tags="{ form, keyName }">
+          <userTagsSelect v-model="form[keyName]"></userTagsSelect>
+        </template>
+      </vk-data-form>
     </vk-data-dialog>
-    <!-- 添加或编辑的弹窗结束 -->
 
+    <!-- 用户详情弹窗 -->
+    <detail
+      ref="detailRef"
+      v-model="formDatas.detail"
+      @edit-user="detailEditUser"
+      @edit-tags="detailEditTags"
+      @edit-comment="detailEditComment"
+      @reset-password="detailResetPassword"
+      @bind-role="detailBindRole"
+    ></detail>
     <!-- 用户角色授权弹窗 -->
-    <bindRole v-model="formDatas.bindRole"></bindRole>
+    <bindRole
+      v-model="formDatas.bindRole"
+      @success="
+        refresh();
+        $refs.detailRef.refresh();
+      "
+    ></bindRole>
     <!-- 重置密码弹窗 -->
     <resetPassword v-model="formDatas.resetPassword"></resetPassword>
     <!-- 批量设置用户允许登录的客户端 -->
     <setAuthorizedAppLogin v-model="formDatas.setAuthorizedAppLogin" @success="refresh"></setAuthorizedAppLogin>
-
-    <!-- 页面内容结束 -->
-  </view>
+  </div>
 </template>
 
 <script>
@@ -85,14 +105,18 @@
   let dcloudAppidData = [];
 
   import bindRole from './form/bindRole';
+  import detail from './form/detail';
   import resetPassword from './form/resetPassword';
   import setAuthorizedAppLogin from './form/setAuthorizedAppLogin';
+  import userTagsSelect from './form/userTagsSelect';
 
   export default {
     components: {
       bindRole,
+      detail,
       resetPassword,
       setAuthorizedAppLogin,
+      userTagsSelect,
     },
     data() {
       // 页面数据变量
@@ -111,6 +135,7 @@
             { key: 'username', title: '用户名', type: 'text', width: 180, defaultValue: '未设置' },
             { key: 'nickname', title: '昵称', type: 'text', width: 180, defaultValue: '未设置' },
             { key: 'mobile', title: '手机号', type: 'text', width: 120, defaultValue: '未绑定' },
+            { key: 'email', title: '邮箱', type: 'text', width: 180, defaultValue: '未绑定' },
             {
               key: 'appList',
               title: '可登录的应用',
@@ -128,7 +153,18 @@
                 return str;
               },
             },
-            { key: 'role', title: '角色', type: 'text', width: 120, defaultValue: '无' },
+            {
+              key: 'roleList',
+              title: '角色',
+              type: 'text',
+              width: 120,
+              defaultValue: '-',
+              formatter: (val) => {
+                if (vk.pubfn.isNull(val) || val.length === 0) return '-';
+                let names = val.map((item) => item.role_name || item.role_id);
+                return names.join('、');
+              },
+            },
             { key: 'comment', title: '备注', type: 'text', width: 160 },
             {
               key: 'allow_login_background',
@@ -166,28 +202,40 @@
               data: genderData,
             },
             { key: 'register_date', title: '注册时间', type: 'time', width: 160, sortable: 'custom' },
-            { key: 'last_login_date', title: '最后登录时间', type: 'dateDiff', width: 130, defaultValue: '从未登录过', sortable: 'custom' },
+            { key: 'last_login_date', title: '最后登录时间', type: 'dateDiff', width: 140, defaultValue: '从未登录过', sortable: 'custom' },
             { key: 'last_login_ip', title: '最后登录ip', type: 'text', width: 120, defaultValue: '从未登录过' },
             { key: '_id', title: 'id', type: 'text', width: 280 },
           ],
-          // 多选框选中的值
-          multipleSelection: [],
           // 当前高亮的记录
           selectItem: '',
-          customRightBtns: [
-            {
-              title: '绑定角色',
-              type: 'primary',
-              onClick: (item) => {
-                this.bindRoleBtn(item);
-              },
-            },
-          ],
           rightBtnsMore: [
             {
               title: '重置密码',
               onClick: (item) => {
                 this.resetPasswordBtn(item);
+              },
+            },
+          ],
+          batchBtns: [
+            {
+              title: '批量冻结',
+              type: 'danger',
+              confirm: true,
+              onClick: (items) => {
+                this.frozen(items, 1);
+              },
+            },
+            {
+              title: '批量解冻',
+              confirm: true,
+              onClick: (items) => {
+                this.frozen(items, 0);
+              },
+            },
+            {
+              title: '批量设置可登录应用',
+              onClick: (items) => {
+                this.setAuthorizedAppLogin(items);
               },
             },
           ],
@@ -206,17 +254,16 @@
               key: 'dcloud_appid',
               title: '所属应用',
               type: 'select',
-              width: 150,
               mode: 'custom',
               data: [],
-              props: { value: 'appid', label: 'name' },
+              props: {
+                value: 'appid',
+                label: 'name',
+              },
             },
-            { key: 'username', title: '用户名', type: 'text', width: 140, mode: '%%' },
-            { key: 'nickname', title: '昵称', type: 'text', width: 140, mode: '%%' },
-            { key: 'mobile', title: '手机号', type: 'text', width: 140, mode: '%%' },
-            { key: '_id', title: 'ID', type: 'text', width: 140, mode: '=' },
-            { key: 'register_date', title: '注册时间', type: 'datetimerange', width: 360, mode: '[]' },
-            { key: 'allow_login_background', hidden: true, mode: '=' },
+            { key: 'searchvalue', title: '', placeholder: '输入用户名、昵称、手机号、邮箱、ID搜索', type: 'text', mode: 'custom' },
+            { key: 'register_date', title: '注册时间', type: 'datetimerange', span: 4, mode: '[]' }, // 这里 span: 4 是为了让搜索按钮在同一行显示，具体可以根据实际情况调整
+            { key: 'allow_login_background', hidden: true, mode: '=' }, // hidden: true 代表隐藏不显示
           ],
         },
         form1: {
@@ -225,6 +272,7 @@
             gender: 0,
             login_appid_type: 1,
             allow_login_background: false,
+            tags: [],
           },
           // 表单属性
           props: {
@@ -233,15 +281,18 @@
             // 表单字段显示规则
             columns: [
               { key: 'username', title: '用户名', type: 'text', show: ['add'] },
-              { key: 'nickname', title: '昵称', type: 'text' },
+              { key: 'nickname', title: '昵称', type: 'text', show: ['add', 'update'] },
+              { key: 'avatar', title: '头像', type: 'file-select', placeholder: '请选择头像', fileType: 'image', multipleLimit: 1, imageFit: 'cover', show: ['add', 'update'] },
               {
                 key: 'gender',
                 title: '性别',
                 type: 'radio',
                 data: genderData,
+                show: ['add', 'update'],
               },
               { key: 'password', title: '密码', type: 'text', tips: '若密码为空，则默认为234567', show: ['add'] },
-              { key: 'mobile', title: '手机号', type: 'text' },
+              { key: 'mobile', title: '手机号', type: 'text', show: ['add', 'update'] },
+              { key: 'email', title: '邮箱', type: 'text', show: ['add', 'update'] },
               {
                 key: 'login_appid_type',
                 title: '登录权限',
@@ -251,6 +302,7 @@
                   { value: 1, label: '部分应用' },
                   { value: 0, label: '全部应用' },
                 ],
+                show: ['add', 'update'],
                 watch: ({ value, formData, column, index, option, $set }) => {
                   if (value === 1) {
                     $set('allow_login_background', false);
@@ -267,6 +319,7 @@
                 itemWidth: 100,
                 data: [],
                 props: { value: 'appid', label: 'name' },
+                show: ['add', 'update'],
                 showRule: 'login_appid_type=1',
                 watch: ({ value, formData, column, index, option = [], $set }) => {
                   let allow_login_background = false;
@@ -283,12 +336,19 @@
               //   tips:"只有同时设置可登录的应用有管理端以及允许登后台，该用户才能登录管理端"
               // },
               {
+                key: 'tags',
+                title: '标签',
+                type: 'text',
+                show: ['add', 'update', 'tags'],
+              },
+              {
                 key: 'comment',
                 title: '备注',
                 type: 'textarea',
                 maxlength: 99,
                 showWordLimit: true,
                 autosize: { minRows: 2, maxRows: 10 },
+                show: ['add', 'update', 'comment'],
               },
             ],
             // 表单对应的验证规则
@@ -300,6 +360,7 @@
               ],
               password: [{ validator: vk.pubfn.validator('password'), message: '密码长度在6~18之间，只能包含字母、数字和下划线', trigger: 'blur' }],
               mobile: [{ validator: vk.pubfn.validator('mobile'), message: '手机号格式错误', trigger: 'blur' }],
+              email: [{ validator: vk.pubfn.validator('email'), message: '邮箱格式错误', trigger: 'blur' }],
             },
             // add 代表添加 update 代表修改
             formType: '',
@@ -377,6 +438,11 @@
       search() {
         this.$refs.table1.search();
       },
+      // 监听 - 查询表单折叠面板变化事件
+      collapseChange() {
+        // 执行表格重新布局
+        this.$refs.table1.doLayout();
+      },
       // 刷新
       refresh() {
         this.$refs.table1.refresh();
@@ -388,10 +454,6 @@
       // 监听 - 行的选中高亮事件
       currentChange(val) {
         this.table1.selectItem = val;
-      },
-      // 当选择项发生变化时会触发该事件
-      selectionChange(list) {
-        this.table1.multipleSelection = list;
       },
       // 显示添加页面
       addBtn() {
@@ -419,36 +481,54 @@
           },
         });
       },
-      // 监听 - 批量操作的按钮点击事件
-      batchBtn(index) {
-        switch (index) {
-          case 1:
-            this.frozen(0);
-            break;
-          case 2:
-            this.frozen(1);
-            break;
-          case 3:
-            this.setAuthorizedAppLogin();
-            break;
-          default:
-            break;
-        }
+      // 导出Excel
+      exportExcel() {
+        this.$refs.table1.exportExcel({
+          showColumnSelector: true,
+        });
       },
       // 角色绑定按钮
       bindRoleBtn(item) {
+        if (!item) item = this.getCurrentRow(true);
         vk.pubfn.openForm('bindRole', { item });
+      },
+      // 详情按钮
+      detailBtn({ row }) {
+        vk.pubfn.openForm('detail', { item: row });
+      },
+      // 详情弹窗 - 编辑用户
+      detailEditUser(item) {
+        this.updateBtn({ item: vk.pubfn.copyObject(item) });
+      },
+      detailEditTags(item) {
+        this.form1.props.action = 'admin/system/user/sys/update';
+        this.form1.props.formType = 'tags';
+        this.form1.props.title = '编辑标签';
+        this.form1.props.show = true;
+        this.form1.data = item;
+      },
+      detailEditComment(item) {
+        this.form1.props.action = 'admin/system/user/sys/update';
+        this.form1.props.formType = 'comment';
+        this.form1.props.title = '编辑备注';
+        this.form1.props.show = true;
+        this.form1.data = item;
+      },
+      // 详情弹窗 - 重置密码
+      detailResetPassword(item) {
+        this.resetPasswordBtn(item);
+      },
+      // 详情弹窗 - 绑定角色
+      detailBindRole(item) {
+        this.bindRoleBtn(item);
       },
       // 重置密码按钮
       resetPasswordBtn(item) {
         vk.pubfn.openForm('resetPassword', { item });
       },
       //账户批量冻结/解冻
-      frozen(status) {
-        let user_ids = [];
-        this.table1.multipleSelection.map((item, index) => {
-          user_ids.push(item._id);
-        });
+      frozen(items, status) {
+        let user_ids = items.map((item) => item._id);
         vk.callFunction({
           url: 'admin/system/user/sys/batchUpdateStatus',
           title: '请求中...',
@@ -466,11 +546,8 @@
         });
       },
       // 批量设置允许登录的客户端
-      setAuthorizedAppLogin() {
-        let user_ids = [];
-        this.table1.multipleSelection.map((item, index) => {
-          user_ids.push(item._id);
-        });
+      setAuthorizedAppLogin(items) {
+        let user_ids = items.map((item) => item._id);
         this.formDatas.setAuthorizedAppLogin = {
           show: true,
           item: {
@@ -486,4 +563,8 @@
     computed: {},
   };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  page {
+    background-color: var(--bgcolor);
+  }
+</style>

@@ -1,23 +1,27 @@
 <template>
-  <scroll-view class="sidebar" :class="classCom" scroll-y="true" v-loading="!vk.getVuex('$app.inited')" :style="styleCom">
-    <vk-data-menu-nav
-      v-if="vk.getVuex('$app.inited')"
-      :data="vk.getVuex('$app.navMenu')"
+  <scroll-view class="sidebar" :class="classCom" scroll-y="true" v-loading="!initedCom" :style="styleCom">
+    <menu-nav
+      v-if="initedCom"
+      :data="navMenuCom"
       :unique-opened="true"
-      :collapse="vk.getVuex('$app.leftCollapse')"
+      :collapse="leftCollapseCom"
       :collapse-transition="false"
       :theme="theme"
       default-menu-icon="el-icon-folder-opened"
       default-sub-menu-icon="el-icon-tickets"
       :defaultOpeneds="defaultOpeneds"
       @select="select"
-    ></vk-data-menu-nav>
+    ></menu-nav>
   </scroll-view>
 </template>
 
 <script>
   import config from '@/app.config.js';
+  import MenuNav from './components/menu-nav.vue';
   export default {
+    components: {
+      MenuNav,
+    },
     data() {
       return {
         theme: config.theme,
@@ -32,8 +36,7 @@
       $route: {
         immediate: true,
         handler(newRoute, oldRoute) {
-          let that = this;
-          let { vk } = that;
+          let { vk } = this;
           let { path, query } = newRoute;
           let url = path + vk.pubfn.queryParams(query);
           let route = { path, query, url };
@@ -43,11 +46,22 @@
     },
     // 计算属性
     computed: {
+      isPC() {
+        return this.vk.getVuex('$app.isPC');
+      },
+      initedCom() {
+        return this.vk.getVuex('$app.inited');
+      },
+      navMenuCom() {
+        return this.vk.getVuex('$app.navMenu');
+      },
+      leftCollapseCom() {
+        return this.vk.getVuex('$app.leftCollapse');
+      },
       styleCom() {
         let theme = this.theme;
         if (theme && theme.use) {
-          let leftCollapse = vk.getVuex('$app.leftCollapse');
-          if (leftCollapse) {
+          if (this.leftCollapseCom) {
             return {
               ...theme[theme.use].leftMenu,
               width: '64px',
@@ -60,12 +74,11 @@
         }
       },
       classCom() {
-        let obj = {
-          pc: vk.getVuex('$app.isPC'),
-          mobile: !vk.getVuex('$app.isPC'),
-          collapse: vk.getVuex('$app.leftCollapse'),
+        return {
+          pc: this.isPC,
+          mobile: !this.isPC,
+          collapse: this.leftCollapseCom,
         };
-        return obj;
       },
     },
   };

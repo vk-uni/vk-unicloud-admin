@@ -53,7 +53,7 @@
       // 初始化系统环境变量
       initApp() {
         uni.getSystemInfo().then(([err, res]) => {
-          let isPC = res.model && res.model != 'PC' ? false : true;
+          let isPC = res.model && res.model != 'PC' && res.windowWidth <= 768 ? false : true;
           vk.setVuex('$app.isPC', isPC);
           vk.setVuex('$app.width', res.windowWidth);
           vk.setVuex('$app.height', res.windowHeight);
@@ -111,6 +111,7 @@
         }
       },
       navigateToLogin() {
+        // 在app.vue中必须这样获取页面地址和参数才是正确的
         let { vk, appOptions = {} } = this;
         let params = vk.pubfn.queryParams(appOptions.query);
         let url = `/${appOptions.path}${params}`;
@@ -158,10 +159,10 @@
 
 <style lang="scss">
   /**
-	 * 每个页面公共css
-	 * 特别注意，如果启动时报scss相关的错误，请卸载你的scss插件，重新安装
-	 * 安装地址：https://ext.dcloud.net.cn/plugin?id=2046
-	 */
+   * 每个页面公共css
+   * 特别注意，如果启动时报scss相关的错误，请卸载你的scss插件，重新安装
+   * 安装地址：https://ext.dcloud.net.cn/plugin?id=2046
+   */
   /* 此为uni-admin的样式，如果你不使用uni-admin的官方插件，可以不需要加载这些样式 */
   @import '@/common/uni-admin/css/uni.css';
   @import '@/common/uni-admin/css/uni-icons.css';

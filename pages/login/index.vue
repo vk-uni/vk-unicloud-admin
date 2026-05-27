@@ -1,39 +1,45 @@
 <template>
-  <view class="page-body no-user-select">
-    <view class="login-view">
+  <div class="page-body no-user-select">
+    <div class="login-view">
       <image class="image" :src="vk.getVuex('$app.staticUrl.navBar.logo')" mode="aspectFit"></image>
-      <text class="login-title">欢迎登录</text>
+      <span class="login-title">{{ $t('vk.login.welcome') }}</span>
 
       <el-form :model="form1" status-icon :rules="rules" ref="form1" label-width="60px" class="form-view">
-        <el-form-item label="账 号" prop="pass" class="form-item"><el-input class="input" type="text" v-model="form1.username" placeholder="请输入用户名"></el-input></el-form-item>
-        <el-form-item label="密 码" prop="checkPass" class="form-item">
-          <el-input class="input" type="password" v-model="form1.password" show-password placeholder="请输入密码" maxlength="20"></el-input>
+        <el-form-item :label="$t('vk.user.username')" prop="pass" class="form-item"
+          ><el-input class="input" type="text" v-model="form1.username" :placeholder="$t('vk.login.usernamePlaceholder')"></el-input
+        ></el-form-item>
+        <el-form-item :label="$t('vk.login.password')" prop="checkPass" class="form-item">
+          <el-input class="input" type="password" v-model="form1.password" show-password :placeholder="$t('vk.login.passwordPlaceholder')" maxlength="20"></el-input>
         </el-form-item>
-        <view class="password-box">
-          <view class="remember-password">
-            <el-checkbox v-model="checked"><text class="tips" style="font-size: 12px">记住密码</text></el-checkbox>
-          </view>
-          <view class="forget-password"><text @click="forgetPassWord" style="font-size: 12px">忘记密码？</text></view>
-        </view>
-        <el-button class="login_but" type="primary" @click="submit">登录</el-button>
+        <div class="password-box">
+          <div class="remember-password">
+            <el-checkbox v-model="checked"
+              ><span class="tips" style="font-size: 12px">{{ $t('vk.login.rememberPassword') }}</span></el-checkbox
+            >
+          </div>
+          <div class="forget-password">
+            <span @click="forgetPassWord" style="font-size: 12px">{{ $t('vk.login.forgotPassword') }}</span>
+          </div>
+        </div>
+        <el-button class="login_but" type="primary" @click="submit">{{ $t('vk.user.login') }}</el-button>
       </el-form>
 
-      <view v-if="testUser && testUser.show && testUser.list && testUser.list.length > 0" class="test-user-list">
-        <view>体验账号：</view>
-        <view v-for="(item, index) in testUser.list" :key="index" class="test-user-item">
-          <text class="test-user-item-nickname">{{ item.nickname }}</text>
-          <text class="test-user-item-username">账号：{{ item.username }}</text>
-          <text class="test-user-item-password">密码：{{ item.password }}</text>
-        </view>
-      </view>
+      <div v-if="testUser && testUser.show && testUser.list && testUser.list.length > 0" class="test-user-list">
+        <div>{{ $t('vk.login.testAccount') }}</div>
+        <div v-for="(item, index) in testUser.list" :key="index" class="test-user-item">
+          <span class="test-user-item-nickname">{{ item.nickname }}</span>
+          <span class="test-user-item-username">{{ $t('vk.login.account') }}{{ item.username }}</span>
+          <span class="test-user-item-password">{{ $t('vk.login.passwordLabel') }}{{ item.password }}</span>
+        </div>
+      </div>
 
-      <!-- <view class="btns-box">
-        <text @click="shortMessageLogin">短信验证码登录</text>
-        <text @click="noCccount">没有账号？</text>
-        <text class="register" @click="register">立即注册</text>
-      </view> -->
-    </view>
-  </view>
+      <!-- <div class="btns-box">
+        <span @click="shortMessageLogin">短信验证码登录</span>
+        <span @click="noCccount">没有账号？</span>
+        <span class="register" @click="register">立即注册</span>
+      </div> -->
+    </div>
+  </div>
 </template>
 
 <script>
@@ -101,7 +107,7 @@
           data: this.form1,
           success: (data) => {
             if (!getApp().isAllowLoginBackground(data.userInfo)) {
-              vk.alert('您的账户无登陆权限');
+              vk.alert(this.$t('vk.login.noPermission'));
               return false;
             }
             if (this.checked) {
@@ -152,7 +158,7 @@
       },
       forgetPassWord() {
         console.log(`忘记密码了`);
-        vk.toast('暂不支持', 'none');
+        vk.toast(this.$t('vk.login.notSupported'), 'none');
       },
       shortMessageLogin() {
         console.log(`短信登录`);
@@ -172,12 +178,25 @@
   .page-body {
     width: 100%;
     height: 100vh;
-    background: #46d0e7 url(../../static/bg/007.jpg?t=2) no-repeat fixed center center;
+    background: linear-gradient(rgba(0, 50, 100, 0.3), rgba(0, 50, 100, 0.3)), url('../../static/bg/006.jpg') no-repeat fixed center center;
     background-size: cover;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    position: relative;
+    box-sizing: border-box;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(25, 55, 109, 0.2);
+      z-index: 1;
+    }
 
     .login-view:hover {
       background-color: rgba(255, 255, 255, 1);
@@ -192,6 +211,7 @@
       box-sizing: border-box;
       border: 1px solid #f5f5f5;
       box-shadow: 6px 6px 10px 0px #888888;
+      z-index: 2;
 
       ::v-deep .input .el-input__inner {
         border: 0 !important;
@@ -265,7 +285,7 @@
         display: flex;
         box-sizing: border-box;
 
-        text {
+        span {
           cursor: pointer;
 
           &:first-of-type {

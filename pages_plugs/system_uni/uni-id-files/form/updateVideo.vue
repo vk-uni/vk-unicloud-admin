@@ -38,9 +38,9 @@
       // 组件创建时，进行数据初始化
       return {
         page: {
-          title: '编辑视频信息',
-          submitText: '确定',
-          cancelText: '关闭',
+          title: `${this.$t('vk.common.update')}${this.$t('vk.assetLibrary.form.name')}`,
+          submitText: this.$t('vk.form.submit'),
+          cancelText: this.$t('vk.form.close'),
           showCancel: true,
           top: '14vh',
           width: '450px',
@@ -54,17 +54,25 @@
             action: 'admin/system_uni/uni-id-files/files/sys/update',
             // 表单字段显示规则
             columns: [
-              { key: 'display_name', title: '名称', type: 'text' },
-              { key: 'cover_image', title: '封面图', type: 'image', limit: 1 },
+              { key: 'display_name', title: this.$t('vk.assetLibrary.form.name'), type: 'text' },
+              {
+                key: 'cover_image',
+                title: this.$t('vk.assetLibrary.updateVideo.coverImage'),
+                type: 'file-select',
+                fileType: 'image',
+                multiple: false,
+                multipleLimit: 1,
+                imageFit: 'cover',
+              },
             ],
             // 表单验证规则
             rules: {
               display_name: [
-                { required: true, message: '名称不能为空', trigger: 'change' },
-                { max: 32, message: '最多32字', trigger: 'change' },
+                { required: true, message: this.$t('vk.assetLibrary.form.nameRequired'), trigger: 'change' },
+                { max: 32, message: this.$t('vk.assetLibrary.form.nameMaxLength', { length: 32 }), trigger: 'change' },
               ],
             },
-            labelWidth: '60px',
+            labelWidth: '100px',
           },
         },
       };

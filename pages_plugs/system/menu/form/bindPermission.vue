@@ -18,9 +18,9 @@
       @success="onFormSuccess"
     >
       <template v-slot:refresh>
-        <view style="margin-left: 30px">
-          <text style="color: #66b1ff; text-decoration: underline; cursor: pointer" @click="getList()">刷新数据</text>
-        </view>
+        <div style="margin-left: 30px">
+          <span style="color: #66b1ff; text-decoration: underline; cursor: pointer" @click="getList()">刷新数据</span>
+        </div>
       </template>
 
       <template v-slot:permissionList>

@@ -1,23 +1,42 @@
 <template>
-  <view class="page-body">
-    <!-- 页面内容开始 -->
+  <div>
+    <!-- 搜索区域卡片 -->
+    <div class="vk-page-card vk-page-search-card">
+      <vk-data-table-query
+        v-model="queryForm1.formData"
+        :columns="queryForm1.columns"
+        :span="4"
+        :collapse-rows="1"
+        :collapse-default-expand="true"
+        @search="search"
+        @collapse-change="collapseChange"
+      ></vk-data-table-query>
+    </div>
 
-    <!-- 表格搜索组件开始 -->
-    <vk-data-table-query v-model="queryForm1.formData" :columns="queryForm1.columns" @search="search"></vk-data-table-query>
-    <!-- 表格搜索组件结束 -->
-    <!-- 表格组件开始 -->
-    <vk-data-table
-      ref="table1"
-      :action="table1.action"
-      :columns="table1.columns"
-      :query-form-param="queryForm1"
-      :right-btns="['detail_auto']"
-      :row-no="true"
-      :pagination="true"
-    ></vk-data-table>
-    <!-- 表格组件结束 -->
-    <!-- 页面内容结束 -->
-  </view>
+    <!-- 表格内容卡片 -->
+    <div class="vk-page-card">
+      <div class="vk-page-card-toolbar">
+        <div class="vk-page-card-title">登录日志列表</div>
+        <div class="vk-page-card-actions">
+          <el-button :size="$global.size" icon="el-icon-download" @click="exportExcel">导出Excel</el-button>
+        </div>
+      </div>
+
+      <!-- 表格区域 -->
+      <div class="vk-page-card-table">
+        <vk-data-table
+          ref="table1"
+          :action="table1.action"
+          :columns="table1.columns"
+          :query-form-param="queryForm1"
+          :right-btns="['detail_auto']"
+          :row-no="true"
+          :pagination="true"
+          :top="0"
+        ></vk-data-table>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -108,15 +127,47 @@
               key: 'dcloud_appid',
               title: '所属应用',
               type: 'select',
-              width: 160,
               mode: 'custom',
               data: [],
               props: { value: 'appid', label: 'name' },
             },
-            { key: 'user_id', title: '用户ID', type: 'text', width: 140, mode: '=' },
-            { key: 'ip', title: 'ip地址', type: 'text', width: 140, mode: '%%' },
-            { key: 'device_id', title: '设备唯一标识', type: 'text', width: 180, mode: '%%' },
-            { key: '_add_time', title: '添加时间', type: 'datetimerange', width: 380, mode: '[]' },
+            { key: 'ip', title: 'ip地址', type: 'text', mode: '%%' },
+            { key: 'device_id', title: '设备唯一标识', type: 'text', mode: '%%' },
+            { key: '_add_time', title: '添加时间', type: 'datetimerange', mode: '[]' },
+            {
+              key: 'user_id',
+              title: '筛选用户',
+              type: 'table-select',
+              placeholder: '请选择用户',
+              action: 'admin/system/user/sys/getList',
+              columns: [
+                { key: 'avatar', title: '头像', type: 'image', width: 80 },
+                { key: 'nickname', title: '用户昵称', type: 'text', minWidth: 200, nameKey: true }, // nameKey: true 代表此字段的值会显示在表单上
+                { key: 'mobile', title: '手机号', type: 'text', minWidth: 140 }, // 设置 minWidth 的列会自动撑开
+                { key: '_id', title: '用户ID', type: 'text', width: 240, idKey: true }, // idKey:true 代表此字段为主键字段，若设置show:["none"]，则可以在表格中隐藏该字段的显示
+              ],
+              queryColumns: [
+                { key: 'nickname', title: '用户昵称', type: 'text', width: 150, mode: '%%' },
+                { key: 'mobile', title: '手机号', type: 'text', width: 150, mode: '%%' },
+                { key: '_id', title: '用户ID', type: 'text', width: 150, mode: '=' },
+                {
+                  key: 'dcloud_appid',
+                  title: '所属应用',
+                  type: 'text',
+                  width: 150,
+                  mode: '=',
+                  disabled: true,
+                  show: (formData) => {
+                    return formData.dcloud_appid ? true : false;
+                  },
+                },
+              ],
+              formData: () => {
+                return {
+                  dcloud_appid: this.queryForm1.formData.dcloud_appid,
+                };
+              },
+            },
           ],
         },
         // 表单相关结束 -----------------------------------------------------------
@@ -175,9 +226,20 @@
       search(obj) {
         this.$refs.table1.query(obj);
       },
+      // 监听 - 查询表单折叠面板变化事件
+      collapseChange() {
+        // 执行表格重新布局
+        this.$refs.table1.doLayout();
+      },
       // 刷新
       refresh() {
         this.$refs.table1.refresh();
+      },
+      // 导出Excel
+      exportExcel() {
+        this.$refs.table1.exportExcel({
+          showColumnSelector: true,
+        });
       },
     },
     watch: {},
@@ -185,4 +247,8 @@
     computed: {},
   };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  page {
+    background-color: var(--bgcolor);
+  }
+</style>

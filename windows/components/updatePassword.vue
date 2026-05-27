@@ -21,8 +21,6 @@
 </template>
 
 <script>
-  let that; // 当前页面对象
-  let vk; // vk实例
   export default {
     props: {
       value: {
@@ -40,9 +38,9 @@
       // 组件创建时，进行数据初始化
       return {
         page: {
-          title: '修改密码',
-          submitText: '修改',
-          cancelText: '关闭',
+          title: this.$t('vk.user.updatePassword'),
+          submitText: this.$t('vk.common.update'),
+          cancelText: this.$t('vk.common.close'),
           showCancel: true,
           top: '14vh',
           width: '500px',
@@ -56,30 +54,30 @@
             action: 'user/kh/updatePwd',
             // 表单字段显示规则
             columns: [
-              { key: 'username', title: '账号', type: 'text', disabled: true },
-              { key: 'oldPassword', title: '原密码', type: 'password' },
-              { key: 'newPassword', title: '新密码', type: 'password' },
-              { key: 'newPassword2', title: '确认新密码', type: 'password' },
+              { key: 'username', title: this.$t('vk.user.username'), type: 'text', disabled: true },
+              { key: 'oldPassword', title: this.$t('vk.user.oldPassword'), type: 'password' },
+              { key: 'newPassword', title: this.$t('vk.user.newPassword'), type: 'password' },
+              { key: 'newPassword2', title: this.$t('vk.user.confirmNewPassword'), type: 'password' },
             ],
             // 表单验证规则
             rules: {
               oldPassword: [
-                { required: true, message: '原密码不能为空', trigger: 'change' },
-                { validator: uni.vk.pubfn.validator('pwd'), message: '密码长度在6~18之间，只能包含字母、数字和下划线', trigger: 'change' },
+                { required: true, message: this.$t('vk.user.oldPasswordCannotBeEmpty'), trigger: 'change' },
+                { validator: uni.vk.pubfn.validator('pwd'), message: this.$t('vk.user.passwordRule'), trigger: 'change' },
               ],
               newPassword: [
-                { required: true, message: '新密码不能为空', trigger: 'change' },
-                { validator: uni.vk.pubfn.validator('pwd'), message: '密码长度在6~18之间，只能包含字母、数字和下划线', trigger: 'change' },
+                { required: true, message: this.$t('vk.user.newPasswordCannotBeEmpty'), trigger: 'change' },
+                { validator: uni.vk.pubfn.validator('pwd'), message: this.$t('vk.user.passwordRule'), trigger: 'change' },
               ],
               newPassword2: [
-                { required: true, message: '请再次输入新密码', trigger: 'change' },
-                { validator: uni.vk.pubfn.validator('pwd'), message: '密码长度在6~18之间，只能包含字母、数字和下划线', trigger: 'change' },
+                { required: true, message: this.$t('vk.user.confirmNewPasswordTips'), trigger: 'change' },
+                { validator: uni.vk.pubfn.validator('pwd'), message: this.$t('vk.user.passwordRule'), trigger: 'change' },
               ],
             },
-            labelWidth: '100px',
-            beforeAction: function (data) {
+            labelWidth: '120px',
+            beforeAction: (data) => {
               if (data.newPassword !== data.newPassword2) {
-                vk.toast('两次密码不一样,请检查!', 'none');
+                uni.vk.toast(this.$t('vk.user.passwordNotMatch'), 'none');
                 return false;
               }
             },
@@ -88,71 +86,65 @@
       };
     },
     mounted() {
-      that = this;
-      vk = that.vk;
-      that.init();
+      this.init();
     },
     methods: {
       // 初始化
       init() {
-        let { value } = that;
-        that._input(value);
+        let { value } = this;
+        this._input(value);
       },
       _input(value) {
-        that.$emit('input', value);
+        this.$emit('input', value);
       },
       // 监听 - 页面打开
       onOpen() {
-        that = this;
-        let { value = {} } = that;
+        let { vk, value = {} } = this;
         let { item } = value;
         let userInfo = vk.getVuex('$user.userInfo');
-        that.form1.data.username = userInfo.username;
+        this.form1.data.username = userInfo.username;
       },
       // 监听 - 页面关闭
       onClose() {
-        that.resetForm();
+        this.resetForm();
       },
       // 监听 - 提交成功后
       onFormSuccess() {
-        that.close();
-        that.$emit('success');
+        this.close();
+        this.$emit('success');
       },
       // 打开页面
       open() {
-        let { value } = that;
+        let { value } = this;
         value.show = true;
-        that._input(value);
+        this._input(value);
       },
       // 关闭页面
       close() {
-        let { value } = that;
+        let { value } = this;
         value.show = false;
-        that._input(value);
+        this._input(value);
       },
       // 表单重置
       resetForm() {
-        that.$refs.form1.resetForm();
+        this.$refs.form1.resetForm();
       },
       // 表单提交
       submitForm() {
-        that.$refs.form1.submitForm();
+        this.$refs.form1.submitForm();
       },
     },
     watch: {
       'value.show': {
         handler(newValue, oldValue) {
-          let that = this;
           if (newValue) {
-            that.onOpen();
+            this.onOpen();
           } else {
-            that.onClose();
+            this.onClose();
           }
         },
       },
     },
-    // 过滤器
-    filters: {},
     // 计算属性
     computed: {},
   };

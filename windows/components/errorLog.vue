@@ -1,41 +1,30 @@
 <template>
   <vk-data-dialog v-model="value.show" :title="page.title" :top="page.top" :width="page.width" mode="form">
-    <view class="page-body">
+    <div class="page-body">
       <!-- 自定义按钮区域开始 -->
-      <view class="btns-box">
+      <div class="btns-box">
         <el-row>
-          <el-button size="small" icon="el-icon-delete" @click="clearErrorLog">清空日志</el-button>
+          <el-button size="small" icon="el-icon-delete" @click="clearErrorLog">{{ $t('vk.errorLog.clearLog') }}</el-button>
         </el-row>
-      </view>
+      </div>
       <!-- 自定义按钮区域结束 -->
 
       <!-- 表格组件开始 -->
       <vk-data-table
         ref="table1"
-        :data="vk.getVuex('$error.logs')"
+        :data="errLogsCom"
         :columns="table1.columns"
         :row-no="true"
         :height="600"
-        :custom-right-btns="[
-          {
-            title: '百度',
-            icon: 'el-icon-document',
-          },
-          {
-            title: '谷歌',
-            icon: 'el-icon-document',
-          },
-        ]"
+        :custom-right-btns="customRightBtnsList"
         @custom-right-btns="customRightBtns"
       ></vk-data-table>
       <!-- 表格组件结束 -->
-    </view>
+    </div>
   </vk-data-dialog>
 </template>
 
 <script>
-  let that; // 当前页面对象
-  let vk; // vk实例
   export default {
     props: {
       value: {
@@ -53,86 +42,88 @@
       // 组件创建时，进行数据初始化
       return {
         page: {
-          title: '错误日志',
+          title: this.$t('vk.errorLog.title'),
           top: '7vh',
           width: '1250px',
         },
         table1: {
           show: false,
           columns: [
-            { key: 'info', title: '类型', type: 'text', width: 160 },
-            { key: 'route', title: '页面地址', type: 'text', width: 240 },
-            { key: 'err', title: '错误信息', type: 'text', minWidth: 260 },
-            { key: 'time', title: '距离现在', type: 'dateDiff', width: 120 },
-            { key: 'timeStr', title: '发生时间', type: 'text', width: 120 },
+            { key: 'info', title: this.$t('vk.errorLog.type'), type: 'text', width: 160 },
+            { key: 'route', title: this.$t('vk.errorLog.pageUrl'), type: 'text', width: 240 },
+            { key: 'err', title: this.$t('vk.errorLog.errorInfo'), type: 'text', minWidth: 260 },
+            { key: 'time', title: this.$t('vk.errorLog.timeAgo'), type: 'dateDiff', width: 120 },
+            { key: 'timeStr', title: this.$t('vk.errorLog.occurTime'), type: 'text', width: 120 },
           ],
         },
       };
     },
     mounted() {
-      that = this;
-      vk = that.vk;
-      that.init();
+      this.init();
     },
     methods: {
       // 初始化
       init() {
-        let { value } = that;
-        that._input(value);
+        let { value } = this;
+        this._input(value);
       },
       _input(value) {
-        that.$emit('input', value);
+        this.$emit('input', value);
       },
       // 清除错误日志
       clearErrorLog() {
-        let that = this;
-        let { vk } = that;
+        let { vk } = this;
         vk.vuex.dispatch('$error/clear');
-        that.close();
+        this.close();
       },
       // 错误日志表格的右侧自定义按钮点击事件
       customRightBtns(row, btn) {
-        if (btn.title === '百度') {
+        if (btn.title === this.$t('vk.errorLog.baidu')) {
           window.open(`https://www.baidu.com/baidu?wd=${row.err}`);
-        } else if (btn.title === '谷歌') {
+        } else if (btn.title === this.$t('vk.errorLog.google')) {
           window.open(`https://www.google.com/search?q=${row.err}`);
         }
       },
       // 监听 - 页面打开
-      onOpen() {
-        that = this;
-      },
+      onOpen() {},
       // 监听 - 页面关闭
       onClose() {},
       // 打开页面
       open() {
-        let { value } = that;
+        let { value } = this;
         value.show = true;
-        that._input(value);
+        this._input(value);
       },
       // 关闭页面
       close() {
-        let { value } = that;
+        let { value } = this;
         value.show = false;
-        that._input(value);
+        this._input(value);
       },
     },
     watch: {
       'value.show': {
         handler(newValue, oldValue) {
-          let that = this;
           if (newValue) {
-            that.onOpen();
+            this.onOpen();
           } else {
-            that.onClose();
+            this.onClose();
           }
         },
       },
     },
-    // 过滤器
-    filters: {},
     // 计算属性
-    computed: {},
+    computed: {
+      customRightBtnsList() {
+        return [
+          { title: this.$t('vk.errorLog.baidu'), icon: 'el-icon-document' },
+          { title: this.$t('vk.errorLog.google'), icon: 'el-icon-document' },
+        ];
+      },
+      errLogsCom() {
+        return this.vk.getVuex('$error.logs');
+      },
+    },
   };
 </script>
 

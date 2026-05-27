@@ -8,16 +8,18 @@
     <!-- #endif -->
     <image class="image" v-show="show" :src="result" :style="{ width: cpSize + 'px', height: cpSize + 'px' }" v-if="result" />
     <view class="loading-text" :style="'width: ' + size + unit + ';height: ' + size + unit + ';'" v-else>
-      {{ loadingText }}
+      {{ actualLoadingText }}
     </view>
   </view>
   <view class="loading-text" :style="'width: ' + size + unit + ';height: ' + size + unit + ';'" v-else>
-    {{ loadingText }}
+    {{ actualLoadingText }}
   </view>
 </template>
 
 <script>
   import QRCode from './qrcode.js';
+  import VueI18n from 'vue-i18n';
+  import messages from './locale/index.js';
   let qrcode;
 
   export default {
@@ -84,12 +86,16 @@
       },
       loadingText: {
         type: String,
-        default: '二维码生成中',
+        default: '',
       },
       // 让组件强制进入loading状态
       loading: {
         type: Boolean,
         default: false,
+      },
+      language: {
+        type: String,
+        default: '',
       },
     },
     data() {
@@ -99,31 +105,33 @@
       };
     },
     methods: {
+      t(key) {
+        return this._i18n.t(key);
+      },
       _makeCode() {
-        let that = this;
         if (!this._empty(this.text)) {
           qrcode = new QRCode({
-            context: that, // 上下文环境
-            canvasId: that.canvasId, // canvas-id
-            usingComponents: that.usingComponents, // 是否是自定义组件
-            showLoading: that.showLoading, // 是否显示loading
-            loadingText: that.loadingText, // loading文字
-            text: that.text, // 生成内容
-            size: that.cpSize, // 二维码大小
-            background: that.background, // 背景色
-            foreground: that.foreground, // 前景色
-            pdground: that.pdground, // 定位角点颜色
-            correctLevel: that.lv, // 容错级别
-            image: that.image, // 二维码图标
-            imageSize: that.imageSize, // 二维码图标大小
-            cbResult: function (res) {
+            context: this, // 上下文环境
+            canvasId: this.canvasId, // canvas-id
+            usingComponents: this.usingComponents, // 是否是自定义组件
+            showLoading: this.showLoading, // 是否显示loading
+            loadingText: this.actualLoadingText, // loading文字
+            text: this.text, // 生成内容
+            size: this.cpSize, // 二维码大小
+            background: this.background, // 背景色
+            foreground: this.foreground, // 前景色
+            pdground: this.pdground, // 定位角点颜色
+            correctLevel: this.lv, // 容错级别
+            image: this.image, // 二维码图标
+            imageSize: this.imageSize, // 二维码图标大小
+            cbResult: (res) => {
               // 生成二维码的回调
-              that._result(res);
+              this._result(res);
             },
           });
         } else {
           uni.showToast({
-            title: '二维码内容不能为空',
+            title: this.t('vk.qrcode.contentEmpty'),
             icon: 'none',
             duration: 2000,
           });
@@ -134,13 +142,12 @@
         qrcode.clear();
       },
       _saveCode() {
-        let that = this;
         if (this.result != '') {
           uni.saveImageToPhotosAlbum({
-            filePath: that.result,
-            success: function () {
+            filePath: this.result,
+            success: () => {
               uni.showToast({
-                title: '二维码保存成功',
+                title: this.t('vk.qrcode.saveSuccess'),
                 icon: 'success',
                 duration: 2000,
               });
@@ -185,18 +192,23 @@
         }
       },
       text: function (n, o) {
-        let that = this;
-        if (that.onval) {
-          if (n != o && !that._empty(n)) {
-            if (that.textTimer) clearTimeout(that.textTimer);
-            that.textTimer = setTimeout(() => {
-              that._makeCode();
+        if (this.onval) {
+          if (n != o && !this._empty(n)) {
+            if (this.textTimer) clearTimeout(this.textTimer);
+            this.textTimer = setTimeout(() => {
+              this._makeCode();
             }, 300);
           }
         }
       },
+      language: function (val) {
+        this._i18n.locale = val || uni.getLocale() || 'zh-Hans';
+      },
     },
     computed: {
+      actualLoadingText() {
+        return this.loadingText || this.t('vk.qrcode.loadingText');
+      },
       cpSize() {
         if (this.unit == 'rpx') {
           return uni.upx2px(this.size);
@@ -204,6 +216,12 @@
           return this.size;
         }
       },
+    },
+    created() {
+      this._i18n = new VueI18n({
+        locale: this.language || uni.getLocale() || 'zh-Hans',
+        messages,
+      });
     },
     mounted: function () {
       this.canvasId = 'vk-data-qrcode-canvas-' + Math.floor(Math.random() * 1000000);

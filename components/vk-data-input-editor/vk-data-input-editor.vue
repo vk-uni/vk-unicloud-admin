@@ -3,11 +3,13 @@
     <view class="wrapper">
       <view class="toolbar" @tap="format">
         <!-- 选着文本颜色面板 -->
-        <view class="text_color"
-          ><text :style="`backgroundColor:${item1}`" v-for="(item1, index1) of choice_color_list" :key="index1" @click="change_text_color(index1)"></text>
+        <view class="text_color">
+          <text :style="`backgroundColor:${item1}`" v-for="(item1, index1) of choice_color_list" :key="index1" @click="change_text_color(index1)"></text>
         </view>
         <!-- 选着背景颜色面板 -->
-        <view class="bg_color"><text :style="`backgroundColor:${item1}`" v-for="(item1, index1) of choice_color_list" :key="index1" @click="change_bg_color(index1)"></text> </view>
+        <view class="bg_color">
+          <text :style="`backgroundColor:${item1}`" v-for="(item1, index1) of choice_color_list" :key="index1" @click="change_bg_color(index1)"></text>
+        </view>
         <!-- 文字颜色 -->
         <view
           style="color: var(--text_color)"
@@ -113,11 +115,11 @@
         showImgToolbar
         showImgResize
         :read-only="disabledFn()"
+        :style="editorStyleCom"
         @statuschange="onStatusChange"
         @ready="onEditorReady"
         @input="onInput"
       ></editor>
-
       <vk-data-input-file-select
         ref="fileSelectDialog"
         :controls="false"
@@ -205,6 +207,14 @@
       width: {
         type: [String, Number],
         default: '100%',
+      },
+      minHeight: {
+        type: [String, Number],
+        default: '200px',
+      },
+      maxHeight: {
+        type: [String, Number],
+        default: '500px',
       },
     },
     data: function () {
@@ -333,10 +343,10 @@
       },
       insertDate() {
         /*
-         this.editorCtx.insertText({
-          text: formatDate
-         })
-         */
+				 this.editorCtx.insertText({
+				 	text: formatDate
+				 })
+				 */
       },
       insertImage() {
         let that = this;
@@ -557,6 +567,15 @@
         }
         return disabled;
       },
+      fillStyle(styleObj, obj = {}) {
+        for (let key in styleObj) {
+          let item = styleObj[key];
+          if (typeof item !== 'undefined') {
+            obj[key] = typeof item === 'number' ? `${item}px` : item;
+          }
+        }
+        return obj;
+      },
     },
     watch: {
       value(newVal = '', oldValue) {
@@ -575,15 +594,11 @@
     computed: {
       styleCom() {
         let { width } = this;
-        let obj = {};
-        if (width) {
-          if (typeof width === 'number') {
-            obj.width = `${width}px`;
-          } else {
-            obj.width = width;
-          }
-        }
-        return obj;
+        return this.fillStyle({ width });
+      },
+      editorStyleCom() {
+        let { minHeight, maxHeight } = this;
+        return this.fillStyle({ minHeight, maxHeight });
       },
     },
   };
@@ -631,6 +646,7 @@
       margin-top: 0px;
       font-size: 16px;
       line-height: 1.5;
+      overflow-y: auto;
     }
 
     .ql-active {

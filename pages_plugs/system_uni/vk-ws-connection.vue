@@ -1,30 +1,46 @@
 <template>
-  <view class="page-body">
-    <!-- 页面内容开始 -->
+  <div>
+    <!-- 搜索区域卡片 -->
+    <div class="vk-page-card vk-page-search-card">
+      <vk-data-table-query
+        v-model="queryForm1.formData"
+        :columns="queryForm1.columns"
+        :span="4"
+        :collapse-rows="1"
+        :collapse-default-expand="true"
+        @search="search"
+        @collapse-change="collapseChange"
+      ></vk-data-table-query>
+    </div>
 
-    <!-- 表格搜索组件开始 -->
+    <!-- 表格内容卡片 -->
+    <div class="vk-page-card">
+      <div class="vk-page-card-toolbar">
+        <div class="vk-page-card-title">连接列表</div>
+        <div class="vk-page-card-actions">
+          <el-button :size="$global.size" icon="el-icon-download" @click="exportExcel">导出Excel</el-button>
+        </div>
+      </div>
 
-    <vk-data-table-query v-model="queryForm1.formData" :columns="queryForm1.columns" @search="search"> </vk-data-table-query>
-    <!-- 表格搜索组件结束 -->
-
-    <!-- 表格组件开始 -->
-    <vk-data-table
-      ref="table1"
-      :action="table1.action"
-      :columns="table1.columns"
-      :query-form-param="queryForm1"
-      :right-btns="['detail_auto', 'more']"
-      :right-btns-more="table1.rightBtnsMore"
-      :row-no="true"
-      :pagination="true"
-      @delete="deleteBtn"
-      @current-change="currentChange"
-      @selection-change="selectionChange"
-    ></vk-data-table>
-    <!-- 表格组件结束 -->
-
-    <!-- 页面内容结束 -->
-  </view>
+      <!-- 表格区域 -->
+      <div class="vk-page-card-table">
+        <vk-data-table
+          ref="table1"
+          :action="table1.action"
+          :columns="table1.columns"
+          :query-form-param="queryForm1"
+          :right-btns="['detail_auto', 'more']"
+          :right-btns-more="table1.rightBtnsMore"
+          :row-no="true"
+          :pagination="true"
+          :top="0"
+          @delete="deleteBtn"
+          @current-change="currentChange"
+          @selection-change="selectionChange"
+        ></vk-data-table>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -123,20 +139,19 @@
           columns: [
             {
               key: 'appid',
-              title: 'DCloud appid',
+              title: 'appid',
               type: 'select',
               filterable: true,
               clearable: true,
-              width: 220,
               data: [],
             },
-            { key: '_id', title: '连接ID', type: 'text', width: 150, mode: '=' },
-            { key: 'user_id', type: 'text', title: '用户ID', width: 150, mode: '=' },
-            { key: 'device_id', type: 'text', title: '设备ID', width: 150, mode: '=' },
-            { key: 'url', type: 'text', title: '云对象URL', width: 150, mode: '=' },
-            { key: 'space_id', title: '空间ID', type: 'text', width: 150 },
-            { key: 'ip', title: 'ip地址', type: 'text', width: 150 },
-            { key: '_add_time', type: 'datetimerange', title: '连接时间', width: 350, mode: '[]' },
+            { key: '_id', title: '连接ID', type: 'text', mode: '=' },
+            { key: 'user_id', type: 'text', title: '用户ID', mode: '=' },
+            { key: 'device_id', type: 'text', title: '设备ID', mode: '=' },
+            { key: 'url', type: 'text', title: '云对象URL', mode: '=' },
+            { key: 'space_id', title: '空间ID', type: 'text' },
+            { key: 'ip', title: 'ip地址', type: 'text' },
+            { key: '_add_time', type: 'datetimerange', title: '连接时间', mode: '[]' },
           ],
         },
         // 表单相关结束 -----------------------------------------------------------
@@ -187,6 +202,11 @@
       search(obj) {
         this.$refs.table1.query(obj);
       },
+      // 监听 - 查询表单折叠面板变化事件
+      collapseChange() {
+        // 执行表格重新布局
+        this.$refs.table1.doLayout();
+      },
       // 刷新
       refresh() {
         this.$refs.table1.refresh();
@@ -212,10 +232,20 @@
           },
         });
       },
+      // 导出Excel
+      exportExcel() {
+        this.$refs.table1.exportExcel({
+          showColumnSelector: true,
+        });
+      },
     },
     watch: {},
     // 计算属性
     computed: {},
   };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  page {
+    background-color: var(--bgcolor);
+  }
+</style>

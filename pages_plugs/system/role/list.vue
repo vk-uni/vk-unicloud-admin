@@ -1,36 +1,47 @@
 <template>
-  <view class="page-body">
-    <!-- 页面内容开始 -->
+  <div>
+    <!-- 搜索区域卡片 -->
+    <div class="vk-page-card vk-page-search-card">
+      <vk-data-table-query v-model="queryForm1.formData" :columns="queryForm1.columns" :span="3" @search="search" @collapse-change="collapseChange"></vk-data-table-query>
+    </div>
 
-    <!-- 表格搜索组件开始 -->
-    <vk-data-table-query v-model="queryForm1.formData" :columns="queryForm1.columns" @search="search"></vk-data-table-query>
-    <!-- 表格搜索组件结束 -->
+    <!-- 表格内容卡片 -->
+    <div class="vk-page-card">
+      <!-- 操作按钮与表格标题区域 -->
+      <div class="vk-page-card-toolbar">
+        <div class="vk-page-card-title">角色列表</div>
+        <div class="vk-page-card-actions">
+          <el-button type="primary" :size="$global.size" icon="el-icon-plus" @click="addBtn">添加角色</el-button>
+          <el-tooltip :disabled="!!table1.selectItem" content="请先点击需要操作的角色" placement="top">
+            <el-button type="success" :size="$global.size" icon="el-icon-key" :disabled="!table1.selectItem" @click="bindPermissionBtn">权限赋予</el-button>
+          </el-tooltip>
+          <el-tooltip :disabled="!!table1.selectItem" content="请先点击需要操作的角色" placement="top">
+            <el-button type="warning" :size="$global.size" icon="el-icon-menu" :disabled="!table1.selectItem" @click="bindMenu">菜单赋予</el-button>
+          </el-tooltip>
+        </div>
+      </div>
 
-    <!-- 自定义按钮区域开始 -->
-    <view class="vk-table-button-box">
-      <el-button type="success" size="small" icon="el-icon-circle-plus-outline" @click="addBtn">添加</el-button>
-      <el-button type="primary" size="small" icon="el-icon-s-tools" :disabled="!table1.selectItem" @click="bindPermissionBtn">权限赋予</el-button>
-      <el-button type="danger" size="small" icon="el-icon-s-tools" :disabled="!table1.selectItem" @click="bindMenu">菜单赋予</el-button>
-    </view>
-    <!-- 自定义按钮区域结束 -->
-    <!-- 表格组件开始 -->
-    <vk-data-table
-      ref="table1"
-      :action="table1.action"
-      :columns="table1.columns"
-      :query-form-param="queryForm1"
-      :right-btns="['detail_auto', 'update', 'delete']"
-      :selection="false"
-      :row-no="true"
-      :pagination="true"
-      @update="updateBtn"
-      @delete="deleteBtn"
-      @current-change="currentChange"
-      @selection-change="selectionChange"
-    ></vk-data-table>
-    <!-- 表格组件结束 -->
+      <!-- 表格区域 -->
+      <div class="vk-page-card-table">
+        <vk-data-table
+          ref="table1"
+          :action="table1.action"
+          :columns="table1.columns"
+          :query-form-param="queryForm1"
+          :right-btns="['detail_auto', 'update', 'delete']"
+          :selection="false"
+          :row-no="true"
+          :pagination="true"
+          :top="0"
+          @update="updateBtn"
+          @delete="deleteBtn"
+          @current-change="currentChange"
+          @selection-change="selectionChange"
+        ></vk-data-table>
+      </div>
+    </div>
 
-    <!-- 添加或编辑的弹窗开始 -->
+    <!-- 添加或编辑的弹窗 -->
     <vk-data-dialog v-model="form1.props.show" :title="form1.props.title" width="500px" mode="form">
       <vk-data-form
         v-model="form1.data"
@@ -45,15 +56,12 @@
         "
       ></vk-data-form>
     </vk-data-dialog>
-    <!-- 添加或编辑的弹窗结束 -->
 
     <!-- 角色赋予权限弹窗 -->
     <bindPermission v-model="formDatas.bindPermission"></bindPermission>
     <!-- 角色赋予菜单弹窗 -->
     <bindMenu v-model="formDatas.bindMenu"></bindMenu>
-
-    <!-- 页面内容结束 -->
-  </view>
+  </div>
 </template>
 
 <script>
@@ -206,9 +214,9 @@
           formData: {},
           // 查询表单的字段规则 fieldName:指定数据库字段名,不填默认等于key
           columns: [
-            { key: 'role_id', title: '角色标识', type: 'text', width: 160, mode: '%%' },
-            { key: 'role_name', title: '角色名称', type: 'text', width: 160, mode: '%%' },
-            { key: '_add_time', title: '添加时间', type: 'datetimerange', width: 400 },
+            { key: 'role_id', title: '角色标识', type: 'text', mode: '%%' },
+            { key: 'role_name', title: '角色名称', type: 'text', mode: '%%' },
+            { key: '_add_time', title: '添加时间', type: 'datetimerange', span: 4, mode: '[]' },
           ],
         },
         form1: {
@@ -280,6 +288,11 @@
       search() {
         this.$refs.table1.search();
       },
+      // 监听 - 查询表单折叠面板变化事件
+      collapseChange() {
+        // 执行表格重新布局
+        this.$refs.table1.doLayout();
+      },
       // 刷新
       refresh() {
         this.$refs.table1.refresh();
@@ -339,7 +352,7 @@
   };
 </script>
 <style lang="scss" scoped>
-  ::v-deep .el-tree-node__content .el-checkbox {
-    margin-right: 8px;
+  page {
+    background-color: var(--bgcolor);
   }
 </style>

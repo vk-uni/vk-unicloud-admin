@@ -1,26 +1,46 @@
 <template>
-  <view class="page-body">
-    <!-- 页面内容开始 -->
+  <div>
+    <!-- 搜索区域卡片 -->
+    <div class="vk-page-card vk-page-search-card">
+      <vk-data-table-query
+        v-model="queryForm1.formData"
+        :columns="queryForm1.columns"
+        :span="4"
+        :collapse-rows="1"
+        :collapse-default-expand="true"
+        @search="search"
+        @collapse-change="collapseChange"
+      ></vk-data-table-query>
+    </div>
 
-    <!-- 表格搜索组件开始 -->
-    <vk-data-table-query v-model="queryForm1.formData" :columns="queryForm1.columns" @search="search"></vk-data-table-query>
-    <!-- 表格搜索组件结束 -->
-    <!-- 表格组件开始 -->
-    <vk-data-table
-      ref="table1"
-      :action="table1.action"
-      :columns="table1.columns"
-      :query-form-param="queryForm1"
-      :right-btns="['detail_auto']"
-      :custom-right-btns="table1.customRightBtns"
-      :default-sort="{ name: 'count', type: 'desc' }"
-      secondary-sort-key="_id"
-      :row-no="true"
-      :pagination="true"
-    ></vk-data-table>
-    <!-- 表格组件结束 -->
+    <!-- 表格内容卡片 -->
+    <div class="vk-page-card">
+      <div class="vk-page-card-toolbar">
+        <div class="vk-page-card-title">错误日志列表</div>
+        <div class="vk-page-card-actions">
+          <el-button :size="$global.size" icon="el-icon-download" @click="exportExcel">导出Excel</el-button>
+        </div>
+      </div>
 
-    <!-- 添加或编辑的弹窗开始 -->
+      <!-- 表格区域 -->
+      <div class="vk-page-card-table">
+        <vk-data-table
+          ref="table1"
+          :action="table1.action"
+          :columns="table1.columns"
+          :query-form-param="queryForm1"
+          :right-btns="['detail_auto']"
+          :custom-right-btns="table1.customRightBtns"
+          :default-sort="{ name: 'count', type: 'desc' }"
+          secondary-sort-key="_id"
+          :row-no="true"
+          :pagination="true"
+          :top="0"
+        ></vk-data-table>
+      </div>
+    </div>
+
+    <!-- 添加或编辑的弹窗 -->
     <vk-data-dialog v-model="form1.props.show" :title="form1.props.title" width="800px" mode="form" top="2vh">
       <vk-data-form
         ref="form1"
@@ -33,21 +53,18 @@
         @success="updateSuccess"
       >
         <template v-slot:data="{ form, keyName }">
-          <view class="stack-view">
+          <div class="stack-view">
             <text space="ensp" style="font-size: 13px" v-if="form.data">{{ form.data }}</text>
-          </view>
+          </div>
         </template>
         <template v-slot:stack="{ form, keyName }">
-          <view class="stack-view">
+          <div class="stack-view">
             <text space="ensp" style="font-size: 13px" v-if="form.err">{{ form.err.stack || form.err }}</text>
-          </view>
+          </div>
         </template>
       </vk-data-form>
     </vk-data-dialog>
-    <!-- 添加或编辑的弹窗结束 -->
-
-    <!-- 页面内容结束 -->
-  </view>
+  </div>
 </template>
 
 <script>
@@ -129,19 +146,35 @@
           },
           // 查询表单的字段规则 fieldName:指定数据库字段名,不填默认等于key
           columns: [
-            { key: 'request_id', title: '请求ID', type: 'text', width: 140, mode: '=' },
-            { key: 'user_id', title: '用户ID', type: 'text', width: 140, mode: '=' },
-            { key: 'url', title: '请求地址', type: 'text', width: 140, mode: '=' },
+            { key: 'request_id', title: '请求ID', type: 'text', mode: '=' },
+            { key: 'url', title: '请求地址', type: 'text', mode: '=' },
             {
               key: 'status',
               title: '当前状态',
               type: 'select',
-              width: 140,
               mode: '=',
               clearable: false,
               data: [{ value: '', label: '全部' }, ...statusData],
             },
-            { key: '_add_time', title: '添加时间', type: 'datetimerange', width: 380, mode: '[]', clearable: false },
+            { key: '_add_time', title: '添加时间', type: 'datetimerange', mode: '[]', clearable: false },
+            {
+              key: 'user_id',
+              title: '筛选用户',
+              type: 'table-select',
+              placeholder: '请选择用户',
+              action: 'admin/system/user/sys/getList',
+              columns: [
+                { key: 'avatar', title: '头像', type: 'image', width: 80 },
+                { key: 'nickname', title: '用户昵称', type: 'text', minWidth: 200, nameKey: true }, // nameKey: true 代表此字段的值会显示在表单上
+                { key: 'mobile', title: '手机号', type: 'text', minWidth: 140 }, // 设置 minWidth 的列会自动撑开
+                { key: '_id', title: '用户ID', type: 'text', width: 240, idKey: true }, // idKey:true 代表此字段为主键字段，若设置show:["none"]，则可以在表格中隐藏该字段的显示
+              ],
+              queryColumns: [
+                { key: 'nickname', title: '用户昵称', type: 'text', width: 150, mode: '%%' },
+                { key: 'mobile', title: '手机号', type: 'text', width: 150, mode: '%%' },
+                { key: '_id', title: '用户ID', type: 'text', width: 150, mode: '=' },
+              ],
+            },
           ],
         },
         form1: {
@@ -205,6 +238,11 @@
       search(obj) {
         this.$refs.table1.query(obj);
       },
+      // 监听 - 查询表单折叠面板变化事件
+      collapseChange() {
+        // 执行表格重新布局
+        this.$refs.table1.doLayout();
+      },
       // 刷新
       refresh() {
         this.$refs.table1.refresh();
@@ -229,6 +267,12 @@
           ],
         });
       },
+      // 导出Excel
+      exportExcel() {
+        this.$refs.table1.exportExcel({
+          showColumnSelector: true,
+        });
+      },
     },
     watch: {},
     // 计算属性
@@ -236,6 +280,9 @@
   };
 </script>
 <style lang="scss" scoped>
+  page {
+    background-color: var(--bgcolor);
+  }
   .stack-view {
     background-color: #f6f8fa;
     padding: 5px 10px;

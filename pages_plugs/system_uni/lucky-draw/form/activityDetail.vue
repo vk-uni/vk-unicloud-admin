@@ -1,58 +1,58 @@
 <template>
   <vk-data-drawer v-model="value.show" :title="page.title" v-loading="page.loading" :width="page.width" direction="rtl" @open="onOpen" @closed="onClose">
-    <view class="drawer-content">
+    <div class="drawer-content">
       <!-- 活动基本信息 -->
-      <view class="module-container">
+      <div class="module-container">
         <el-card shadow="never">
-          <text class="h2">{{ activityData.title }}</text>
+          <span class="h2">{{ activityData.title }}</span>
         </el-card>
 
-        <view class="tags-group">
+        <div class="tags-group">
           <el-tag type="warning">{{ activityData.status_text }}</el-tag>
           <el-tag type="success">{{ activityData.mode_text }}</el-tag>
           <el-tag type="info">{{ activityData.lottery_type_text }}</el-tag>
-        </view>
+        </div>
 
-        <view class="time-info" v-if="activityData.lottery_type === 1"> 活动时间: {{ activityData.start_time_text }} - {{ activityData.end_time_text }} </view>
+        <div class="time-info" v-if="activityData.lottery_type === 1">活动时间: {{ activityData.start_time_text }} - {{ activityData.end_time_text }}</div>
 
-        <view v-if="activityData.lottery_type === 2" class="people-limit"> 开奖人数要求: {{ activityData.max_people }} </view>
-      </view>
+        <div v-if="activityData.lottery_type === 2" class="people-limit">开奖人数要求: {{ activityData.max_people }}</div>
+      </div>
 
       <!-- 数据统计 -->
-      <view class="module-container">
-        <view class="h3">活动数据</view>
+      <div class="module-container">
+        <div class="h3">活动数据</div>
         <el-row :gutter="16">
           <el-col :span="6" v-for="(item, key) in statItems" :key="key">
-            <view class="stat-card">
-              <view class="stat-value" v-if="activityData.stat_data">{{ activityData.stat_data[key] }}</view>
-              <view class="stat-label"> {{ item.label }} </view>
-            </view>
+            <div class="stat-card">
+              <div class="stat-value" v-if="activityData.stat_data">{{ activityData.stat_data[key] }}</div>
+              <div class="stat-label">{{ item.label }}</div>
+            </div>
           </el-col>
         </el-row>
-      </view>
+      </div>
 
       <!-- 奖品信息 -->
-      <view class="module-container">
-        <view class="h3">奖品列表</view>
+      <div class="module-container">
+        <div class="h3">奖品列表</div>
         <el-table :data="activityData.prize_list" size="small">
           <el-table-column prop="name" label="奖品名称">
             <template slot-scope="scope">
-              <view class="tags-group">
+              <div class="tags-group">
                 <el-tag>{{ scope.row.lv_text ? scope.row.lv_text + '：' : '' }} {{ scope.row.name }}</el-tag>
-              </view>
+              </div>
             </template>
           </el-table-column>
           <el-table-column prop="num" label="数量" width="80"></el-table-column>
         </el-table>
-      </view>
+      </div>
 
       <!-- 预览二维码 -->
-      <view class="module-container" v-if="activityData.qrcode">
-        <view class="h3">活动二维码</view>
+      <div class="module-container" v-if="activityData.qrcode">
+        <div class="h3">活动二维码</div>
         <vk-data-qrcode :text="activityData.qrcode" :size="400"></vk-data-qrcode>
-        <view class="tips">使用微信扫一扫进入活动详情</view>
-      </view>
-    </view>
+        <div class="tips">使用微信扫一扫进入活动详情</div>
+      </div>
+    </div>
   </vk-data-drawer>
 </template>
 

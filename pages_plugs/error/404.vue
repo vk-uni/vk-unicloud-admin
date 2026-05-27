@@ -1,13 +1,13 @@
 <template>
-  <view class="page-body">
+  <div class="page-body">
     <image src="../../static/icon/icon-404.svg"></image>
-    <view class="title">
-      <text class="code">404</text>
-      <text class="tips">抱歉，你访问的页面不存在</text>
-      <text class="tips">{{ errMsg }}</text>
-      <text class="btn" @tap="to_index_page">返回首页</text>
-    </view>
-  </view>
+    <div class="title">
+      <span class="code">404</span>
+      <span class="tips">抱歉，你访问的页面不存在</span>
+      <span class="tips">{{ errMsg }}</span>
+      <span class="btn" @tap="to_index_page">返回首页</span>
+    </div>
+  </div>
 </template>
 
 <script>

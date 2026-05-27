@@ -1,33 +1,49 @@
 <template>
-  <view class="page-body">
-    <!-- 页面内容开始 -->
+  <div>
+    <!-- 搜索区域卡片 -->
+    <div class="vk-page-card vk-page-search-card">
+      <vk-data-table-query
+        v-model="queryForm1.formData"
+        :columns="queryForm1.columns"
+        :span="3"
+        :collapse-rows="1"
+        :collapse-default-expand="true"
+        @search="search"
+        @collapse-change="collapseChange"
+      ></vk-data-table-query>
+    </div>
 
-    <!-- 表格搜索组件开始 -->
+    <!-- 表格内容卡片 -->
+    <div class="vk-page-card">
+      <!-- 操作按钮与表格标题区域 -->
+      <div class="vk-page-card-toolbar">
+        <div class="vk-page-card-title">全局缓存列表</div>
+        <div class="vk-page-card-actions">
+          <el-button type="primary" :size="$global.size" icon="el-icon-plus" @click="addBtn">添加</el-button>
+          <el-button :size="$global.size" icon="el-icon-download" @click="exportExcel">导出Excel</el-button>
+        </div>
+      </div>
 
-    <vk-data-table-query v-model="queryForm1.formData" :columns="queryForm1.columns" @search="search">
-      <template slot="right-btns">
-        <el-button type="success" icon="el-icon-circle-plus-outline" @click="addBtn"> 添加 </el-button>
-      </template>
-    </vk-data-table-query>
-    <!-- 表格搜索组件结束 -->
+      <!-- 表格区域 -->
+      <div class="vk-page-card-table">
+        <vk-data-table
+          ref="table1"
+          :action="table1.action"
+          :columns="table1.columns"
+          :query-form-param="queryForm1"
+          :right-btns="['detail_auto', 'update', 'delete']"
+          :row-no="true"
+          :pagination="true"
+          :top="0"
+          @update="updateBtn"
+          @delete="deleteBtn"
+          @current-change="currentChange"
+          @selection-change="selectionChange"
+        ></vk-data-table>
+      </div>
+    </div>
 
-    <!-- 表格组件开始 -->
-    <vk-data-table
-      ref="table1"
-      :action="table1.action"
-      :columns="table1.columns"
-      :query-form-param="queryForm1"
-      :right-btns="['detail_auto', 'update', 'delete']"
-      :row-no="true"
-      :pagination="true"
-      @update="updateBtn"
-      @delete="deleteBtn"
-      @current-change="currentChange"
-      @selection-change="selectionChange"
-    ></vk-data-table>
-    <!-- 表格组件结束 -->
-
-    <!-- 添加或编辑的弹窗开始 -->
+    <!-- 添加或编辑的弹窗 -->
     <vk-data-dialog v-model="form1.props.show" :title="form1.props.title" width="800px" mode="form">
       <vk-data-form
         ref="form1"
@@ -43,9 +59,7 @@
         "
       ></vk-data-form>
     </vk-data-dialog>
-    <!-- 添加或编辑的弹窗结束 -->
-    <!-- 页面内容结束 -->
-  </view>
+  </div>
 </template>
 
 <script>
@@ -88,7 +102,7 @@
           columns: [
             { key: 'key', type: 'text', title: '键名搜索', mode: '%%' },
             { key: 'value', type: 'text', title: '键值搜索', mode: '%%' },
-            { key: '_add_time', type: 'datetimerange', title: '添加时间', width: 400, mode: '[]' },
+            { key: '_add_time', type: 'datetimerange', title: '添加时间', span: 4, mode: '[]' },
           ],
         },
         form1: {
@@ -149,6 +163,11 @@
       search(obj) {
         this.$refs.table1.query(obj);
       },
+      // 监听 - 查询表单折叠面板变化事件
+      collapseChange() {
+        // 执行表格重新布局
+        this.$refs.table1.doLayout();
+      },
       // 刷新
       refresh() {
         this.$refs.table1.refresh();
@@ -190,10 +209,20 @@
           },
         });
       },
+      // 导出Excel
+      exportExcel() {
+        this.$refs.table1.exportExcel({
+          showColumnSelector: true,
+        });
+      },
     },
     watch: {},
     // 计算属性
     computed: {},
   };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  page {
+    background-color: var(--bgcolor);
+  }
+</style>

@@ -14,7 +14,13 @@
       :cancel-text="page.cancelText"
       :submit-text="page.submitText"
       @success="onFormSuccess"
-    ></vk-data-form>
+    >
+      <template v-slot:parent_id="{ form, keyName }">
+        <el-select v-model="form[keyName]" clearable :placeholder="$t('vk.assetLibrary.addCategory.selectParentCategory')" style="width: 100%">
+          <el-option v-for="item in value.list || []" :key="item._id || 'root'" :label="item.name" :value="item._id"></el-option>
+        </el-select>
+      </template>
+    </vk-data-form>
     <!-- 页面主体内容结束 -->
   </vk-data-dialog>
 </template>
@@ -30,6 +36,7 @@
             show: false,
             mode: '',
             item: {},
+            list: [],
           };
         },
       },
@@ -38,9 +45,9 @@
       // 组件创建时，进行数据初始化
       return {
         page: {
-          title: '添加分组',
-          submitText: '确定',
-          cancelText: '关闭',
+          title: `${this.$t('vk.common.add')}${this.$t('vk.assetLibrary.updateFileCategory.category')}`,
+          submitText: this.$t('vk.form.submit'),
+          cancelText: this.$t('vk.form.close'),
           showCancel: true,
           top: '14vh',
           width: '450px',
@@ -55,16 +62,22 @@
             // 表单字段显示规则
             columns: [
               // 常用字段类型
-              { key: 'name', title: '名称', type: 'text' },
+              { key: 'name', title: this.$t('vk.assetLibrary.form.name'), type: 'text' },
+              {
+                key: 'parent_id',
+                title: this.$t('vk.assetLibrary.addCategory.parentCategory'),
+                type: 'select',
+                placeholder: this.$t('vk.assetLibrary.addCategory.selectParentCategory'),
+              },
             ],
             // 表单验证规则
             rules: {
               name: [
-                { required: true, message: '名称不能为空', trigger: 'change' },
-                { max: 16, message: '最多16字', trigger: 'change' },
+                { required: true, message: this.$t('vk.assetLibrary.form.nameRequired'), trigger: 'change' },
+                { max: 16, message: this.$t('vk.assetLibrary.form.nameMaxLength', { length: 16 }), trigger: 'change' },
               ],
             },
-            labelWidth: '60px',
+            labelWidth: '120px',
           },
         },
       };
@@ -84,6 +97,7 @@
         this.form1.data = {
           _id: item._id,
           name: item.name,
+          parent_id: item.parent_id || '',
         };
       },
       // 监听 - 页面关闭

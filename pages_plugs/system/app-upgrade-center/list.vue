@@ -1,66 +1,58 @@
 <template>
-  <view class="page-body" v-loading="loading">
-    <!-- 页面内容开始 -->
+  <div v-loading="loading">
+    <!-- 搜索区域卡片 -->
+    <div class="vk-page-card vk-page-search-card">
+      <vk-data-table-query
+        v-model="queryForm1.formData"
+        :columns="queryForm1.columns"
+        :span="3"
+        :collapse-rows="1"
+        :collapse-default-expand="true"
+        @search="search"
+        @collapse-change="collapseChange"
+      ></vk-data-table-query>
+    </div>
 
-    <!-- 表格搜索组件开始 -->
-    <vk-data-table-query
-      v-model="queryForm1.formData"
-      :columns="queryForm1.columns"
-      :main-columns="['appid', 'title', 'type', 'stable_publish']"
-      @search="search"
-    ></vk-data-table-query>
-    <!-- 表格搜索组件结束 -->
+    <!-- 表格内容卡片 -->
+    <div class="vk-page-card">
+      <!-- 操作按钮与表格标题区域 -->
+      <div class="vk-page-card-toolbar">
+        <div class="vk-page-card-title">版本列表</div>
+        <div class="vk-page-card-actions">
+          <el-dropdown placement="bottom-start" @command="addBtn">
+            <el-button type="primary" :size="$global.size" icon="el-icon-plus" :disabled="!queryForm1.formData.appid">添加版本</el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="native_app">原生App安装包</el-dropdown-item>
+              <el-dropdown-item command="wgt">wgt资源包</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+      </div>
 
-    <!-- 自定义按钮区域开始 -->
-    <view>
-      <el-row>
-        <el-dropdown placement="bottom-start" @command="addBtn">
-          <el-button type="success" size="small" icon="el-icon-circle-plus-outline" :disabled="!queryForm1.formData.appid">添加</el-button>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="native_app">原生App安装包</el-dropdown-item>
-            <el-dropdown-item command="wgt">wgt资源包</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-
-        <!-- 批量操作 -->
-        <!-- <el-dropdown v-if="table1.multipleSelection" :split-button="false"	trigger="click" @command="batchBtn">
-          <el-button type="danger" size="small" style="margin-left: 20rpx;"
-            :disabled="table1.multipleSelection.length === 0"
-          >
-            批量操作<i class="el-icon-arrow-down el-icon--right"></i>
-          </el-button>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item :command="1">批量操作1</el-dropdown-item>
-            <el-dropdown-item :command="2">批量操作2</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown> -->
-      </el-row>
-    </view>
-    <!-- 自定义按钮区域结束 -->
-
-    <!-- 表格组件开始 -->
-    <vk-data-table
-      ref="table1"
-      :action="table1.action"
-      :columns="table1.columns"
-      :query-form-param="queryForm1"
-      :right-btns="['detail_auto', 'update', 'delete']"
-      :selection="false"
-      :row-no="true"
-      :pagination="true"
-      :auto-action="false"
-      @update="updateBtn"
-      @delete="deleteBtn"
-      @current-change="currentChange"
-      @selection-change="selectionChange"
-    ></vk-data-table>
-    <!-- 表格组件结束 -->
+      <!-- 表格区域 -->
+      <div class="vk-page-card-table">
+        <vk-data-table
+          ref="table1"
+          :action="table1.action"
+          :columns="table1.columns"
+          :query-form-param="queryForm1"
+          :right-btns="['detail_auto', 'update', 'delete']"
+          :selection="false"
+          :row-no="true"
+          :pagination="true"
+          :auto-action="false"
+          :top="0"
+          @update="updateBtn"
+          @delete="deleteBtn"
+          @current-change="currentChange"
+          @selection-change="selectionChange"
+        ></vk-data-table>
+      </div>
+    </div>
 
     <!-- 添加或编辑 -->
     <addUpdate v-model="formDatas.addUpdate" @success="refresh"></addUpdate>
-
-    <!-- 页面内容结束 -->
-  </view>
+  </div>
 </template>
 
 <script>
@@ -174,7 +166,7 @@
             { key: 'title', title: '标题', type: 'text', width: 140, mode: '%%' },
             {
               key: 'type',
-              title: '安装包类型',
+              title: '类型',
               type: 'select',
               width: 140,
               placeholder: '请选择类型',
@@ -185,7 +177,7 @@
             },
             {
               key: 'stable_publish',
-              title: '安装包状态',
+              title: '状态',
               type: 'select',
               width: 140,
               placeholder: '请选择状态',
@@ -251,6 +243,11 @@
       // 搜索
       search() {
         this.$refs.table1.search();
+      },
+      // 监听 - 查询表单折叠面板变化事件
+      collapseChange() {
+        // 执行表格重新布局
+        this.$refs.table1.doLayout();
       },
       // 刷新
       refresh() {
@@ -322,6 +319,7 @@
   };
 </script>
 <style lang="scss" scoped>
-  .page-body {
+  page {
+    background-color: var(--bgcolor);
   }
 </style>

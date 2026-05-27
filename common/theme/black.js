@@ -2,6 +2,7 @@
 export default {
   // 左侧菜单样式
   leftMenu: {
+    width: '240px',
     backgroundColor: '#191a23',
     subBackgroundColor: '#101117',
     textColor: 'rgba(255,255,255,0.9)',
@@ -12,7 +13,6 @@ export default {
     hoverTextColor: '#ffffff',
     hoverBackgroundColor: '#545f6c',
     boxShadow: '0px 0 0px rgba(0,21,4,0.2)',
-    //boxShadow: "2px 0 2px rgba(0,21,4,0.2)",
     //borderTop: "1px solid #101117"
   },
   // 顶部菜单样式

@@ -1,13 +1,13 @@
 <template>
-  <view class="page-body">
+  <div class="page-body">
     <image src="../../static/icon/icon-403.svg"></image>
-    <view class="title">
-      <text class="code">403</text>
-      <text class="tips">抱歉，你无权访问该页面</text>
-      <text class="tips">{{ errMsg }}</text>
-      <text class="btn" @tap="to_index_page">返回首页</text>
-    </view>
-  </view>
+    <div class="title">
+      <span class="code">403</span>
+      <span class="tips">抱歉，你无权访问该页面</span>
+      <span class="tips">{{ errMsg }}</span>
+      <span class="btn" @tap="to_index_page">返回首页</span>
+    </div>
+  </div>
 </template>
 
 <script>

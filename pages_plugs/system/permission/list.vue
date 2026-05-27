@@ -1,36 +1,42 @@
 <template>
-  <view class="page-body">
-    <!-- 页面内容开始 -->
+  <div>
+    <!-- 表格内容卡片 -->
+    <div class="vk-page-card">
+      <!-- 操作按钮与表格标题区域 -->
+      <div class="vk-page-card-toolbar">
+        <div class="vk-page-card-title">权限列表</div>
+        <div class="vk-page-card-actions">
+          <el-button type="primary" :size="$global.size" icon="el-icon-plus" @click="addBtn">添加权限</el-button>
+        </div>
+      </div>
 
-    <!-- 自定义按钮区域开始 -->
-    <view class="vk-table-button-box">
-      <el-button type="success" size="small" icon="el-icon-circle-plus-outline" @click="addBtn">添加</el-button>
-    </view>
-    <!-- 自定义按钮区域结束 -->
+      <!-- 表格区域 -->
+      <div class="vk-page-card-table">
+        <vk-data-table
+          ref="table1"
+          :action="table1.action"
+          :columns="table1.columns"
+          :query-form-param="queryForm1"
+          :right-btns="['detail_auto', 'update', 'delete']"
+          :default-expand-all="false"
+          :fullscreen="true"
+          :top="0"
+          @update="updateBtn"
+          @delete="deleteBtn"
+          @current-change="currentChange"
+          @selection-change="selectionChange"
+          @cell-click="cellClick"
+        >
+          <!-- 排序值 -->
+          <template v-slot:sort="{ row, column, index }">
+            <el-input v-model="row.sort" size="mini" @change="sortChange($event, row)" />
+          </template>
+        </vk-data-table>
+      </div>
+    </div>
 
-    <!-- 表格组件开始 -->
-    <vk-data-table
-      ref="table1"
-      :action="table1.action"
-      :columns="table1.columns"
-      :query-form-param="queryForm1"
-      :right-btns="['detail_auto', 'update', 'delete']"
-      :default-expand-all="false"
-      @update="updateBtn"
-      @delete="deleteBtn"
-      @current-change="currentChange"
-      @selection-change="selectionChange"
-      @cell-click="cellClick"
-    >
-      <!-- 排序值 -->
-      <template v-slot:sort="{ row, column, index }">
-        <el-input v-model="row.sort" size="mini" @change="sortChange($event, row)" />
-      </template>
-    </vk-data-table>
-    <!-- 表格组件结束 -->
-
-    <!-- 添加或编辑的弹窗开始 -->
-    <vk-data-dialog v-model="form1.props.show" :title="form1.props.title" width="700px" mode="form">
+    <!-- 添加或编辑的弹窗 -->
+    <vk-data-dialog v-model="form1.props.show" :title="form1.props.title" width="700px" top="2vh" mode="form">
       <vk-data-form
         v-model="form1.data"
         :rules="form1.props.rules"
@@ -41,13 +47,12 @@
         @success="formSuccess"
       ></vk-data-form>
     </vk-data-dialog>
-    <!-- 添加或编辑的弹窗结束 -->
+
     <!-- 修改分类 -->
     <updateCategory v-model="formDatas.updateCategory"></updateCategory>
     <!-- 修改等级 -->
     <updateLevel v-model="formDatas.updateLevel"></updateLevel>
-    <!-- 页面内容结束 -->
-  </view>
+  </div>
 </template>
 
 <script>
@@ -402,4 +407,8 @@
     computed: {},
   };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  page {
+    background-color: var(--bgcolor);
+  }
+</style>

@@ -1,7 +1,7 @@
 <template>
   <!-- 万能表单 -->
-  <view v-if="scene === 'form'" :style="{ width: widthCom }" :class="{ fullscreen: fullscreen }" class="tinymce-editor editor-container">
-    <view v-if="!hasInit && showLoading" v-loading="!hasInit" class="loading-box"></view>
+  <div v-if="scene === 'form'" :style="{ width: widthCom }" :class="{ fullscreen: fullscreen }" class="tinymce-editor editor-container">
+    <div v-if="!hasInit && showLoading" v-loading="!hasInit" class="loading-box"></div>
     <textarea :id="editorId" class="editor-textarea" />
 
     <vk-data-input-file-select
@@ -15,21 +15,23 @@
       :cloudDirectory="_getProp('cloudDirectory')"
       :env="_getProp('env')"
       :cloudPathRemoveChinese="_getProp('cloudPathRemoveChinese')"
-      placeholder="请选择文件"
+      :placeholder="t('vk.form.fileSelect.placeholder')"
       @selected="_selected"
     ></vk-data-input-file-select>
-  </view>
+  </div>
   <!-- 万能表格 -->
-  <view v-else-if="scene === 'table'" class="tinymce-editor editor-table">
+  <div v-else-if="scene === 'table'" class="tinymce-editor editor-table">
     {{ value }}
-  </view>
+  </div>
   <!-- 万能表格详情 -->
-  <view v-else-if="scene === 'detail'" class="tinymce-editor editor-detail">
+  <div v-else-if="scene === 'detail'" class="tinymce-editor editor-detail">
     <textarea v-html="value" :style="{ width: widthCom }" style="display: block"></textarea>
-  </view>
+  </div>
 </template>
 <script>
   import defaultConfig from './config.js';
+  import VueI18n from 'vue-i18n';
+  import messages from './locale/index.js';
   import { PopupManager } from 'element-ui/lib/utils/popup';
   /**
    * custom-editor-tinymce 富文本编辑器 - tinymce
@@ -95,7 +97,6 @@
       },
       placeholder: {
         type: String,
-        default: '开始输入...',
       },
       // 工具栏
       toolbar: {
@@ -121,7 +122,7 @@
       },
       language: {
         type: String,
-        default: 'zh-Hans',
+        default: uni.getLocale() || 'zh-Hans',
       },
       disabled: {
         type: Boolean,
@@ -168,6 +169,12 @@
         },
       };
     },
+    created() {
+      this._i18n = new VueI18n({
+        locale: this._getProp('language') || uni.getLocale() || 'zh-Hans',
+        messages,
+      });
+    },
     mounted() {
       this._updateValue(this.value || '');
       this.init();
@@ -182,6 +189,9 @@
       this.destroyEditor();
     },
     methods: {
+      t(key) {
+        return this._i18n.t(key);
+      },
       // 初始化
       async init() {
         if (!window.tinymce) {
@@ -209,7 +219,10 @@
         window.tinymce.init({
           selector: `#${that.editorId}`,
           ...defaultConfig,
-          placeholder: that._getProp('placeholder'),
+          placeholder: (() => {
+            let placeholder = that.column.placeholder !== undefined ? that.column.placeholder : that.placeholder;
+            return placeholder !== undefined ? placeholder : that._i18n.t('vk.form.editor.placeholder');
+          })(),
           language,
           height: that._getProp('height') || 600,
           readonly: that._getProp('disabled'),
@@ -254,7 +267,7 @@
                 fail: (err) => {
                   // 上传失败
                   let errMsg = err.msg || err.errMsg || err.message;
-                  reject('上传失败: ' + errMsg);
+                  reject(that._i18n.t('vk.form.editor.uploadFailed') + errMsg);
                 },
               });
             });
@@ -312,11 +325,11 @@
               let width = 750;
               let height = Math.round((width / data.width) * data.height);
               htmlStr = `
-            <video controls width="${width}" height="${height}" class="editor-video" style="max-width:100%;">
-              <source src="${data.source}" :type="${data.sourcemime}">
-              您的浏览器不支持播放此视频
-            </video>
-            `;
+						<video controls width="${width}" height="${height}" class="editor-video" style="max-width:100%;">
+							<source src="${data.source}" :type="${data.sourcemime}">
+							${that._i18n.t('vk.form.editor.videoNotSupported')}
+						</video>
+						`;
             }
             return htmlStr;
           },
@@ -328,7 +341,7 @@
             // 注册多图上传按钮
             editor.ui.registry.addButton('images', {
               icon: 'images',
-              tooltip: '多图上传',
+              tooltip: that._i18n.t('vk.form.editor.multiImageUpload'),
               enabled: true,
               onAction: () => {
                 that.fileSelect.fileType = 'image';
@@ -397,11 +410,11 @@
       insertVideo(data) {
         let { width, height, url, type } = data;
         let htmlStr = `
-      <video controls width="${width}" height="${height}" class="editor-video" style="max-width:100%;">
-        <source src="${url}" :type="${type}">
-        您的浏览器不支持播放此视频
-      </video>
-      `;
+			<video controls width="${width}" height="${height}" class="editor-video" style="max-width:100%;">
+				<source src="${url}" :type="${type}">
+				${this._i18n.t('vk.form.editor.videoNotSupported')}
+			</video>
+			`;
         this.getEditor().insertContent(htmlStr);
       },
       // 插入多个视频
@@ -431,7 +444,7 @@
           // 多图上传
           this.insertImages(file);
         } else {
-          let { display_name = '附件' } = file;
+          let { display_name = this._i18n.t('vk.form.editor.defaultAttachmentName') } = file;
           this.callback(url, { text: display_name });
         }
       },
@@ -443,6 +456,7 @@
         }
       },
       language(val) {
+        this._i18n.locale = val || uni.getLocale() || 'zh-Hans';
         this.init();
       },
     },

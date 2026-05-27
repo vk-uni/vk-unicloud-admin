@@ -17,10 +17,10 @@
       @success="onFormSuccess"
     >
       <template v-slot:user_id>
-        <view style="display: flex; align-items: center">
+        <div style="display: flex; align-items: center">
           <el-avatar v-if="data.avatar" :src="data.avatar" fit="cover"></el-avatar>
-          <text style="margin-left: 10px">{{ data.nickname }}（ID：{{ data._id }}）</text>
-        </view>
+          <span style="margin-left: 10px">{{ data.nickname }}（ID：{{ data._id }}）</span>
+        </div>
       </template>
     </vk-data-form>
     <!-- 页面主体内容结束 -->

@@ -1,10 +1,10 @@
 <template>
   <vk-data-drawer v-model="value.show" :title="page.title" v-loading="page.loading" :width="page.width" :destroy-on-close="true" direction="rtl" @open="onOpen" @closed="onClose">
-    <view class="drawer-content">
-      <view class="drawer-actions">
+    <div class="drawer-content">
+      <div class="drawer-actions">
         <el-button size="mini" type="primary" @click="batchdDeliveryPrize">提交发货信息</el-button>
         <el-button size="mini" @click="refresh">刷新</el-button>
-      </view>
+      </div>
       <vk-data-table
         ref="table1"
         :action="table1.action"
@@ -29,7 +29,7 @@
             size="mini"
             @input="inputValue(row, column.key, $event)"
           />
-          <view v-else>-</view>
+          <div v-else>-</div>
         </template>
         <template v-slot:receiver_mobile="{ row, column, index }">
           <el-input
@@ -38,7 +38,7 @@
             size="mini"
             @input="inputValue(row, column.key, $event)"
           />
-          <view v-else>-</view>
+          <div v-else>-</div>
         </template>
         <template v-slot:formatted_address="{ row, column, index }">
           <el-input
@@ -47,7 +47,7 @@
             size="mini"
             @input="inputValue(row, column.key, $event)"
           />
-          <view v-else>-</view>
+          <div v-else>-</div>
         </template>
         <template v-slot:express_name="{ row, column, index }">
           <el-select
@@ -59,7 +59,7 @@
           >
             <el-option v-for="item in expressOptions" :key="item.label" :label="item.label" :value="item.label"> </el-option>
           </el-select>
-          <view v-else>-</view>
+          <div v-else>-</div>
         </template>
         <template v-slot:express_no="{ row, column, index }">
           <el-input
@@ -68,10 +68,10 @@
             size="mini"
             @input="inputValue(row, column.key, $event)"
           />
-          <view v-else>-</view>
+          <div v-else>-</div>
         </template>
       </vk-data-table>
-    </view>
+    </div>
   </vk-data-drawer>
 </template>
 

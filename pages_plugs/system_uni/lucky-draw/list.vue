@@ -1,60 +1,62 @@
 <template>
-  <view class="page-body">
-    <!-- 页面内容开始 -->
+  <div>
+    <!-- 搜索区域卡片 -->
+    <div class="vk-page-card vk-page-search-card">
+      <vk-data-table-query
+        v-model="queryForm1.formData"
+        :columns="queryForm1.columns"
+        :span="3"
+        :collapse-rows="1"
+        :collapse-default-expand="true"
+        @search="search"
+        @collapse-change="collapseChange"
+      ></vk-data-table-query>
+    </div>
 
-    <!-- 表格搜索组件开始 -->
-    <vk-data-table-query v-model="queryForm1.formData" :columns="queryForm1.columns" size="mini" @search="search"></vk-data-table-query>
-    <!-- 表格搜索组件结束 -->
+    <!-- 表格内容卡片 -->
+    <div class="vk-page-card">
+      <!-- 操作按钮与表格标题区域 -->
+      <div class="vk-page-card-toolbar">
+        <div class="vk-page-card-title">抽奖活动列表</div>
+        <div class="vk-page-card-actions">
+          <el-button type="primary" :size="$global.size" icon="el-icon-circle-plus-outline" @click="addBtn">添加</el-button>
+          <el-button type="success" :size="$global.size" icon="el-icon-circle-plus-outline" @click="showSetKey">设置key</el-button>
+          <el-button :size="$global.size" icon="el-icon-download" @click="exportExcel">导出Excel</el-button>
+          <el-button :size="$global.size" @click="showHelp">查看教程</el-button>
+        </div>
+      </div>
 
-    <!-- 自定义按钮区域开始 -->
-    <view>
-      <el-row>
-        <el-button type="danger" size="mini" icon="el-icon-circle-plus-outline" @click="showSetKey">设置key</el-button>
-        <el-button type="success" size="mini" icon="el-icon-circle-plus-outline" @click="addBtn">添加</el-button>
-        <el-dropdown v-if="table1.multipleSelection" :split-button="false" trigger="click" @command="batchBtn">
-          <el-button type="danger" size="mini" style="margin-left: 10px" :disabled="table1.multipleSelection.length === 0">
-            批量操作<i class="el-icon-arrow-down el-icon--right"></i>
-          </el-button>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item :command="1">批量启用（显示）</el-dropdown-item>
-            <el-dropdown-item :command="2">批量停用（隐藏）</el-dropdown-item>
-            <el-dropdown-item :command="3">批量删除</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-        <el-button type="success" size="mini" style="margin-left: 10px" @click="showHelp">查看教程</el-button>
-      </el-row>
-    </view>
-    <!-- 自定义按钮区域结束 -->
+      <!-- 表格区域 -->
+      <div class="vk-page-card-table">
+        <vk-data-table
+          ref="table1"
+          :action="table1.action"
+          :columns="table1.columns"
+          :query-form-param="queryForm1"
+          :right-btns="['update', 'delete']"
+          :custom-right-btns="table1.customRightBtns"
+          right-btns-align="right"
+          :selection="true"
+          :batch-btns="table1.batchBtns"
+          :row-no="true"
+          :pagination="true"
+          :auto-action="false"
+          :default-sort="{ name: 'sort', type: 'desc' }"
+          :top="0"
+          @update="updateBtn"
+          @delete="deleteBtn"
+          @current-change="currentChange"
+          @table-mounted="init"
+        >
+          <!-- 排序值 -->
+          <template v-slot:sort="{ row, column, index }">
+            <el-input v-model="row.sort" size="mini" @change="sortChange($event, row)" />
+          </template>
+        </vk-data-table>
+      </div>
+    </div>
 
-    <!-- 表格组件开始 -->
-    <vk-data-table
-      ref="table1"
-      :action="table1.action"
-      :columns="table1.columns"
-      :query-form-param="queryForm1"
-      :right-btns="['update', 'delete']"
-      :custom-right-btns="table1.customRightBtns"
-      right-btns-align="right"
-      :selection="true"
-      :row-no="true"
-      :pagination="true"
-      :auto-action="false"
-      :default-sort="{ name: 'sort', type: 'desc' }"
-      size="mini"
-      @update="updateBtn"
-      @delete="deleteBtn"
-      @current-change="currentChange"
-      @selection-change="selectionChange"
-      @table-mounted="init"
-    >
-      <!-- 排序值 -->
-      <template v-slot:sort="{ row, column, index }">
-        <el-input v-model="row.sort" size="mini" @change="sortChange($event, row)" />
-      </template>
-    </vk-data-table>
-    <!-- 表格组件结束 -->
-
-    <!-- 添加或编辑的弹窗开始 -->
+    <!-- 添加或编辑的弹窗 -->
     <vk-data-dialog v-model="form1.props.show" :title="form1.props.title" width="600px" mode="form" :close-on-click-modal="true">
       <vk-data-form
         v-model="form1.data"
@@ -69,31 +71,29 @@
         "
       >
         <template v-slot:qrcode="{ form, keyName, column }">
-          <view class="qrcode-container">
-            <view class="qrcode-card">
-              <view class="qrcode-header">
-                <text class="qrcode-title">创建活动</text>
-              </view>
-              <view class="qrcode-image-wrapper">
+          <div class="qrcode-container">
+            <div class="qrcode-card">
+              <div class="qrcode-header">
+                <span class="qrcode-title">创建活动</span>
+              </div>
+              <div class="qrcode-image-wrapper">
                 <image :src="qrcode" mode="aspectFit" class="qrcode-image"></image>
-              </view>
-              <view class="qrcode-tips">
-                <text class="tips-text">微信扫一扫上方小程序码</text>
-                <text class="tips-sub">可创建活动，然后即可在此处选择</text>
-              </view>
-            </view>
-          </view>
+              </div>
+              <div class="qrcode-tips">
+                <span class="tips-text">微信扫一扫上方小程序码</span>
+                <span class="tips-sub">可创建活动，然后即可在此处选择</span>
+              </div>
+            </div>
+          </div>
         </template>
       </vk-data-form>
     </vk-data-dialog>
-    <!-- 添加或编辑的弹窗结束 -->
 
     <setKey v-model="formDatas.setKey" @success="refresh"></setKey>
     <activityDetail v-model="formDatas.activityDetail"></activityDetail>
     <winList v-model="formDatas.winList"></winList>
     <help v-model="formDatas.help"></help>
-    <!-- 页面内容结束 -->
-  </view>
+  </div>
 </template>
 
 <script>
@@ -154,8 +154,80 @@
             { key: '_add_time', title: '距离现在', type: 'dateDiff', width: 120 },
             { key: 'activity_id', title: '活动ID', type: 'text', width: 200 },
           ],
-          // 多选框选中的值
-          multipleSelection: [],
+          // 底部批量操作按钮
+          batchBtns: [
+            {
+              title: '批量启用',
+              confirm: true,
+              onClick: (items) => {
+                let ids = items.map((item) => item._id);
+                vk.callFunction({
+                  url: 'plugs/lucky-draw/admin/sys.luckyDraw.update',
+                  title: '请求中...',
+                  data: {
+                    _id: ids,
+                    enable: true,
+                  },
+                  success: (data) => {
+                    if (data.num > 0) {
+                      let list = this.$refs.table1.getMultipleSelection();
+                      list.forEach((item) => {
+                        item.enable = true;
+                      });
+                    }
+                  },
+                });
+              },
+            },
+            {
+              title: '批量停用',
+              confirm: true,
+              onClick: (items) => {
+                let ids = items.map((item) => item._id);
+                vk.callFunction({
+                  url: 'plugs/lucky-draw/admin/sys.luckyDraw.update',
+                  title: '请求中...',
+                  data: {
+                    _id: ids,
+                    enable: false,
+                  },
+                  success: (data) => {
+                    if (data.num > 0) {
+                      let list = this.$refs.table1.getMultipleSelection();
+                      list.forEach((item) => {
+                        item.enable = false;
+                      });
+                    }
+                  },
+                });
+              },
+            },
+            {
+              title: '批量删除',
+              type: 'danger',
+              icon: 'el-icon-delete',
+              confirm: true,
+              onClick: (items) => {
+                let ids = items.map((item) => item._id);
+                vk.callFunction({
+                  url: 'plugs/lucky-draw/admin/sys.luckyDraw.delete',
+                  title: '请求中...',
+                  data: {
+                    _id: ids,
+                  },
+                  success: (data) => {
+                    this.$message({
+                      message: data.msg,
+                      type: data.num > 0 ? 'success' : 'error',
+                    });
+                    if (data.num > 0) {
+                      this.refresh();
+                    }
+                  },
+                });
+              },
+            },
+          ],
           // 当前高亮的记录
           selectItem: '',
           customRightBtns: [
@@ -198,7 +270,6 @@
               key: 'enable',
               title: '是否启用',
               type: 'select',
-              width: 100,
               mode: '=',
               clearable: false,
               data: [
@@ -207,7 +278,7 @@
                 { value: false, label: '停用' },
               ],
             },
-            { key: 'title', title: '活动标题', type: 'text', width: 200, mode: '%%' },
+            { key: 'title', title: '活动标题', type: 'text', mode: '%%' },
           ],
         },
         form1: {
@@ -337,6 +408,11 @@
       search() {
         this.$refs.table1.search();
       },
+      // 监听 - 查询表单折叠面板变化事件
+      collapseChange() {
+        // 执行表格重新布局
+        this.$refs.table1.doLayout();
+      },
       // 刷新
       refresh() {
         this.$refs.table1.refresh();
@@ -348,10 +424,6 @@
       // 监听 - 行的选中高亮事件
       currentChange(val) {
         this.table1.selectItem = val;
-      },
-      // 当选择项发生变化时会触发该事件
-      selectionChange(list) {
-        this.table1.multipleSelection = list;
       },
       // 显示添加页面
       addBtn() {
@@ -379,53 +451,6 @@
           },
         });
       },
-      // 监听 - 批量操作的按钮点击事件
-      batchBtn(index) {
-        let ids = this.table1.multipleSelection.map((item) => item._id);
-        switch (index) {
-          case 1:
-          case 2:
-            // 批量启用或停用
-            vk.callFunction({
-              url: 'plugs/lucky-draw/admin/sys.luckyDraw.update',
-              title: '请求中...',
-              data: {
-                _id: ids,
-                enable: index === 1 ? true : false,
-              },
-              success: (data) => {
-                if (data.num > 0) {
-                  let list = this.$refs.table1.getMultipleSelection();
-                  list.forEach((item) => {
-                    item.enable = index === 1 ? true : false;
-                  });
-                }
-              },
-            });
-            break;
-          case 3:
-            // 批量删除
-            vk.callFunction({
-              url: 'plugs/lucky-draw/admin/sys.luckyDraw.delete',
-              title: '请求中...',
-              data: {
-                _id: ids,
-              },
-              success: (data) => {
-                this.$message({
-                  message: data.msg,
-                  type: data.num > 0 ? 'success' : 'error',
-                });
-                if (data.num > 0) {
-                  this.refresh();
-                }
-              },
-            });
-            break;
-          default:
-            break;
-        }
-      },
       // 监听 - 排序值发生变化时触发
       sortChange(sort, item) {
         vk.callFunction({
@@ -449,6 +474,12 @@
       showHelp() {
         vk.pubfn.openForm('help', {});
       },
+      // 导出Excel
+      exportExcel() {
+        this.$refs.table1.exportExcel({
+          showColumnSelector: true,
+        });
+      },
     },
     // 监听属性
     watch: {},
@@ -458,6 +489,9 @@
 </script>
 
 <style lang="scss" scoped>
+  page {
+    background-color: var(--bgcolor);
+  }
   .qrcode-container {
     display: flex;
     justify-content: center;

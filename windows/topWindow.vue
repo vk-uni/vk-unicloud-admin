@@ -1,90 +1,91 @@
 <template>
-  <view class="header no-user-select" :class="showMenuTabs ? 'show-menu-tabs' : 'hide-menu-tabs'" v-loading="!vk.getVuex('$app.inited')" :style="'--textColor' + textColor">
+  <div class="header no-user-select" :class="showMenuTabs ? 'show-menu-tabs' : 'hide-menu-tabs'" v-loading="!appInitedCom" :style="'--textColor' + textColorCom">
     <!-- 左侧 -->
-    <view class="left">
+    <div class="left">
       <!-- 模式一：纯图片 -->
       <navigator class="logo-mode-1" open-type="reLaunch" url="/" v-if="mode === 1">
-        <image :src="vk.getVuex('$app.staticUrl.navBar.logo1')" mode="aspectFill" class="logo-image" v-show="vk.getVuex('$app.leftCollapse')"></image>
-        <image :src="vk.getVuex('$app.staticUrl.navBar.logo2')" mode="aspectFill" class="logo-image" v-show="!vk.getVuex('$app.leftCollapse')"></image>
+        <image :src="logo1Com" mode="aspectFill" class="logo-image" v-show="leftCollapseCom"></image>
+        <image :src="logo2Com" mode="aspectFill" class="logo-image" v-show="!leftCollapseCom"></image>
       </navigator>
 
       <!-- 模式二：图片+文字 -->
       <navigator class="logo-mode-2" open-type="reLaunch" url="/" v-else>
-        <view class="logo-box" v-show="!vk.getVuex('$app.leftCollapse')">
-          <image class="logo-image" :src="vk.getVuex('$app.staticUrl.navBar.logo')" mode="scaleToFill"></image>
-          <view class="app-name">{{ title }}</view>
-        </view>
-        <view class="logo-box" v-show="vk.getVuex('$app.leftCollapse')">
-          <image class="logo-image" :src="vk.getVuex('$app.staticUrl.navBar.logo')" mode="aspectFit"></image>
-        </view>
+        <div class="logo-box" v-show="!leftCollapseCom">
+          <image class="logo-image" :src="logoCom" mode="scaleToFill"></image>
+          <div class="app-name">{{ titleCom }}</div>
+        </div>
+        <div class="logo-box" v-show="leftCollapseCom">
+          <image class="logo-image" :src="logoCom" mode="aspectFit"></image>
+        </div>
       </navigator>
-    </view>
+    </div>
     <!-- 右侧 -->
-    <view class="right">
+    <div class="right">
       <!-- 右上 -->
-      <view class="right-top" :style="topMenuStyle">
-        <view class="navbar" :class="{ 'navbar-mini': !matchLeftWindow, 'popup-menu': popupMenuOpened }">
+      <div class="right-top" :style="topMenuStyleCom">
+        <div class="navbar" :class="{ 'navbar-mini': !matchLeftWindow }">
           <vk-data-icon
             class="menu-collapse"
-            :name="vk.getVuex('$app.leftCollapse') ? 'vk-icon-zhankaicaidan' : 'vk-icon-shouqicaidan'"
-            size="17"
-            :color="textColor"
+            :name="leftCollapseCom ? 'vk-icon-zhankaicaidan' : 'vk-icon-shouqicaidan'"
+            :size="17"
+            :color="textColorCom"
             :pointer="true"
             @click="menuCollapse"
           ></vk-data-icon>
           <!-- 面包屑 -->
           <breadcrumb></breadcrumb>
 
-          <view class="navbar-left pointer">
-            <vk-data-icon @click="toggleSidebar" class="menu-icon" name="vk-icon-sortlight" size="30" :color="textColor"></vk-data-icon>
-          </view>
-          <view class="navbar-middle">
-            <text class="title-text">{{ navigationBarTitleText }}</text>
-          </view>
-          <view class="navbar-right pointer">
-            <view @click="togglePopupMenu" class="navbar-user">
-              <view class="username">
-                <text>{{ vk.getVuex('$user.userInfo.username') }}</text>
-              </view>
-              <vk-data-icon class="arrowdown" name="vk-icon-unfold" :color="textColor" size="13"></vk-data-icon>
-            </view>
-            <view class="vk-mask" @click="togglePopupMenu"></view>
-            <view class="navbar-menu">
+          <div class="navbar-left">
+            <vk-data-icon @click="toggleSidebar" class="menu-icon pointer" name="vk-icon-sortlight" :size="30" :color="textColorCom"></vk-data-icon>
+          </div>
+          <div class="navbar-middle">
+            <span class="title-text">{{ navigationBarTitleText }}</span>
+          </div>
+          <div class="navbar-right">
+            <div class="navbar-menu">
               <!-- #ifdef WEB -->
-              <view v-if="vk.getVuex('$error.logs').length" @click="openForm('errorLog')" class="menu-item debug pointer">
-                <el-badge :value="vk.getVuex('$error.logs').length" class="item">
-                  <vk-data-icon name="el-icon-message-solid" size="22" :color="textColor"></vk-data-icon>
+              <div v-if="errorLogsCom.length" @click="openForm('errorLog')" class="menu-item debug pointer">
+                <el-badge :value="errorLogsCom.length" class="item">
+                  <vk-data-icon name="el-icon-message-solid" :size="22" :color="textColorCom"></vk-data-icon>
                 </el-badge>
-              </view>
+              </div>
               <!-- #endif -->
-              <view v-if="vk.getVuex('$app.width') >= 1100 && debug" v-for="link in links" :key="link.url" class="menu-item text-overflow">
+              <div v-if="appWidthCom >= 1100 && debug" v-for="link in links" :key="link.url" class="menu-item text-overflow">
                 <vk-data-link :href="link.url" :text="link.text" />
-              </view>
-              <view class="menu-item text-overflow">
-                <text>{{ vk.getVuex('$user.userInfo.username') }}</text>
-              </view>
-              <view class="menu-item" @click="openForm('updatePassword')">
-                <text class="text-overflow">修改密码</text>
-              </view>
-              <view class="menu-item">
-                <text class="logout pointer text-overflow" @click="logout">退出</text>
-              </view>
-              <view class="popup-menu__arrow"></view>
-            </view>
-          </view>
-        </view>
-      </view>
+              </div>
+            </div>
+            <el-dropdown v-if="isLoginCom" trigger="hover" @command="handleUserMenuCommand">
+              <div class="menu-item user-info-item">
+                <el-avatar :size="28" :src="avatarCom" icon="el-icon-user-solid" class="menu-avatar"></el-avatar>
+                <span class="text-overflow">{{ nicknameCom }}</span>
+                <i class="el-icon-arrow-down el-icon--right"></i>
+              </div>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="updateUserInfo"><i class="el-icon-user"></i>{{ $t('vk.user.updateUserInfo') }}</el-dropdown-item>
+                <el-dropdown-item command="updatePassword"><i class="el-icon-lock"></i>{{ $t('vk.user.updatePassword') }}</el-dropdown-item>
+                <el-dropdown-item command="logout"><i class="el-icon-switch-button"></i>{{ $t('vk.user.logout') }}</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <div v-else class="menu-item user-info-item" @click="navigateToLogin">
+              <vk-data-icon name="el-icon-user" :color="textColorCom" :size="16" style="margin-right: 4px"></vk-data-icon>
+              <span>{{ $t('vk.user.login') }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- 右下 -->
-      <view class="right-bottom" v-show="showMenuTabs">
+      <div class="right-bottom" v-show="showMenuTabs">
         <!-- tabs标签组 -->
-        <vk-data-menu-tabs v-if="vk.getVuex('$app.inited')" ref="menuTabs"></vk-data-menu-tabs>
-      </view>
-    </view>
+        <vk-data-menu-tabs v-if="appInitedCom" ref="menuTabs"></vk-data-menu-tabs>
+      </div>
+    </div>
     <!-- 弹窗 - 错误日志 -->
     <errorLog v-model="formDatas.errorLog"></errorLog>
     <!-- 弹窗 - 修改密码 -->
     <updatePassword v-model="formDatas.updatePassword"></updatePassword>
-  </view>
+    <!-- 弹窗 - 修改个人信息 -->
+    <updateUserInfo v-model="formDatas.updateUserInfo"></updateUserInfo>
+  </div>
 </template>
 
 <script>
@@ -92,11 +93,13 @@
   import breadcrumb from './components/breadcrumb';
   import errorLog from './components/errorLog';
   import updatePassword from './components/updatePassword';
+  import updateUserInfo from './components/updateUserInfo';
   export default {
     components: {
       breadcrumb,
       errorLog,
       updatePassword,
+      updateUserInfo,
     },
     props: {
       navigationBarTitleText: {
@@ -125,9 +128,6 @@
             url: 'https://ext.dcloud.net.cn/search?q=vk',
           },
         ],
-        popupMenuOpened: false,
-        tabCheck: '',
-        title: config.topBar.logoTitle,
         mode: config.topBar.logoMode,
         showMenuTabs: true,
         formDatas: {},
@@ -140,13 +140,16 @@
       this.checkMenuTabs();
     },
     methods: {
+      // 跳转登录页
+      navigateToLogin() {
+        this.vk.navigateToLogin();
+      },
       // 退出登录
       logout() {
-        let that = this;
-        let { vk } = that;
+        let { vk } = this;
         vk.userCenter.logout({
-          success: function (data) {
-            if (typeof that.$refs.menuTabs.clear === 'function') that.$refs.menuTabs.clear();
+          success: (data) => {
+            if (typeof this.$refs.menuTabs.clear === 'function') this.$refs.menuTabs.clear();
             uni.reLaunch({
               url: config.login.url,
             });
@@ -155,23 +158,25 @@
       },
       // 左侧菜单显示和隐藏
       toggleSidebar() {
-        let that = this;
-        if (!that.showLeftWindow) {
+        if (!this.showLeftWindow) {
           uni.showLeftWindow();
         } else {
           uni.hideLeftWindow();
         }
       },
-      // 右上方菜单显示和隐藏
-      togglePopupMenu() {
-        let that = this;
-        that.popupMenuOpened = !that.popupMenuOpened;
+      // 用户下拉菜单命令处理
+      handleUserMenuCommand(command) {
+        if (command === 'updateUserInfo') {
+          this.openForm('updateUserInfo');
+        } else if (command === 'updatePassword') {
+          this.openForm('updatePassword');
+        } else if (command === 'logout') {
+          this.logout();
+        }
       },
       // 打开表单
       openForm(name) {
-        let that = this;
-        let { vk } = that;
-        that.formDatas[name] = {
+        this.formDatas[name] = {
           show: true,
         };
       },
@@ -187,7 +192,7 @@
         if (!leftCollapse) {
           // 打开
           uni.setLeftWindowStyle({
-            width: this.leftWidth,
+            width: this.leftWidthCom,
           });
         } else {
           // 折叠
@@ -216,7 +221,40 @@
       leftCollapseCom() {
         return this.vk.getVuex('$app.leftCollapse');
       },
-      topMenuStyle() {
+      appInitedCom() {
+        return this.vk.getVuex('$app.inited');
+      },
+      logo1Com() {
+        return this.vk.getVuex('$app.config.staticUrl.navBar.logo1');
+      },
+      logo2Com() {
+        return this.vk.getVuex('$app.config.staticUrl.navBar.logo2');
+      },
+      titleCom() {
+        return this.vk.getVuex('$app.config.topBar.logoTitle');
+      },
+      logoCom() {
+        return this.vk.getVuex('$app.config.staticUrl.navBar.logo');
+      },
+      nicknameCom() {
+        const userInfo = this.vk.getVuex('$user.userInfo') || {};
+        return userInfo.nickname || userInfo.username || '';
+      },
+      isLoginCom() {
+        const userInfo = this.vk.getVuex('$user.userInfo');
+        return userInfo && userInfo._id;
+      },
+      avatarCom() {
+        const userInfo = this.vk.getVuex('$user.userInfo') || {};
+        return userInfo.avatar || '';
+      },
+      errorLogsCom() {
+        return this.vk.getVuex('$error.logs');
+      },
+      appWidthCom() {
+        return this.vk.getVuex('$app.width');
+      },
+      topMenuStyleCom() {
         let theme = this.theme;
         if (theme && theme.use) {
           let topMenu = theme[theme.use].topMenu;
@@ -229,7 +267,7 @@
           return {};
         }
       },
-      textColor() {
+      textColorCom() {
         let theme = this.theme;
         if (theme && theme.use) {
           return theme[theme.use].topMenu.textColor || '#999';
@@ -237,7 +275,7 @@
           return '#999';
         }
       },
-      leftWidth() {
+      leftWidthCom() {
         let theme = this.theme;
         if (theme && theme.use) {
           return theme[theme.use].leftMenu.width || '240px';
@@ -336,6 +374,20 @@
 
       .menu-item {
         padding: 5px;
+        display: flex;
+        align-items: center;
+      }
+
+      .user-info-item {
+        cursor: pointer;
+      }
+
+      .menu-avatar {
+        margin-right: 6px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .debug {
@@ -360,42 +412,10 @@
         justify-content: flex-end;
       }
 
-      .navbar-right .vk-mask {
-        background-color: rgba(255, 255, 255, 0);
-      }
-
-      .popup-menu__arrow {
-        position: absolute;
-        top: -6px;
-        right: 20px;
-        border-width: 6px;
-        margin-right: 3px;
-        border-top-width: 0;
-        border-bottom-color: #ebeef5;
-        filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.03));
-      }
-
-      .popup-menu__arrow::after {
-        content: ' ';
-        position: absolute;
-        display: block;
-        width: 0;
-        height: 0;
-        border-color: transparent;
-        border-style: solid;
-        border-width: 6px;
-        top: 1px;
-        margin-left: -6px;
-        border-top-width: 0;
-        border-bottom-color: #fff;
-      }
-
       /* 大屏时，隐藏的内容 */
       .menu-icon,
       .navbar-middle,
-      .navbar-user,
-      .popup-menu__arrow,
-      .navbar-right .vk-mask {
+      .navbar-user {
         display: none;
       }
 
@@ -407,6 +427,27 @@
 
       .navbar-mini .navbar-user {
         display: flex;
+        align-items: center;
+      }
+
+      .navbar-mini .user-info {
+        display: flex;
+        align-items: center;
+      }
+
+      .user-avatar {
+        margin-right: 8px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .login-btn {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
       }
 
       /* 小屏时，隐藏的内容 */
@@ -418,37 +459,6 @@
       .navbar-mini .breadcrumb-view,
       .navbar-mini .mini-none {
         display: none;
-      }
-
-      .navbar-mini .navbar-menu {
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        position: fixed;
-        right: 20px;
-        top: 50px;
-        background-color: #fff;
-        z-index: 999;
-        padding: 0px 15px;
-        margin: 5px 0;
-        background-color: #fff;
-        border: 1px solid #ebeef5;
-        border-radius: 4px;
-        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-      }
-
-      /* 小屏时，弹出下拉菜单 */
-      .navbar-mini.popup-menu .navbar-menu {
-        display: flex;
-      }
-
-      .navbar-mini.popup-menu .popup-menu__arrow,
-      .navbar-mini.popup-menu .navbar-right .vk-mask {
-        display: block;
-      }
-
-      .logout:hover {
-        color: $menu-text-color-actived;
       }
     }
 

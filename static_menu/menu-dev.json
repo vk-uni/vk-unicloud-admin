@@ -39,7 +39,7 @@
           },
           {
             "menu_id": "vk-data-table-easy",
-            "name": "综合用法",
+            "name": "简易用法",
             "icon": "",
             "url": "/pages_template/components/table/table-easy"
           },
@@ -54,6 +54,12 @@
             "name": "表格行展开",
             "icon": "",
             "url": "/pages_template/components/table/table-expand"
+          },
+          {
+            "menu_id": "vk-data-table-pro",
+            "name": "万能表格",
+            "icon": "",
+            "url": "/pages_template/components/table/table-pro"
           }
         ]
       },

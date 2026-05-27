@@ -1,36 +1,54 @@
 <template>
-  <view class="page-body">
-    <!-- 页面内容开始 -->
-    <!-- 表格搜索组件开始 -->
-    <vk-data-table-query v-model="queryForm1.formData" :columns="queryForm1.columns" @search="search">
-      <template slot="right-btns">
-        <el-button type="success" icon="el-icon-circle-plus-outline" @click="addBtn"> 添加 </el-button>
-      </template>
-    </vk-data-table-query>
-    <!-- 表格搜索组件结束 -->
+  <div>
+    <!-- 搜索区域卡片 -->
+    <div class="vk-page-card vk-page-search-card">
+      <vk-data-table-query
+        v-model="queryForm1.formData"
+        :columns="queryForm1.columns"
+        :span="3"
+        :collapse-rows="1"
+        :collapse-default-expand="true"
+        @search="search"
+        @collapse-change="collapseChange"
+      ></vk-data-table-query>
+    </div>
 
-    <!-- 表格组件开始 -->
-    <vk-data-table
-      ref="table1"
-      :action="table1.action"
-      :columns="table1.columns"
-      :query-form-param="queryForm1"
-      :right-btns="['detail_auto', 'update', 'delete']"
-      :row-no="true"
-      :pagination="true"
-      @update="updateBtn"
-      @delete="deleteBtn"
-      @current-change="currentChange"
-      @selection-change="selectionChange"
-    >
-      <!-- 排序值 -->
-      <template v-slot:sort="{ row, column, index }">
-        <el-input v-model="row.sort" size="mini" @change="sortChange($event, row)" />
-      </template>
-    </vk-data-table>
-    <!-- 表格组件结束 -->
+    <!-- 表格内容卡片 -->
+    <div class="vk-page-card">
+      <!-- 操作按钮与表格标题区域 -->
+      <div class="vk-page-card-toolbar">
+        <div class="vk-page-card-title">动态组件列表</div>
+        <div class="vk-page-card-actions">
+          <el-button type="primary" :size="$global.size" icon="el-icon-plus" @click="addBtn">添加</el-button>
+          <el-button :size="$global.size" icon="el-icon-download" @click="exportExcel">导出Excel</el-button>
+        </div>
+      </div>
 
-    <!-- 添加或编辑的弹窗开始 -->
+      <!-- 表格区域 -->
+      <div class="vk-page-card-table">
+        <vk-data-table
+          ref="table1"
+          :action="table1.action"
+          :columns="table1.columns"
+          :query-form-param="queryForm1"
+          :right-btns="['detail_auto', 'update', 'delete']"
+          :row-no="true"
+          :pagination="true"
+          :top="0"
+          @update="updateBtn"
+          @delete="deleteBtn"
+          @current-change="currentChange"
+          @selection-change="selectionChange"
+        >
+          <!-- 排序值 -->
+          <template v-slot:sort="{ row, column, index }">
+            <el-input v-model="row.sort" size="mini" @change="sortChange($event, row)" />
+          </template>
+        </vk-data-table>
+      </div>
+    </div>
+
+    <!-- 添加或编辑的弹窗 -->
     <vk-data-dialog v-model="form1.props.show" :title="form1.props.title" width="800px" mode="form">
       <vk-data-form
         ref="form1"
@@ -46,10 +64,7 @@
         "
       ></vk-data-form>
     </vk-data-dialog>
-    <!-- 添加或编辑的弹窗结束 -->
-
-    <!-- 页面内容结束 -->
-  </view>
+  </div>
 </template>
 
 <script>
@@ -132,18 +147,17 @@
           formData: {},
           // 查询表单的字段规则 fieldName:指定数据库字段名,不填默认等于key
           columns: [
-            { key: 'data_id', title: '组件数据ID', type: 'text', width: 180, mode: '%%' },
-            { key: 'title', title: '数据标题', type: 'text', width: 180, mode: '%%' },
+            { key: 'data_id', title: '组件数据ID', type: 'text', mode: '%%' },
+            { key: 'title', title: '数据标题', type: 'text', mode: '%%' },
             {
               key: 'type',
               title: 'type',
               type: 'select',
-              width: 160,
               mode: '=',
               data: [{ value: '', label: '全部' }, ...typeData],
             },
-            { key: 'name', title: 'name', type: 'text', width: 160, mode: '%%' },
-            { key: '_add_time', title: '添加时间', type: 'datetimerange', width: 380, mode: '[]' },
+            { key: 'name', title: 'name', type: 'text', mode: '%%' },
+            { key: '_add_time', title: '添加时间', type: 'datetimerange', mode: '[]' },
           ],
         },
         form1: {
@@ -218,6 +232,11 @@
       search(obj) {
         this.$refs.table1.query(obj);
       },
+      // 监听 - 查询表单折叠面板变化事件
+      collapseChange() {
+        // 执行表格重新布局
+        this.$refs.table1.doLayout();
+      },
       // 刷新
       refresh() {
         this.$refs.table1.refresh();
@@ -270,10 +289,20 @@
           success: (data) => {},
         });
       },
+      // 导出Excel
+      exportExcel() {
+        this.$refs.table1.exportExcel({
+          showColumnSelector: true,
+        });
+      },
     },
     watch: {},
     // 计算属性
     computed: {},
   };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  page {
+    background-color: var(--bgcolor);
+  }
+</style>

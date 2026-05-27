@@ -11,6 +11,7 @@
         { "path": "table/table-easy" },
         { "path": "table/table-query" },
         { "path": "table/table-expand" },
+        { "path": "table/table-pro" },
         { "path": "form/form-array-object" },
         { "path": "form/form-basic" },
         { "path": "form/form-inline" },

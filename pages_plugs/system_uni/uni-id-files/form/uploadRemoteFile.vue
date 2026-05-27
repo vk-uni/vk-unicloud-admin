@@ -4,30 +4,30 @@
     <div class="body">
       <!-- URL输入区域 -->
       <div class="url-section">
-        <div class="section-title">远程文件地址</div>
+        <div class="section-title">{{ $t('vk.assetLibrary.uploadRemoteFile.remoteFileUrl') }}</div>
         <div class="url-input-group">
           <el-input
             ref="urlInput"
             v-model="form1.data.url"
-            placeholder="请输入远程文件的URL地址，支持图片、视频等文件"
+            :placeholder="$t('vk.assetLibrary.uploadRemoteFile.urlPlaceholder')"
             :disabled="isLoading"
             @keyup.enter.native="fetchRemoteFile"
             @input="onUrlInput"
             clearable
           >
             <el-button slot="append" icon="el-icon-download" :loading="isLoading" :disabled="!form1.data.url.trim() || isLoading" @click="fetchRemoteFile">
-              {{ isLoading ? '抓取中...' : '抓取' }}
+              {{ isLoading ? $t('vk.assetLibrary.uploadRemoteFile.fetching') : $t('vk.assetLibrary.uploadRemoteFile.fetch') }}
             </el-button>
           </el-input>
           <div class="url-tips">
-            <span class="tip-text">💡 支持图片、视频、音频、文档等多种格式，系统会自动识别文件类型</span>
+            <span class="tip-text">{{ $t('vk.assetLibrary.uploadRemoteFile.urlTips') }}</span>
           </div>
         </div>
       </div>
 
       <!-- 文件信息显示区域 -->
       <div class="file-info-section" v-if="fileInfo">
-        <div class="section-title">文件信息</div>
+        <div class="section-title">{{ $t('vk.assetLibrary.uploadRemoteFile.fileInfo') }}</div>
 
         <!-- 文件预览 -->
         <div class="preview-area">
@@ -35,12 +35,13 @@
             <el-image :src="fileInfo.url" fit="contain" class="preview-image" :preview-src-list="[fileInfo.url]">
               <div slot="error" class="image-slot">
                 <i class="el-icon-picture-outline"></i>
-                <div>图片加载失败</div>
+                <div>{{ $t('vk.assetLibrary.uploadRemoteFile.imageLoadFailed') }}</div>
               </div>
             </el-image>
           </div>
-          <div class="preview-container" v-else-if="fileInfo.type === 'video'">
+          <div class="preview-container" v-else-if="fileInfo.type === 'video' || fileInfo.type === 'audio'">
             <iframe v-if="['html', 'htm'].indexOf(getFileFormatFromUrl(fileInfo.url)) > -1" :src="fileInfo.url" class="preview-iframe"></iframe>
+            <audio v-else-if="fileInfo.type === 'audio'" :src="fileInfo.url" controls class="preview-audio"></audio>
             <video v-else :src="fileInfo.url" controls class="preview-video"></video>
           </div>
           <div class="preview-container" v-else>
@@ -54,11 +55,11 @@
         <!-- 文件详情 -->
         <div class="file-details">
           <div class="detail-item" v-if="fileInfo.format">
-            <span class="label">文件格式：</span>
+            <span class="label">{{ $t('vk.assetLibrary.uploadRemoteFile.fileFormat') }}</span>
             <span class="value">{{ fileInfo.format.toUpperCase() }}</span>
           </div>
           <div class="detail-item" v-if="fileInfo.width && fileInfo.height">
-            <span class="label">尺寸：</span>
+            <span class="label">{{ $t('vk.assetLibrary.uploadRemoteFile.dimensions') }}</span>
             <span class="value">{{ fileInfo.width }} × {{ fileInfo.height }}</span>
           </div>
         </div>
@@ -66,7 +67,7 @@
 
       <!-- 文件设置区域 -->
       <div class="settings-section" v-if="fileInfo">
-        <div class="section-title">文件设置</div>
+        <div class="section-title">{{ $t('vk.assetLibrary.uploadRemoteFile.fileSettings') }}</div>
 
         <vk-data-form
           ref="form1"
@@ -106,10 +107,8 @@
     data: function () {
       return {
         page: {
-          title: '上传远程文件',
-          submitText: '确定上传',
-          cancelText: '取消',
-          showCancel: true,
+          title: this.$t('vk.assetLibrary.uploadRemoteFile.title'),
+          submitText: this.$t('vk.assetLibrary.uploadRemoteFile.submitUpload'),
           top: '5vh',
           width: '800px',
         },
@@ -133,36 +132,36 @@
             columns: [
               {
                 key: 'url',
-                title: '文件地址',
+                title: this.$t('vk.assetLibrary.uploadRemoteFile.fileUrl'),
                 type: 'text',
                 disabled: true,
-                placeholder: '远程文件地址',
+                placeholder: this.$t('vk.assetLibrary.uploadRemoteFile.remoteFileUrl'),
               },
               {
                 key: 'name',
-                title: '文件名',
+                title: this.$t('vk.assetLibrary.fileName'),
                 type: 'text',
-                placeholder: '请输入文件名',
+                placeholder: this.$t('vk.assetLibrary.uploadRemoteFile.fileNamePlaceholder'),
               },
               {
                 key: 'description',
-                title: '描述',
+                title: this.$t('vk.assetLibrary.form.description'),
                 type: 'text',
-                placeholder: '请输入文件描述（可选）',
+                placeholder: this.$t('vk.assetLibrary.uploadRemoteFile.descriptionPlaceholder'),
               },
               {
                 key: 'clone_image',
-                title: '克隆图片',
+                title: this.$t('vk.assetLibrary.uploadRemoteFile.cloneImage'),
                 type: 'switch',
                 show: false, // 默认隐藏，根据文件类型动态显示
               },
             ],
             rules: {
               name: [
-                { required: true, message: '文件名不能为空', trigger: 'change' },
-                { max: 50, message: '文件名最多50字', trigger: 'change' },
+                { required: true, message: this.$t('vk.assetLibrary.form.nameRequired'), trigger: 'change' },
+                { max: 50, message: this.$t('vk.assetLibrary.form.nameMaxLength', { length: 50 }), trigger: 'change' },
               ],
-              category_id: [{ required: true, message: '请选择分类', trigger: 'change' }],
+              category_id: [{ required: true, message: this.$t('vk.assetLibrary.uploadRemoteFile.selectCategory'), trigger: 'change' }],
             },
             labelWidth: '80px',
           },
@@ -214,13 +213,13 @@
       // 抓取远程文件
       async fetchRemoteFile() {
         if (!this.form1.data.url.trim()) {
-          this.$message.warning('请输入远程文件地址');
+          this.$message.warning(this.$t('vk.assetLibrary.uploadRemoteFile.enterRemoteUrl'));
           return;
         }
 
         // 验证URL格式
         if (!this.validateUrl(this.form1.data.url.trim())) {
-          this.$message.error('请输入有效的URL地址');
+          this.$message.error(this.$t('vk.assetLibrary.uploadRemoteFile.invalidUrl'));
           return;
         }
 
@@ -234,11 +233,11 @@
             this.updateFormData();
             this.updateFormColumns();
           } else {
-            this.$message.error('无法获取文件信息，请检查URL是否正确');
+            this.$message.error(this.$t('vk.assetLibrary.uploadRemoteFile.fetchFailed'));
           }
         } catch (error) {
           console.error('获取远程文件信息失败:', error);
-          this.$message.error('获取文件信息失败，请检查URL是否正确');
+          this.$message.error(this.$t('vk.assetLibrary.uploadRemoteFile.fetchFailed'));
         } finally {
           this.isLoading = false;
         }
@@ -299,7 +298,7 @@
           }
 
           // 音频格式
-          if (['mp3', 'wav', 'flac', 'aac', 'ogg', 'wma'].includes(extension)) {
+          if (['mp3', 'wav', 'flac', 'aac', 'ogg', 'wma', 'm4a', 'ape', 'amr', 'mid', 'midi', 'opus'].includes(extension)) {
             return 'audio';
           }
 
@@ -389,19 +388,19 @@
       // 获取文件类型文本
       getFileTypeText(type) {
         const typeMap = {
-          image: '图片',
-          video: '视频',
-          audio: '音频',
-          document: '文档',
-          archive: '压缩包',
-          other: '其他',
+          image: this.$t('vk.assetLibrary.image'),
+          video: this.$t('vk.assetLibrary.video'),
+          audio: this.$t('vk.assetLibrary.audio'),
+          document: this.$t('vk.assetLibrary.document'),
+          archive: this.$t('vk.assetLibrary.archive'),
+          other: this.$t('vk.assetLibrary.other'),
         };
-        return typeMap[type] || '未知';
+        return typeMap[type] || this.$t('vk.assetLibrary.unknown');
       },
 
       // 格式化文件大小
       formatFileSize(bytes) {
-        if (!bytes) return '未知';
+        if (!bytes) return this.$t('vk.assetLibrary.unknown');
         const units = ['B', 'KB', 'MB', 'GB'];
         let size = bytes;
         let unitIndex = 0;
@@ -416,7 +415,7 @@
 
       // 格式化时长
       formatDuration(seconds) {
-        if (!seconds) return '未知';
+        if (!seconds) return this.$t('vk.assetLibrary.unknown');
         let h = Math.floor(seconds / 3600);
         let m = Math.floor((seconds % 3600) / 60);
         let s = Math.floor(seconds % 60);
@@ -587,6 +586,11 @@
     display: block;
   }
 
+  .preview-audio {
+    width: 400px;
+    display: block;
+  }
+
   .preview-iframe {
     width: 600px;
     height: 400px;
@@ -671,7 +675,8 @@
     }
 
     .preview-image,
-    .preview-video {
+    .preview-video,
+    .preview-audio {
       max-width: 100%;
     }
   }

@@ -19,11 +19,11 @@
     >
       <template v-slot:permissionList>
         <el-input placeholder="输入关键字进行搜索" v-model="tree.filterText"> </el-input>
-        <view style="margin-top: 5px">
+        <div style="margin-top: 5px">
           <el-checkbox v-model="tree.expandAll" @change="expandAllChange">展开/折叠</el-checkbox>
           <el-checkbox v-model="tree.checkAll" @change="checkAllChange" v-if="!tree.filterText">全选/全不选</el-checkbox>
-        </view>
-        <view class="tree-box">
+        </div>
+        <div class="tree-box">
           <el-tree
             ref="tree"
             :data="data.treeData"
@@ -38,7 +38,7 @@
             :default-expand-all="false"
             :filter-node-method="filterNode"
           ></el-tree>
-        </view>
+        </div>
       </template>
     </vk-data-form>
     <!-- 页面主体内容结束 -->

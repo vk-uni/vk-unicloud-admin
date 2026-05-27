@@ -26,13 +26,13 @@
       @success="onFormSuccess"
     >
       <template v-slot:url="{ form, keyName }">
-        <view>
+        <div>
           <el-input v-model="form[keyName]">
             <template v-slot:append v-if="form[keyName]">
               <el-button @click="toUrl(form[keyName])">测试下载</el-button>
             </template>
           </el-input>
-        </view>
+        </div>
       </template>
     </vk-data-form>
     <!-- 页面主体内容结束 -->

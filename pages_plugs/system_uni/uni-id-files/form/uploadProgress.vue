@@ -13,14 +13,16 @@
     <!-- 页面主体内容开始 -->
     <div class="body" v-if="total > 1">
       <div class="total-progress">
-        <span class="span">总进度：{{ completedCount + failedCount }} / {{ total }} (成功: {{ completedCount }}, 失败: {{ failedCount }})</span>
+        <span class="span">{{
+          $t('vk.assetLibrary.uploadProgress.totalProgress', { completed: completedCount + failedCount, total, success: completedCount, failed: failedCount })
+        }}</span>
         <el-progress :percentage="totalPercentage"></el-progress>
       </div>
 
       <div class="progress-slots">
         <div v-for="(slot, index) in progressSlots" :key="index" class="progress-slot" :class="slot.status">
           <div class="slot-header">
-            <span class="slot-title">{{ slot.fileName || `文件 ${index + 1}` }}</span>
+            <span class="slot-title">{{ slot.fileName || $t('vk.assetLibrary.uploadProgress.file', { index: index + 1 }) }}</span>
             <span class="slot-status">{{ getStatusText(slot.status) }}</span>
           </div>
           <el-progress :percentage="slot.progress || 0" :status="getProgressStatus(slot.status) || undefined" :show-text="false"></el-progress>
@@ -29,16 +31,16 @@
       </div>
 
       <div class="status-text">
-        <span v-if="isUploading">正在并发上传中...</span>
-        <span v-else>上传完成</span>
+        <span v-if="isUploading">{{ $t('vk.assetLibrary.uploadProgress.uploadingConcurrently') }}</span>
+        <span v-else>{{ $t('vk.assetLibrary.uploadProgress.uploadComplete') }}</span>
       </div>
     </div>
     <div class="body" v-else>
       <div style="text-align: center">
         <el-progress :percentage="currentPercentage" type="circle"></el-progress>
         <div style="margin-top: 10px">
-          <span v-if="isUploading">正在上传...</span>
-          <span v-else>上传完成</span>
+          <span v-if="isUploading">{{ $t('vk.assetLibrary.uploadProgress.uploading') }}</span>
+          <span v-else>{{ $t('vk.assetLibrary.uploadProgress.uploadComplete') }}</span>
         </div>
       </div>
     </div>
@@ -65,9 +67,9 @@
       // 组件创建时，进行数据初始化
       return {
         page: {
-          title: '上传进度',
-          submitText: '确定',
-          cancelText: '关闭',
+          title: this.$t('vk.assetLibrary.uploadProgress.title'),
+          submitText: this.$t('vk.form.submit'),
+          cancelText: this.$t('vk.form.close'),
           showCancel: true,
           top: '10vh',
           width: '800px',
@@ -149,7 +151,7 @@
           index,
           fileId: `file_${index}_${Date.now()}`,
           progress: 0,
-          fileName: tempFiles[index].name || `文件${index + 1}`,
+          fileName: tempFiles[index].name || this.$t('vk.assetLibrary.uploadProgress.file', { index: index + 1 }),
         }));
 
         // 启动并发上传
@@ -316,12 +318,12 @@
       // 获取状态文本
       getStatusText(status) {
         const statusMap = {
-          idle: '空闲',
-          uploading: '上传中',
-          completed: '完成',
-          failed: '失败',
+          idle: this.$t('vk.assetLibrary.uploadProgress.statusIdle'),
+          uploading: this.$t('vk.assetLibrary.uploadProgress.statusUploading'),
+          completed: this.$t('vk.common.complete'),
+          failed: this.$t('vk.common.fail'),
         };
-        return statusMap[status] || '未知';
+        return statusMap[status] || this.$t('vk.assetLibrary.unknown');
       },
 
       // 获取进度条状态

@@ -16,15 +16,15 @@
       @success="onFormSuccess"
     >
       <template v-slot:key="{ form, keyName, column }">
-        <view>
+        <div>
           <vk-data-input type="text" v-model="form[keyName]" :placeholder="column.tips"></vk-data-input>
           <vk-data-tips v-if="column.tips" :tips="column.tips" :show="true"></vk-data-tips>
-          <view class="tips">微信扫下方小程序码进入首页，点击底部会员中心-申请API key，将得到的key填写到此处并保存</view>
-          <view class="qrcode">
+          <div class="tips">微信扫下方小程序码进入首页，点击底部会员中心-申请API key，将得到的key填写到此处并保存</div>
+          <div class="qrcode">
             <image :src="qrcode" mode="aspectFit" class="image"></image>
-            <view class="text">使用微信扫一扫</view>
-          </view>
-        </view>
+            <div class="text">使用微信扫一扫</div>
+          </div>
+        </div>
       </template>
     </vk-data-form>
     <!-- 页面主体内容结束 -->

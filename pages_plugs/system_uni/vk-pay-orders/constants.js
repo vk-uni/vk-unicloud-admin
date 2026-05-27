@@ -30,7 +30,7 @@ export const PAY_TYPE_MAP = {
   'huawei_mp-harmony': { label: '华为官方 - 元服务', icon: 'vk-icon-huawei', color: '#cf0a2c' },
   'huawei_app-harmony': { label: '华为官方 - APP', icon: 'vk-icon-huawei', color: '#cf0a2c' },
   // 苹果官方
-  'appleiap_app-plus': { label: '苹果内购', icon: 'vk-icon-iOS', color: '#000000' },
+  'appleiap_app-plus': { label: '苹果内购', icon: 'vk-icon-apple', color: '#000000' },
   // 三方渠道 - VksPay
   'vkspay_mp-weixin': { label: 'VksPay - 微信小程序', icon: 'vk-icon-weixin', color: '#07c160' },
   vkspay_mweb: { label: 'VksPay - 微信MWEB', icon: 'vk-icon-weixin', color: '#07c160' },

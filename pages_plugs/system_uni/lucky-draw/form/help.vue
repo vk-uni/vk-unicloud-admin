@@ -1,11 +1,11 @@
 <template>
   <vk-data-dialog v-model="value.show" :title="page.title" :top="page.top" :width="page.width" :close-on-click-modal="true" center @open="onOpen" @closed="onClose">
-    <view class="help">
-      <view class="qrcode">
+    <div class="help">
+      <div class="qrcode">
         <image :src="qrcode" mode="aspectFit" class="image"></image>
-      </view>
-      <view class="tips">微信扫一扫上方小程序码查看抽奖小助手使用教程</view>
-    </view>
+      </div>
+      <div class="tips">微信扫一扫上方小程序码查看抽奖小助手使用教程</div>
+    </div>
     <template v-slot:footer>
       <el-button :loading="page.loading" type="primary" size="medium" style="width: 80px" @click="close">{{ page.submitText }}</el-button>
     </template>

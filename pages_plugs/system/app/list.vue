@@ -1,42 +1,47 @@
 <template>
-  <view class="page-body">
-    <!-- 页面内容开始 -->
+  <div>
+    <!-- 搜索区域卡片 -->
+    <div class="vk-page-card vk-page-search-card">
+      <vk-data-table-query v-model="queryForm1.formData" :columns="queryForm1.columns" :span="3" @search="search" @collapse-change="collapseChange"></vk-data-table-query>
+    </div>
 
-    <!-- 表格搜索组件开始 -->
-    <vk-data-table-query v-model="queryForm1.formData" :columns="queryForm1.columns" @search="search"></vk-data-table-query>
-    <!-- 表格搜索组件结束 -->
+    <!-- 表格内容卡片 -->
+    <div class="vk-page-card">
+      <!-- 操作按钮与表格标题区域 -->
+      <div class="vk-page-card-toolbar">
+        <div class="vk-page-card-title">应用列表</div>
+        <div class="vk-page-card-actions">
+          <el-button type="primary" :size="$global.size" icon="el-icon-plus" @click="addBtn">添加应用</el-button>
+          <el-alert v-if="!appIdExist" :title="`⚠警告：当前项目的 appId：${currentAppId} 没有在下方表格中，请新增应用或修改应用！`" type="error"> </el-alert>
+        </div>
+      </div>
 
-    <!-- 自定义按钮区域开始 -->
-    <view style="display: flex; height: 32px">
-      <el-button type="success" size="small" icon="el-icon-circle-plus-outline" @click="addBtn">添加</el-button>
-      <el-alert v-if="!appIdExist" :title="`⚠警告：当前项目的 appId：${currentAppId} 没有在下方表格中，请新增应用或修改应用！`" type="error" style="margin-left: 20px"> </el-alert>
-    </view>
-    <!-- 自定义按钮区域结束 -->
-    <!-- 表格组件开始 -->
-    <vk-data-table
-      ref="table1"
-      :action="table1.action"
-      :columns="table1.columns"
-      :query-form-param="queryForm1"
-      :right-btns="['update', 'delete']"
-      :custom-right-btns="table1.customRightBtns"
-      :selection="false"
-      :row-no="true"
-      :pagination="true"
-      @update="updateBtn"
-      @delete="deleteBtn"
-      @current-change="currentChange"
-      @selection-change="selectionChange"
-    ></vk-data-table>
-    <!-- 表格组件结束 -->
+      <!-- 表格区域 -->
+      <div class="vk-page-card-table">
+        <vk-data-table
+          ref="table1"
+          :action="table1.action"
+          :columns="table1.columns"
+          :query-form-param="queryForm1"
+          :right-btns="['update', 'delete']"
+          :custom-right-btns="table1.customRightBtns"
+          :selection="false"
+          :row-no="true"
+          :pagination="true"
+          :top="0"
+          @update="updateBtn"
+          @delete="deleteBtn"
+          @current-change="currentChange"
+          @selection-change="selectionChange"
+        ></vk-data-table>
+      </div>
+    </div>
 
     <!-- 添加或编辑 -->
     <addUpdate v-model="formDatas.addUpdate" @success="refresh"></addUpdate>
     <!-- 生成发布页 -->
     <createPublishHtml v-model="formDatas.createPublishHtml" @success="refresh"></createPublishHtml>
-
-    <!-- 页面内容结束 -->
-  </view>
+  </div>
 </template>
 
 <script>
@@ -99,9 +104,9 @@
           formData: {},
           // 查询表单的字段规则 fieldName:指定数据库字段名,不填默认等于key
           columns: [
-            { key: 'appid', title: 'AppID', type: 'text', width: 160, mode: '%%' },
-            { key: 'name', title: '应用名称', type: 'text', width: 160, mode: '%%' },
-            { key: '_add_time', title: '添加时间', type: 'datetimerange', width: 400, mode: '[]' },
+            { key: 'appid', title: 'AppID', type: 'text', mode: '%%' },
+            { key: 'name', title: '应用名称', type: 'text', mode: '%%' },
+            { key: '_add_time', title: '添加时间', type: 'datetimerange', span: 4, mode: '[]' },
           ],
         },
         // 其他弹窗表单
@@ -135,6 +140,11 @@
       // 搜索
       search() {
         this.$refs.table1.search();
+      },
+      // 监听 - 查询表单折叠面板变化事件
+      collapseChange() {
+        // 执行表格重新布局
+        this.$refs.table1.doLayout();
       },
       // 刷新
       refresh() {
@@ -197,6 +207,7 @@
   };
 </script>
 <style lang="scss" scoped>
-  .page-body {
+  page {
+    background-color: var(--bgcolor);
   }
 </style>
