@@ -5,7 +5,7 @@
       <span class="code">500</span>
       <span class="tips">抱歉，服务器出错了</span>
       <span class="tips">{{ errMsg }}</span>
-      <span class="btn" @tap="to_index_page">返回首页</span>
+      <span class="btn" @tap="toHome">返回首页</span>
     </div>
   </div>
 </template>
@@ -13,16 +13,16 @@
 <script>
   export default {
     data() {
-      return {};
+      return {
+        errMsg: '',
+      };
     },
     onLoad(query) {
       this.errMsg = query.errMsg || '';
     },
     methods: {
-      to_index_page() {
-        uni.navigateTo({
-          url: '/pages/index/index',
-        });
+      toHome() {
+        uni.vk.navigateToHome();
       },
     },
   };
