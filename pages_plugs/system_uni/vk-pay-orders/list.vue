@@ -1,77 +1,69 @@
 <template>
-  <view class="page-body">
-    <!-- 页面内容开始 -->
+  <view>
+    <!-- 搜索区域卡片 -->
+    <view class="vk-page-card vk-page-search-card">
+      <vk-data-table-query
+        v-model="queryForm1.formData"
+        :columns="queryForm1.columns"
+        :span="3"
+        :collapse-rows="1"
+        :collapse-default-expand="true"
+        @search="search"
+        @collapse-change="collapseChange"
+      ></vk-data-table-query>
+    </view>
 
-    <!-- 表格搜索组件开始 -->
-    <vk-data-table-query
-      v-model="queryForm1.formData"
-      :columns="queryForm1.columns"
-      :main-columns="['out_trade_no', 'transaction_id', 'type', 'status', '_add_time']"
-      @search="search"
-    ></vk-data-table-query>
-    <!-- 表格搜索组件结束 -->
-    <!-- 表格组件开始 -->
-    <vk-data-table
-      ref="table1"
-      :action="table1.action"
-      :columns="table1.columns"
-      :query-form-param="queryForm1"
-      :right-btns="['detail_auto']"
-      :row-no="false"
-      :pagination="true"
-      @current-change="currentChange"
-      @selection-change="selectionChange"
-    >
-      <template v-slot:button1="{ row }">
-        <view v-if="row.status <= 0">-</view>
-        <el-tag type="success" effect="dark" v-else-if="row.user_order_success">成功</el-tag>
-        <el-button type="danger" size="mini" v-else-if="row.status === 1" @click="afreshNotice(row)">重新推送</el-button>
-        <view v-else-if="row.refund_fee > 0">失败，但已退款</view>
-        <view v-else>未知</view>
-      </template>
-    </vk-data-table>
-    <!-- 表格组件结束 -->
-    <!-- 页面内容结束 -->
+    <!-- 表格内容卡片 -->
+    <view class="vk-page-card">
+      <view class="vk-page-card-toolbar">
+        <view class="vk-page-card-title">支付订单列表</view>
+        <view class="vk-page-card-actions">
+          <el-button :size="$global.size" icon="el-icon-download" @click="exportExcel">导出Excel</el-button>
+        </view>
+      </view>
+
+      <!-- 表格区域 -->
+      <view class="vk-page-card-table">
+        <vk-data-table
+          ref="table1"
+          :action="table1.action"
+          :columns="table1.columns"
+          :query-form-param="queryForm1"
+          :right-btns="['detail']"
+          :row-no="false"
+          :pagination="true"
+          :top="0"
+          @current-change="currentChange"
+          @selection-change="selectionChange"
+          @detail="onDetail"
+        >
+          <template v-slot:button1="{ row }">
+            <view v-if="row.status <= 0">-</view>
+            <el-tag type="success" effect="dark" v-else-if="row.user_order_success">成功</el-tag>
+            <el-button type="danger" size="mini" v-else-if="row.status === 1" @click="afreshNotice(row)">重新推送</el-button>
+            <view v-else-if="row.refund_fee > 0">失败，但已退款</view>
+            <view v-else>未知</view>
+          </template>
+        </vk-data-table>
+      </view>
+    </view>
+
+    <!-- 自定义详情弹窗 -->
+    <vk-pay-orders-detail ref="detailDialog" @afresh-notice="afreshNotice" @refresh="refresh"></vk-pay-orders-detail>
   </view>
 </template>
 
 <script>
+  import vkPayOrdersDetail from './form/detail.vue';
+  import { payTypeData, orderTypeData, statusData } from './constants.js';
+
   let vk = uni.vk; // vk实例
   let originalForms = {}; // 表单初始化数据
 
-  const payTypeData = [
-    { label: '官方渠道 - 微信 - 小程序', value: 'wxpay_mp-weixin', tagType: 'success' },
-    { label: '官方渠道 - 微信 - APP', value: 'wxpay_app-plus', tagType: 'success' },
-    { label: '官方渠道 - 微信 - H5', value: 'wxpay_h5', tagType: 'success' },
-    { label: '官方渠道 - 微信 - MWEB', value: 'wxpay_mweb', tagType: 'success' },
-    { label: '官方渠道 - 微信 - 公众号', value: 'wxpay_h5-weixin', tagType: 'success' },
-    { label: '官方渠道 - 支付宝 - 小程序', value: 'alipay_mp-alipay', tagType: 'primary' },
-    { label: '官方渠道 - 支付宝 - APP', value: 'alipay_app-plus', tagType: 'primary' },
-    { label: '官方渠道 - 支付宝 - H5', value: 'alipay_h5', tagType: 'primary' },
-
-    { label: 'VksPay - 微信 - 小程序', value: 'vkspay_mp-weixin', tagType: 'success' },
-    { label: 'VksPay - 微信 - MWEB', value: 'vkspay_mweb', tagType: 'success' },
-    { label: 'VksPay - 微信 - 公众号', value: 'vkspay_h5-weixin', tagType: 'success' },
-    { label: 'VksPay - 支付宝 - 小程序', value: 'vkspay_mp-alipay', tagType: 'primary' },
-    { label: 'VksPay - H5', value: 'vkspay_h5', tagType: 'success' },
-    { label: 'VksPay - APP', value: 'vkspay_app-plus', tagType: 'success' },
-  ];
-  const orderTypeData = [
-    { label: '商品订单', value: 'goods' },
-    { label: '充值订单', value: 'recharge' },
-    { label: 'VIP购买订单', value: 'vip' },
-    { label: '其他订单', value: 'other' },
-  ];
-
-  const statusData = [
-    { label: '已关闭', value: -1, tagType: 'info' },
-    { label: '未支付', value: 0, tagType: 'info' },
-    { label: '已支付', value: 1, tagType: 'success' },
-    { label: '已部分退款', value: 2, tagType: 'warning' },
-    { label: '已全额退款', value: 3, tagType: 'danger' },
-  ];
-
   export default {
+    components: {
+      vkPayOrdersDetail,
+    },
     data() {
       // 页面数据变量
       return {
@@ -86,12 +78,12 @@
           // 表格字段显示规则
           columns: [
             { key: 'button1', title: '回调通知状态', type: 'text', width: 120, fixed: 'right' },
-            { key: 'out_trade_no', title: '商户订单号', type: 'text', width: 200 },
+            { key: 'out_trade_no', title: '商户单号', type: 'text', width: 200 },
             {
               key: 'type',
               title: '订单类型',
               type: 'select',
-              width: 100,
+              width: 140,
               data: orderTypeData,
             },
             {
@@ -110,11 +102,11 @@
             },
             { key: 'create_date', title: '创建时间', type: 'time', width: 160 },
             { key: 'pay_date', title: '支付时间', type: 'time', width: 160 },
-            { key: 'total_fee', title: '总金额', type: 'money', width: 110 },
-            { key: 'refund_fee', title: '总退款金额', type: 'money', width: 110, defaultValue: '-' },
+            { key: 'total_fee', title: '订单金额', type: 'money', width: 110 },
+            { key: 'refund_fee', title: '退款金额', type: 'money', width: 110, defaultValue: '-' },
             { key: 'refund_num', title: '退款次数', type: 'number', width: 80, defaultValue: '-' },
-            { key: 'transaction_id', title: '支付平台订单号', type: 'text', width: 260, defaultValue: '-' },
-            { key: 'openid', title: '用户openid', type: 'text', width: 280, show: ['detail'] },
+            { key: 'transaction_id', title: '支付单号', type: 'text', width: 260, defaultValue: '-' },
+            { key: 'openid', title: 'openid', type: 'text', width: 280, show: ['detail'] },
             {
               key: 'refund_list',
               title: '退款详情',
@@ -145,13 +137,12 @@
           formData: {},
           // 查询表单的字段规则 fieldName:指定数据库字段名,不填默认等于key
           columns: [
-            { key: 'out_trade_no', title: '商户订单号', type: 'text', width: 150, mode: '%%' },
-            { key: 'transaction_id', title: '支付平台订单号', type: 'text', width: 150, mode: '%%' },
+            { key: 'out_trade_no', title: '商户单号', type: 'text', mode: '%%' },
+            { key: 'transaction_id', title: '平台单号', type: 'text', mode: '%%' },
             {
               key: 'type',
               title: '订单类型',
               type: 'select',
-              width: 150,
               mode: '=',
               data: orderTypeData,
             },
@@ -159,11 +150,9 @@
               key: 'status',
               title: '订单状态',
               type: 'select',
-              width: 150,
               mode: '=',
               data: statusData,
             },
-            { key: '_add_time', title: '添加时间', type: 'datetimerange', width: 340, mode: '[]' },
             {
               key: 'pay_type',
               title: '支付类型',
@@ -171,8 +160,8 @@
               mode: '=',
               data: payTypeData,
             },
-            { key: 'total_fee_min', title: '金额范围', type: 'money', mode: '>=', fieldName: 'total_fee' },
-            { key: 'total_fee_max', title: '-', type: 'money', mode: '<=', fieldName: 'total_fee' },
+            { key: 'total_fee', title: '金额范围', type: 'money', placeholder: ['最小金额', '最大金额'], range: true, mode: '[]' },
+            { key: '_add_time', title: '添加时间', type: 'datetimerange', mode: '[]' },
           ],
         },
         // 表单相关结束 -----------------------------------------------------------
@@ -208,6 +197,11 @@
       search(obj) {
         this.$refs.table1.query(obj);
       },
+      // 监听 - 查询表单折叠面板变化事件
+      collapseChange() {
+        // 执行表格重新布局
+        this.$refs.table1.doLayout();
+      },
       // 刷新
       refresh() {
         this.$refs.table1.refresh();
@@ -224,6 +218,10 @@
       selectionChange(list) {
         this.table1.multipleSelection = list;
       },
+      // 点击详情按钮，打开自定义详情弹窗
+      onDetail({ row }) {
+        this.$refs.detailDialog.open(row);
+      },
       // 重新推送
       afreshNotice(row) {
         vk.callFunction({
@@ -238,10 +236,20 @@
           },
         });
       },
+      // 导出Excel
+      exportExcel() {
+        this.$refs.table1.exportExcel({
+          showColumnSelector: true,
+        });
+      },
     },
     watch: {},
     // 计算属性
     computed: {},
   };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  page {
+    background-color: var(--bgcolor);
+  }
+</style>
