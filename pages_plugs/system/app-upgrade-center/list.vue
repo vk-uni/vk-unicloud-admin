@@ -242,16 +242,16 @@
       },
       // 搜索
       search() {
-        this.$refs.table1.search();
+        if (this.$refs.table1) this.$refs.table1.search();
       },
       // 监听 - 查询表单折叠面板变化事件
       collapseChange() {
         // 执行表格重新布局
-        this.$refs.table1.doLayout();
+        if (this.$refs.table1) this.$refs.table1.doLayout();
       },
       // 刷新
       refresh() {
-        this.$refs.table1.refresh();
+        if (this.$refs.table1) this.$refs.table1.refresh();
       },
       // 获取当前选中的行的数据
       getCurrentRow() {
