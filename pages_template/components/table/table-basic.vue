@@ -1,19 +1,19 @@
 <!-- 基础用法 -->
 <template>
-  <view class="page">
-    <!-- 页面内容开始 -->
-    <vk-data-page-header title="表格基础用法" subTitle="高性能表格 - 万行数据如丝滑般流畅"></vk-data-page-header>
-    <view class="page-body">
-      <!-- 表格组件开始 -->
-      <vk-data-table ref="table1" :data="table1.data" :columns="table1.columns" :row-no="true"></vk-data-table>
-      <!-- 表格组件结束 -->
-    </view>
-    <!-- 页面内容结束 -->
-  </view>
+  <div>
+    <div class="vk-page-card">
+      <div class="vk-page-card-toolbar">
+        <div class="vk-page-card-title">表格基础用法</div>
+      </div>
+
+      <div class="vk-page-card-table">
+        <vk-data-table ref="table1" :data="table1.data" :columns="table1.columns" :row-no="true" :top="0"></vk-data-table>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-  let that; // 当前页面对象
   let vk = uni.vk; // vk实例
 
   export default {
@@ -37,10 +37,9 @@
     },
     // 监听 - 页面每次【加载时】执行(如：前进)
     onLoad(options = {}) {
-      that = this;
-      vk = that.vk;
-      that.options = options;
-      that.init(options);
+      vk = this.vk;
+      this.options = options;
+      this.init(options);
     },
     // 监听 - 页面【首次渲染完成时】执行。注意如果渲染速度快，会在页面进入动画完成前触发
     onReady() {},
@@ -66,7 +65,7 @@
             comment: `用户${s}的备注`,
           });
         }
-        that.table1.data = list;
+        this.table1.data = list;
       },
     },
     // 监听属性

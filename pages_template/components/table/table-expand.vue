@@ -1,51 +1,42 @@
 <template>
-  <view class="page-body">
-    <!-- 页面内容开始 -->
+  <div>
+    <div class="vk-page-card vk-page-search-card">
+      <vk-data-table-query v-model="queryForm1.formData" :columns="queryForm1.columns" :span="3" @search="search" @collapse-change="collapseChange"></vk-data-table-query>
+    </div>
 
-    <!-- 表格搜索组件开始 -->
-    <vk-data-table-query v-model="queryForm1.formData" :columns="queryForm1.columns" @search="search"></vk-data-table-query>
-    <!-- 表格搜索组件结束 -->
+    <div class="vk-page-card">
+      <div class="vk-page-card-toolbar">
+        <div class="vk-page-card-title">展开行表格</div>
+        <div class="vk-page-card-actions">
+          <el-button type="primary" :size="$global.size" icon="el-icon-plus" class="btn-add" @click="addBtn">添加</el-button>
+          <el-button :size="$global.size" icon="el-icon-download" @click="exportExcel">导出Excel</el-button>
+        </div>
+      </div>
 
-    <!-- 自定义按钮区域开始 -->
-    <view>
-      <el-row>
-        <el-button type="success" size="small" icon="el-icon-circle-plus-outline" @click="addBtn">添加</el-button>
-        <!-- 批量操作 -->
-        <el-dropdown v-if="table1.multipleSelection" :split-button="false" trigger="click" @command="batchBtn">
-          <el-button type="danger" size="small" style="margin-left: 20rpx" :disabled="table1.multipleSelection.length === 0">
-            批量操作<i class="el-icon-arrow-down el-icon--right"></i>
-          </el-button>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item :command="1">批量操作1</el-dropdown-item>
-            <el-dropdown-item :command="2">批量操作2</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-        <el-button type="success" size="small" icon="el-icon-edit-outline" style="margin-left: 20rpx" @click="exportExcel"> 订单导出xls </el-button>
-      </el-row>
-    </view>
-    <!-- 自定义按钮区域结束 -->
+      <div class="vk-page-card-table">
+        <vk-data-table
+          ref="table1"
+          :action="table1.action"
+          :columns="table1.columns"
+          :query-form-param="queryForm1"
+          :right-btns="['detail_auto', 'update', 'delete', 'more']"
+          :right-btns-more="table1.rightBtnsMore"
+          :batch-btns="table1.batchBtns"
+          :selection="true"
+          :row-no="true"
+          :pagination="true"
+          :expand="true"
+          :top="0"
+          @update="updateBtn"
+          @delete="deleteBtn"
+          @current-change="currentChange"
+          @selection-change="selectionChange"
+        ></vk-data-table>
+      </div>
+    </div>
 
-    <!-- 表格组件开始 -->
-    <vk-data-table
-      ref="table1"
-      :action="table1.action"
-      :columns="table1.columns"
-      :query-form-param="queryForm1"
-      :right-btns="['detail_auto', 'update', 'delete', 'more']"
-      :right-btns-more="table1.rightBtnsMore"
-      :selection="true"
-      :row-no="true"
-      :pagination="true"
-      :expand="true"
-      @update="updateBtn"
-      @delete="deleteBtn"
-      @current-change="currentChange"
-      @selection-change="selectionChange"
-    ></vk-data-table>
-    <!-- 表格组件结束 -->
-
-    <!-- 添加或编辑的弹窗开始 -->
-    <vk-data-dialog v-model="form1.props.show" :title="form1.props.title" width="500px" mode="form" :close-on-click-modal="false">
+    <!-- 添加或编辑的弹窗 -->
+    <vk-data-dialog v-model="form1.props.show" :title="form1.props.title" width="580px" top="4vh" mode="form" :close-on-click-modal="false">
       <vk-data-form
         v-model="form1.data"
         :rules="form1.props.rules"
@@ -53,20 +44,17 @@
         :form-type="form1.props.formType"
         :columns="form1.props.columns"
         label-width="80px"
+        max-height="700px"
         @success="
           form1.props.show = false;
           refresh();
         "
       ></vk-data-form>
     </vk-data-dialog>
-    <!-- 添加或编辑的弹窗结束 -->
-
-    <!-- 页面内容结束 -->
-  </view>
+  </div>
 </template>
 
 <script>
-  let that; // 当前页面对象
   let vk = uni.vk; // vk实例
   let originalForms = {}; // 表单初始化数据
 
@@ -86,7 +74,7 @@
           columns: [
             { key: '_id', title: 'id', type: 'text', width: 220, show: ['expand', 'detail'] },
             { key: 'money', title: '金额', type: 'money', width: 80, sortable: 'custom' },
-            { key: 'remark', title: '备注', type: 'text', width: 80, show: ['expand', 'detail'] },
+            { key: 'remark', title: '备注', type: 'text', width: 160, show: ['expand', 'detail'] },
             { key: '_add_time', title: '添加时间', type: 'time', width: 160, sortable: 'custom', valueFormat: 'yyyy-MM-dd hh:mm:ss' },
             { key: '_add_time', title: '距离现在', type: 'dateDiff', width: 120 },
           ],
@@ -97,14 +85,24 @@
           rightBtnsMore: [
             {
               title: '按钮1',
-              onClick: function (item) {
+              onClick: (item) => {
                 vk.toast(`${item._id}-按钮1`);
               },
             },
             {
               title: '按钮2',
-              onClick: function (item) {
+              onClick: (item) => {
                 vk.toast(`${item._id}-按钮2`);
+              },
+            },
+          ],
+          batchBtns: [
+            {
+              title: '批量删除',
+              type: 'danger',
+              confirm: true,
+              onClick: (items) => {
+                this.batchDelete(items);
               },
             },
           ],
@@ -117,10 +115,8 @@
           formData: {},
           // 查询表单的字段规则 fieldName:指定数据库字段名,不填默认等于key
           columns: [
-            { key: 'money_1', type: 'money', title: '金额范围', width: 160, placeholder: '请输入最小金额', mode: '>=', fieldName: 'money' },
-            { key: 'money_2', type: 'money', title: '-', width: 160, placeholder: '请输入最大金额', mode: '<=', fieldName: 'money' },
-            { key: 'remark', title: '备注', type: 'text', width: 160, mode: '%%' },
-            { key: '_add_time', title: '添加时间', type: 'datetimerange', width: 400, mode: '[]' },
+            { key: 'remark', title: '备注', type: 'text', mode: '%%' },
+            { key: '_add_time', title: '添加时间', type: 'datetimerange', mode: '[]' },
           ],
         },
         form1: {
@@ -167,10 +163,9 @@
     },
     // 监听 - 页面每次【加载时】执行(如：前进)
     onLoad(options = {}) {
-      that = this;
-      vk = that.vk;
-      that.options = options;
-      that.init(options);
+      vk = this.vk;
+      this.options = options;
+      this.init(options);
     },
     // 监听 - 页面【首次渲染完成时】执行。注意如果渲染速度快，会在页面进入动画完成前触发
     onReady() {},
@@ -182,7 +177,7 @@
     methods: {
       // 页面数据初始化函数
       init(options) {
-        originalForms['form1'] = vk.pubfn.copyObject(that.form1);
+        originalForms['form1'] = vk.pubfn.copyObject(this.form1);
       },
       // 页面跳转
       pageTo(path) {
@@ -191,7 +186,7 @@
       // 页面返回
       pageBack(path) {
         const pages = getCurrentPages();
-        if (pages.length > 1 && pages[0].route !== that.$page.route) {
+        if (pages.length > 1 && pages[0].route !== this.$page.route) {
           vk.navigateBack();
         } else if (path) {
           vk.navigateTo(path);
@@ -199,43 +194,54 @@
       },
       // 表单重置
       resetForm() {
-        vk.pubfn.resetForm(originalForms, that);
+        vk.pubfn.resetForm(originalForms, this);
       },
       // 搜索
       search() {
-        that.$refs.table1.search();
+        this.$refs.table1.search();
+      },
+      // 监听 - 查询表单折叠面板变化事件
+      collapseChange() {
+        // 执行表格重新布局
+        this.$refs.table1.doLayout();
       },
       // 刷新
       refresh() {
-        that.$refs.table1.refresh();
+        this.$refs.table1.refresh();
       },
       // 获取当前选中的行的数据
       getCurrentRow() {
-        return that.$refs.table1.getCurrentRow();
+        return this.$refs.table1.getCurrentRow();
       },
       // 监听 - 行的选中高亮事件
       currentChange(val) {
-        that.table1.selectItem = val;
+        this.table1.selectItem = val;
+      },
+      // 导出Excel
+      exportExcel() {
+        this.$refs.table1.exportExcel({
+          showColumnSelector: true,
+        });
       },
       // 当选择项发生变化时会触发该事件
       selectionChange(list) {
-        that.table1.multipleSelection = list;
+        this.table1.multipleSelection = list;
       },
       // 显示添加页面
       addBtn() {
-        that.resetForm();
-        that.form1.props.action = 'template/sys.table.save';
-        that.form1.props.formType = 'add';
-        that.form1.props.title = '添加';
-        that.form1.props.show = true;
+        this.resetForm();
+        this.form1.props.action = 'template/sys.table.save';
+        this.form1.props.formType = 'add';
+        this.form1.props.title = '添加';
+        this.form1.props.show = true;
       },
       // 显示修改页面
       updateBtn({ item }) {
-        that.form1.props.action = 'template/sys.table.save';
-        that.form1.props.formType = 'update';
-        that.form1.props.title = '编辑';
-        that.form1.props.show = true;
-        that.form1.data = item;
+        this.form1.props.action = 'template/sys.table.save';
+        this.form1.props.formType = 'update';
+        this.form1.props.title = '编辑';
+        this.form1.props.show = true;
+        this.form1.data = item;
       },
       // 删除按钮
       deleteBtn({ item, deleteFn }) {
@@ -247,22 +253,19 @@
           refresh: true,
         });
       },
-      // 监听 - 批量操作的按钮点击事件
-      batchBtn(index) {
-        switch (index) {
-          case 1:
-            vk.toast('批量操作按钮1');
-            break;
-          case 2:
-            vk.toast('批量操作按钮2');
-            break;
-          default:
-            break;
-        }
-      },
-      // 导出xls表格文件
-      exportExcel() {
-        that.$refs.table1.exportExcel();
+      // 批量删除
+      batchDelete(items) {
+        const ids = items.map((item) => item._id);
+        vk.callFunction({
+          url: 'template/sys.table.delete',
+          data: {
+            _id: ids,
+          },
+          success: (data) => {
+            this.$message.success(data.msg || '删除成功');
+            this.refresh();
+          },
+        });
       },
     },
     // 监听属性
@@ -272,6 +275,7 @@
   };
 </script>
 <style lang="scss" scoped>
-  .page-body {
+  page {
+    background-color: var(--bgcolor);
   }
 </style>
