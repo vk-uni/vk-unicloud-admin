@@ -6,16 +6,15 @@
     methods: {
       // 初始化菜单权限等数据
       init() {
-        let that = this;
-        let { vk } = that;
+        let { vk } = this;
         // 如果token失效，直接跳登录页面
         if (!vk.checkToken()) {
-          that.navigateToLogin();
+          this.navigateToLogin();
           return false;
         }
-        if (!that.isAllowLoginBackground()) {
+        if (!this.isAllowLoginBackground()) {
           vk.alert('您的账户无登陆权限', () => {
-            that.navigateToLogin();
+            this.navigateToLogin();
           });
           return false;
         }
@@ -43,10 +42,10 @@
             if (JSON.stringify(menuList) !== JSON.stringify(vk.getVuex('$app.menuList'))) {
               vk.setVuex('$app.menuList', menuList);
             }
-            vk.setVuex('$app.inited', true);
             vk.setVuex('$user.userInfo', data.userInfo);
             vk.setVuex('$user.permission', data.userInfo.permission);
-            that.checkCurrentAppId();
+            vk.setVuex('$app.inited', true);
+            this.checkCurrentAppId();
           },
         });
       },
@@ -74,8 +73,7 @@
       },
       // 检查是否允许登录admin后台
       isAllowLoginBackground(userInfo) {
-        let that = this;
-        let { vk } = that;
+        let { vk } = this;
         if (!userInfo) userInfo = vk.getVuex('$user.userInfo');
         let key = true;
         if (vk.pubfn.isNotNull(userInfo)) {
@@ -88,8 +86,7 @@
       },
       // 检测当前应用appid是否已添加到应用管理中
       checkCurrentAppId() {
-        let that = this;
-        let { vk } = that;
+        let { vk } = this;
         let systemInfo = uni.getSystemInfoSync();
         let isHome = `/${this.appOptions.path}` === config.index.url; // 是否是首页
         if (systemInfo.appId && isHome && vk.checkToken() && this.$hasRole('admin')) {
@@ -118,6 +115,19 @@
         let uniIdRedirectUrl = encodeURIComponent(url);
         vk.reLaunch(`${config.login.url}?uniIdRedirectUrl=${uniIdRedirectUrl}`);
       },
+      // 页面跳转拦截器
+      pageBeforeInterceptor() {
+        const invoke = (args = {}) => {
+          if (!this.vk.checkCurrentPagePermission({ url: args.url })) {
+            // 跳403页面
+            this.vk.navigateTo403();
+            return false;
+          }
+        };
+        uni.addInterceptor('redirectTo', { invoke });
+        uni.addInterceptor('navigateTo', { invoke });
+        uni.addInterceptor('reLaunch', { invoke });
+      },
     },
     // 监听 - 页面404
     onPageNotFound(e) {
@@ -127,10 +137,9 @@
     },
     // 监听 - 应用启动时
     onLaunch: function (options) {
-      let that = this;
-      that.appOptions = options;
+      this.appOptions = options;
       // 接收页面token参数，用于实现自动登录
-      that.vk.handleAutoLoginToken(options);
+      this.vk.handleAutoLoginToken(options);
       if (config.debug) {
         console.log(
           `%c vk-admin %c v${version} `,
@@ -139,14 +148,15 @@
         );
         console.log('App Launch');
       }
-      that.vk.pubfn.needInit({
-        that,
+      this.vk.pubfn.needInit({
+        that: this,
         config,
         success: () => {
-          that.init();
+          this.init();
         },
       });
-      that.initApp();
+      this.initApp();
+      this.pageBeforeInterceptor();
     },
     onShow: function () {
       if (config.debug) console.log('App Show');

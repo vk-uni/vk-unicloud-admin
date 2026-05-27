@@ -269,6 +269,11 @@
   "vk.assetLibrary.uploadProgress.statusIdle": "閒置",
   "vk.assetLibrary.uploadProgress.statusUploading": "上傳中",
 
+  "vk.error.pageNotFoundTips": "抱歉，您訪問的頁面不存在",
+  "vk.error.serverErrorTips": "抱歉，伺服器出錯了",
+  "vk.error.noPermissionTips": "抱歉，您無權訪問該頁面",
+  "vk.error.backToHome": "返回首頁",
+
   "vk.errorLog.title": "錯誤日誌",
   "vk.errorLog.clearLog": "清空日誌",
   "vk.errorLog.type": "類型",

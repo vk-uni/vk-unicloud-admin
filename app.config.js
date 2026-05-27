@@ -30,6 +30,10 @@ export default {
   error: {
     url: '/pages_plugs/error/404',
   },
+  // 403 无权限页面路径
+  noPermission: {
+    url: '/pages_plugs/error/403',
+  },
   // 前端默认时区（中国为8）
   targetTimezone: 8,
   // 日志风格（注意：只在开发调试模式下生效，正式发布后不会打印日志）
@@ -50,6 +54,16 @@ export default {
      */
     mode: 2,
     list: ['/pages/login/*', '/pages_template/element/*', '/pages_template/components/form/*', '/pages_template/components/icons/*'],
+  },
+  // 需要检查菜单权限的页面列表
+  checkPermissionPages: {
+    /**
+     * 如果 mode = 1 则代表list内的页面需要检查菜单权限，不在list内的页面不需要检查
+     * 如果 mode = 2 则代表list内的页面不需要检查菜单权限，不在list内的页面需要检查
+     * 注意: list内是通配符表达式，非正则表达式，如果一个页面不在左侧菜单中，但需要能访问，则需要在此设置
+     */
+    mode: 2,
+    list: ['/pages/index/index', '/pages/login/*'],
   },
   // 需要检查是否哪些请求需要加密通信
   checkEncryptRequest: {

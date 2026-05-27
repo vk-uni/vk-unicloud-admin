@@ -269,6 +269,11 @@
   "vk.assetLibrary.uploadProgress.statusIdle": "Idle",
   "vk.assetLibrary.uploadProgress.statusUploading": "Uploading",
 
+  "vk.error.pageNotFoundTips": "Sorry, the page you visited does not exist",
+  "vk.error.serverErrorTips": "Sorry, the server encountered an error",
+  "vk.error.noPermissionTips": "Sorry, you are not authorized to access this page",
+  "vk.error.backToHome": "Back to Home",
+
   "vk.errorLog.title": "Error Log",
   "vk.errorLog.clearLog": "Clear Log",
   "vk.errorLog.type": "Type",

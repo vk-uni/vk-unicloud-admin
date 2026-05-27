@@ -3,9 +3,9 @@
     <image src="../../static/icon/icon-404.svg"></image>
     <div class="title">
       <span class="code">404</span>
-      <span class="tips">抱歉，你访问的页面不存在</span>
+      <span class="tips">{{ $t('vk.error.pageNotFoundTips') }}</span>
       <span class="tips">{{ errMsg }}</span>
-      <span class="btn" @tap="toHome">返回首页</span>
+      <span class="btn" @tap="toHome">{{ $t('vk.error.backToHome') }}</span>
     </div>
   </div>
 </template>
@@ -36,14 +36,14 @@
   }
   .page-body {
     display: flex;
-    padding-top: 250rpx;
+    padding-top: 125px;
     justify-content: center;
 
     .title {
       display: flex;
       flex-direction: column;
-      padding-top: 120rpx;
-      margin-left: 200rpx;
+      padding-top: 60px;
+      margin-left: 100px;
     }
     .code {
       margin-bottom: 24px;
@@ -63,11 +63,11 @@
       color: #fff;
       background-color: #2d8cf0;
       border-color: #2d8cf0;
-      width: 200rpx;
-      height: 85rpx;
-      border-radius: 6rpx;
+      width: 150px;
+      height: 42px;
+      border-radius: 3px;
       text-align: center;
-      line-height: 85rpx;
+      line-height: 42px;
     }
     .btn:hover {
       cursor: pointer;
