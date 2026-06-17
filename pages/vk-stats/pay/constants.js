@@ -47,6 +47,8 @@ export const STATUS_MAP = {
   1: { label: '已支付', tagType: 'success' },
   2: { label: '已部分退款', tagType: 'warning' },
   3: { label: '已全额退款', tagType: 'danger' },
+  'paid-success': { label: '已支付（含退款）', tagType: 'success' },
+  refunded: { label: '已退款（含部分退款）', tagType: 'success' },
 };
 
 // 订单类型 MAP
@@ -67,7 +69,22 @@ export const NOTIFY_MODE_MAP = {
 // 支付方式 MAP
 export const PROVIDER_PAY_METHOD_MAP = {
   wxpay: '微信支付',
+  'wxpay-virtual': '微信虚拟支付',
   alipay: '支付宝支付',
+  douyin: '抖音支付',
+  huawei: '华为支付',
+  appleiap: '苹果内购',
+};
+
+export const PLATFORM_LABEL_MAP = {
+  h5: 'Web（H5）',
+  'mp-weixin': '微信小程序',
+  'h5-weixin': '微信公众号',
+  'mp-alipay': '支付宝小程序',
+  'mp-toutiao': '抖音小程序',
+  'mp-harmony': '鸿蒙元服务',
+  'app-plus': 'App（安卓、iOS）',
+  'app-harmony': '鸿蒙App',
 };
 
 // 派生数组：支付类型（供表格/查询表单使用）
@@ -80,6 +97,18 @@ export const payTypeData = Object.keys(PAY_TYPE_MAP).map((key) => {
   };
 });
 
+// 派生数组：支付方式搜索项（按支付渠道类型聚合）
+export const payTypeSearchData = Object.keys(PROVIDER_PAY_METHOD_MAP).map((key) => ({
+  label: PROVIDER_PAY_METHOD_MAP[key],
+  value: key,
+}));
+
+// 派生数组：支付方式搜索项（按支付渠道类型聚合）
+export const platformData = Object.keys(PLATFORM_LABEL_MAP).map((key) => ({
+  label: PLATFORM_LABEL_MAP[key],
+  value: key,
+}));
+
 // 派生数组：订单类型
 export const orderTypeData = Object.keys(ORDER_TYPE_MAP).map((key) => ({
   label: ORDER_TYPE_MAP[key],
@@ -89,6 +118,6 @@ export const orderTypeData = Object.keys(ORDER_TYPE_MAP).map((key) => ({
 // 派生数组：订单状态
 export const statusData = Object.keys(STATUS_MAP).map((key) => ({
   label: STATUS_MAP[key].label,
-  value: Number(key),
+  value: isNaN(key) ? key : Number(key),
   tagType: STATUS_MAP[key].tagType,
 }));

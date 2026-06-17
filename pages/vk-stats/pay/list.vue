@@ -5,7 +5,7 @@
       <vk-data-table-query
         v-model="queryForm1.formData"
         :columns="queryForm1.columns"
-        :span="3"
+        :span="4"
         :collapse-rows="1"
         :collapse-default-expand="true"
         @search="search"
@@ -18,6 +18,8 @@
       <div class="vk-page-card-toolbar">
         <div class="vk-page-card-title">支付订单列表</div>
         <div class="vk-page-card-actions">
+          <el-button :size="$global.size" icon="el-icon-data-line" @click="pageTo('./overview')">支付统计</el-button>
+          <el-button :size="$global.size" icon="el-icon-s-data" @click="pageTo('./ranking')">用户价值排行</el-button>
           <el-button :size="$global.size" icon="el-icon-download" @click="exportExcel">导出Excel</el-button>
         </div>
       </div>
@@ -55,7 +57,7 @@
 
 <script>
   import vkPayOrdersDetail from './form/detail.vue';
-  import { payTypeData, orderTypeData, statusData } from './constants.js';
+  import { payTypeData, payTypeSearchData, platformData, orderTypeData, statusData } from './constants.js';
 
   let vk = uni.vk; // vk实例
   let originalForms = {}; // 表单初始化数据
@@ -139,6 +141,14 @@
           columns: [
             { key: 'out_trade_no', title: '商户单号', type: 'text', mode: '%%' },
             { key: 'transaction_id', title: '平台单号', type: 'text', mode: '%%' },
+            { key: 'user_id', title: '用户ID', type: 'text', mode: '=' },
+            {
+              key: 'platform',
+              title: '平台',
+              type: 'select',
+              mode: '=',
+              data: platformData,
+            },
             {
               key: 'type',
               title: '订单类型',
@@ -150,18 +160,18 @@
               key: 'status',
               title: '订单状态',
               type: 'select',
-              mode: '=',
+              mode: 'custom',
               data: statusData,
             },
             {
               key: 'pay_type',
               title: '支付类型',
               type: 'select',
-              mode: '=',
-              data: payTypeData,
+              mode: '%*',
+              data: payTypeSearchData,
             },
-            { key: 'total_fee', title: '金额范围', type: 'money', placeholder: ['最小金额', '最大金额'], range: true, mode: '[]' },
-            { key: '_add_time', title: '添加时间', type: 'datetimerange', mode: '[]' },
+            { key: 'total_fee', title: '金额范围', type: 'money', placeholder: ['最小金额', '最大金额'], range: true, mode: '[]', span: 8 },
+            { key: 'pay_date', title: '支付时间', type: 'datetimerange', mode: '[]' },
           ],
         },
         // 表单相关结束 -----------------------------------------------------------
@@ -172,6 +182,10 @@
       vk = this.vk;
       this.options = options;
       this.init(options);
+      // 处理从统计页面传递过来的筛选参数
+      if (options.platform || options.orderType || options.startTime || options.user_id || options.pay_type) {
+        this.applyExternalFilter(options);
+      }
     },
     // 监听 - 页面【首次渲染完成时】执行。注意如果渲染速度快，会在页面进入动画完成前触发
     onReady() {},
@@ -184,6 +198,33 @@
       // 页面数据初始化函数
       init(options) {
         originalForms['form1'] = vk.pubfn.copyObject(this.form1);
+      },
+      // 应用外部筛选参数（从统计页面跳转过来时）
+      applyExternalFilter(options) {
+        const formData = {};
+        if (options.platform) {
+          formData.platform = options.platform;
+        }
+        if (options.user_id) {
+          formData.user_id = options.user_id;
+        }
+        if (options.pay_type) {
+          formData.pay_type = options.pay_type;
+        }
+        if (options.orderType) {
+          formData.type = options.orderType;
+        }
+        if (vk.pubfn.isNotNull(options.status)) {
+          formData.status = isNaN(options.status) ? options.status : Number(options.status);
+        }
+        if (options.startTime && options.endTime) {
+          formData.pay_date = [Number(options.startTime), Number(options.endTime)];
+        }
+        this.queryForm1.formData = formData;
+        // 延迟执行搜索，确保表格组件已初始化
+        this.$nextTick(() => {
+          this.$refs.table1.search();
+        });
       },
       // 页面跳转
       pageTo(path) {

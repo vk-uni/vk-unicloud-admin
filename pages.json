@@ -12,6 +12,17 @@
   ],
   "subPackages": [
     {
+      "root": "pages/vk-stats",
+      "pages": [
+        { "path": "user/overview", "style": { "navigationBarTitleText": "用户统计" } },
+        { "path": "user/log", "style": { "navigationBarTitleText": "用户登录日志" } },
+        { "path": "pay/overview", "style": { "navigationBarTitleText": "支付统计" } },
+        { "path": "pay/ranking", "style": { "navigationBarTitleText": "用户价值排行" } },
+        { "path": "pay/list", "style": { "navigationBarTitleText": "支付订单明细" } },
+        { "path": "error/list", "style": { "navigationBarTitleText": "云端错误统计" } }
+      ]
+    },
+    {
       "root": "pages_plugs",
       "pages": [
         { "path": "error/404", "style": { "navigationBarTitleText": "页面不存在" } },
@@ -24,13 +35,10 @@
         { "path": "system/app/list" },
         { "path": "system/app-upgrade-center/list" },
         { "path": "system_uni/vk-global-data" },
-        { "path": "system_uni/uni-id-log" },
         { "path": "system_uni/opendb-admin-log" },
         { "path": "system_uni/vk-components-dynamic" },
         { "path": "system_uni/uni-id-files/list" },
-        { "path": "system_uni/vk-pay-orders/list" },
         { "path": "system_uni/vk-ws-connection" },
-        { "path": "system_uni/vk-error-log" },
         { "path": "system_uni/lucky-draw/list", "style": { "navigationBarTitleText": "抽奖活动" } }
       ]
     }

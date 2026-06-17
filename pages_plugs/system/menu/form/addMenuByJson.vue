@@ -22,6 +22,31 @@
 
 <script>
   let vk = uni.vk; // vk实例
+  const jsonSymbolMap = {
+    '【': '[',
+    '】': ']',
+    '［': '[',
+    '］': ']',
+    '｛': '{',
+    '｝': '}',
+    '（': '(',
+    '）': ')',
+    '，': ',',
+    '、': ',',
+    '：': ':',
+    '；': ';',
+    '“': '"',
+    '”': '"',
+    '＂': '"',
+    '‘': "'",
+    '’': "'",
+    '＇': "'",
+    '。': '.',
+  };
+  const normalizeJsonSymbols = (value) => {
+    if (typeof value !== 'string') return value;
+    return value.replace(/[【】［］｛｝（），、：；“”＂「」『』﹁﹂﹃﹄‘’＇？！。]/g, (symbol) => jsonSymbolMap[symbol] || symbol);
+  };
   export default {
     props: {
       value: {
@@ -50,7 +75,7 @@
           // 表单请求数据，此处可以设置默认值
           data: {
             mode: 1,
-            jsonType: 1,
+            jsonType: 2,
           },
           // 表单属性
           props: {
@@ -63,8 +88,8 @@
                 title: 'json类型',
                 type: 'radio',
                 data: [
-                  { value: 1, label: '树形结构' },
                   { value: 2, label: '数组结构' },
+                  { value: 1, label: '树形结构' },
                 ],
               },
               {
@@ -87,6 +112,12 @@
                 title: 'JSON内容',
                 type: 'textarea',
                 autosize: { minRows: 18, maxRows: 18 },
+                watch: ({ value, $set }) => {
+                  const menus = normalizeJsonSymbols(value);
+                  if (menus !== value) {
+                    $set('menus', menus);
+                  }
+                },
               },
             ],
             // 表单验证规则
@@ -102,7 +133,7 @@
             labelWidth: '140px',
             beforeAction(formData) {
               try {
-                let menus = JSON.parse(formData.menus);
+                let menus = JSON.parse(normalizeJsonSymbols(formData.menus));
                 if (Object.prototype.toString.call(menus) === '[object Object]') {
                   menus = [menus];
                 }

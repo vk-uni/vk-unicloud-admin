@@ -10,7 +10,8 @@
           <el-tooltip :disabled="!!table1.selectItem" content="请先点击需要操作的菜单" placement="top">
             <el-button type="success" :size="$global.size" icon="el-icon-key" :disabled="!table1.selectItem" @click="bindPermissionBtn">设置内置权限</el-button>
           </el-tooltip>
-          <el-button type="warning" :size="$global.size" icon="el-icon-upload2" @click="addMenuByJsonBtn">通过JSON批量导入</el-button>
+          <el-button :size="$global.size" icon="el-icon-upload2" @click="addMenuByJsonBtn">通过JSON批量导入</el-button>
+          <el-button :size="$global.size" icon="el-icon-data-line" @click="initVkStatBtn">初始化vk统计</el-button>
           <el-badge v-if="pluginMenus && pluginMenus.length > 0" :value="pluginMenus.length" class="item">
             <el-button type="warning" :size="$global.size" icon="el-icon-plus" style="margin-right: 0" @click="addPluginMenuMenu">待添加的插件菜单</el-button>
           </el-badge>
@@ -72,6 +73,7 @@
   import addPluginMenu from './form/addPluginMenu.vue';
 
   import getPluginMenu from './libs/pluginMenu.js';
+  import vkStatMenus from './libs/vk-stat.json';
   const pluginMenuJsons = getPluginMenu();
 
   let vk = uni.vk; // vk实例
@@ -365,6 +367,19 @@
       addMenuByJsonBtn() {
         let item = this.getCurrentRow();
         vk.pubfn.openForm('addMenuByJson', { item });
+      },
+      initVkStatBtn() {
+        vk.callFunction({
+          url: 'admin/system/menu/sys/adds',
+          title: '初始化中...',
+          data: {
+            mode: 1,
+            menus: vk.pubfn.copyObject(vkStatMenus),
+          },
+          success: () => {
+            this.refresh();
+          },
+        });
       },
       // 修改排序值
       sortChange(sort, item) {
