@@ -19,11 +19,11 @@ dev-script/
 .vite
 package-lock.json
 
-# claude
-.claude/rules/env.md
-.claude/skills/vk-read-doc/.last-update
-.claude/skills/vk-read-doc/doc-index.md
-.claude/settings.local.json
+# agents
+**/rules/env.md
+**/skills/vk-read-doc/.last-update
+**/skills/vk-read-doc/doc-index.md
+**/settings.local.json
 
 # python
 *.pyc
