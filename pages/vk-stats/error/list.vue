@@ -18,6 +18,16 @@
       <div class="vk-page-card-toolbar">
         <div class="vk-page-card-title">错误日志列表</div>
         <div class="vk-page-card-actions">
+          <el-button
+            type="warning"
+            :size="$global.size"
+            icon="el-icon-circle-check"
+            :loading="loading"
+            :disabled="loading"
+            @click="markAllPendingHandled"
+          >
+            全部标记已处理
+          </el-button>
           <el-button :size="$global.size" icon="el-icon-download" @click="exportExcel">导出Excel</el-button>
         </div>
       </div>
@@ -31,6 +41,9 @@
           :query-form-param="queryForm1"
           :right-btns="['detail_auto']"
           :custom-right-btns="table1.customRightBtns"
+          :selection="true"
+          :selectable="table1.selectable"
+          :batch-btns="table1.batchBtns"
           :default-sort="{ name: 'count', type: 'desc' }"
           secondary-sort-key="_id"
           :row-no="true"
@@ -118,6 +131,31 @@
           ],
           // 多选框选中的值
           multipleSelection: [],
+          // 仅待处理错误可以执行批量操作
+          selectable: (row) => {
+            return row.status === 0;
+          },
+          // 底部批量操作按钮
+          batchBtns: [
+            {
+              title: '批量标记已处理',
+              type: 'success',
+              icon: 'el-icon-circle-check',
+              confirm: true,
+              onClick: (items) => {
+                this.batchUpdateStatus(items, 1);
+              },
+            },
+            {
+              title: '批量标记不处理',
+              type: 'info',
+              icon: 'el-icon-remove-outline',
+              confirm: true,
+              onClick: (items) => {
+                this.batchUpdateStatus(items, 2);
+              },
+            },
+          ],
           // 当前高亮的记录
           selectItem: '',
           customRightBtns: [
@@ -245,6 +283,54 @@
       },
       // 刷新
       refresh() {
+        this.$refs.table1.refresh();
+      },
+      // 批量修改选中错误的状态
+      batchUpdateStatus(items, status) {
+        let md5List = items.map((item) => item.md5);
+        vk.callFunction({
+          url: 'admin/system_uni/error-log/sys/update',
+          title: '处理中...',
+          data: {
+            mode: 'batch',
+            md5List,
+            status,
+          },
+          success: (data) => {
+            this.batchUpdateSuccess(data);
+          },
+        });
+      },
+      // 将全库所有待处理错误标记为已处理
+      markAllPendingHandled() {
+        this.$confirm('此操作会将全库所有待处理错误标记为已处理，不受当前筛选条件影响，是否继续？', '确认操作', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        })
+          .then(() => {
+            vk.callFunction({
+              url: 'admin/system_uni/error-log/sys/update',
+              loading: { that: this, name: 'loading' },
+              data: {
+                mode: 'allPending',
+              },
+              success: (data) => {
+                this.batchUpdateSuccess(data);
+              },
+            });
+          })
+          .catch(() => {});
+      },
+      // 批量操作成功
+      batchUpdateSuccess(data) {
+        let num = Number(data.num) || 0;
+        if (num > 0) {
+          this.$message.success(`操作成功，共更新 ${num} 条错误日志`);
+        } else {
+          this.$message.info('没有需要更新的待处理错误日志');
+        }
+        this.$refs.table1.clearSelection();
         this.$refs.table1.refresh();
       },
       // 显示修改页面
