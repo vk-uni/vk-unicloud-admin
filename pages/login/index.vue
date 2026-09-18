@@ -9,7 +9,7 @@
           ><el-input class="input" type="text" v-model="form1.username" :placeholder="$t('vk.login.usernamePlaceholder')"></el-input
         ></el-form-item>
         <el-form-item :label="$t('vk.login.password')" prop="checkPass" class="form-item">
-          <el-input class="input" type="password" v-model="form1.password" show-password :placeholder="$t('vk.login.passwordPlaceholder')" maxlength="20"></el-input>
+          <el-input class="input" type="password" v-model="form1.password" show-password :placeholder="$t('vk.login.passwordPlaceholder')" maxlength="20" @keyup.enter.native="submit"></el-input>
         </el-form-item>
         <div class="password-box">
           <div class="remember-password">
