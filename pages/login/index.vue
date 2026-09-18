@@ -124,13 +124,14 @@
         });
       },
       //登陆成功
-      loginSuccess(data = {}) {
+      async loginSuccess(data = {}) {
         let { userInfo = {} } = data;
         // 先清空下菜单缓存
         vk.setVuex('$app.inited', false);
         vk.setVuex('$app.navMenu', []);
-        // 再执行init函数
-        getApp().init();
+        vk.setVuex('$app.menuList', []);
+        // 等待菜单权限就绪，避免回跳时用空菜单或旧账号菜单判断权限。
+        if (!(await getApp().init())) return;
         // 检查是否有指定跳转的页面
         if (this.options.uniIdRedirectUrl) {
           let uniIdRedirectUrl = decodeURIComponent(this.options.uniIdRedirectUrl);
