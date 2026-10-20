@@ -2,10 +2,10 @@
   <div class="vk-data-page-header" v-if="showCom" :style="styleCom">
     <div class="header-group">
       <div class="header-title">
-        <slot> {{ title }} </slot>
+        <slot>{{ title }}</slot>
       </div>
       <div class="header-sub-title">
-        <slot name="sub-title"> {{ subTitle }} </slot>
+        <slot name="sub-title">{{ subTitle }}</slot>
       </div>
     </div>
     <div>

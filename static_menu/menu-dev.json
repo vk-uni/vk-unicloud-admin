@@ -248,12 +248,6 @@
         "icon": "el-icon-edit-outline",
         "children": [
           {
-            "menu_id": "vk-data-editor-1",
-            "name": "富文本-editor",
-            "icon": "",
-            "url": "/pages_template/components/editor/editor"
-          },
-          {
             "menu_id": "vk-data-editor-2",
             "name": "富文本-tinymce",
             "icon": "",

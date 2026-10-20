@@ -1,5 +1,5 @@
 <template>
-  <view class="page-body">
+  <div class="page-body">
     <!-- 页面内容开始 -->
 
     <!-- 表格搜索组件开始 -->
@@ -7,13 +7,14 @@
     <!-- 表格搜索组件结束 -->
 
     <!-- 自定义按钮区域开始 -->
-    <view>
+    <div>
       <el-row>
-        <el-button type="success" size="small" icon="el-icon-circle-plus-outline" @click="addBtn">添加</el-button>
+        <el-button type="success" icon="el-icon-circle-plus-outline" @click="addBtn">添加</el-button>
         <!-- 批量操作 -->
         <el-dropdown v-if="table1.multipleSelection" :split-button="false" trigger="click" @command="batchBtn">
-          <el-button type="danger" size="small" style="margin-left: 20rpx" :disabled="table1.multipleSelection.length === 0">
-            批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+          <el-button type="danger" style="margin-left: 20rpx" :disabled="table1.multipleSelection.length === 0">
+            批量操作
+            <i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item :command="1">批量操作1</el-dropdown-item>
@@ -21,7 +22,7 @@
           </el-dropdown-menu>
         </el-dropdown>
       </el-row>
-    </view>
+    </div>
     <!-- 自定义按钮区域结束 -->
 
     <!-- 表格组件开始 -->
@@ -59,7 +60,7 @@
     <!-- 添加或编辑的弹窗结束 -->
 
     <!-- 页面内容结束 -->
-  </view>
+  </div>
 </template>
 
 <script>

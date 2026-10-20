@@ -1,10 +1,10 @@
 <template>
-  <view class="page">
+  <div class="page">
     <!-- 页面内容开始 -->
     <vk-data-page-header title="Input 表单输入" subTitle="聚合输入框"></vk-data-page-header>
-    <view class="page-body">
-      <view class="tips"> 根据type自动渲染的不同的输入框 </view>
-      <view class="mt15">
+    <div class="page-body">
+      <div class="tips">根据type自动渲染的不同的输入框</div>
+      <div class="mt15">
         <el-radio-group v-model="type">
           <el-radio label="number">数字输入框</el-radio>
           <el-radio label="money">金额输入框</el-radio>
@@ -14,19 +14,19 @@
           <!-- <el-radio label="json">JSON输入框</el-radio> -->
           <el-radio label="textarea">多行文本输入框</el-radio>
         </el-radio-group>
-      </view>
-      <view class="mt15">
+      </div>
+      <div class="mt15">
         <vk-data-input :type="type" v-model="form1.value" :precision="0" width="300px" placeholder="请输入"></vk-data-input>
-      </view>
-      <view class="mt15 json-view" v-if="form1">
+      </div>
+      <div class="mt15 json-view" v-if="form1">
         <pre>
 					{{ form1 }}
 				</pre
         >
-      </view>
-    </view>
+      </div>
+    </div>
     <!-- 页面内容结束 -->
-  </view>
+  </div>
 </template>
 
 <script>
