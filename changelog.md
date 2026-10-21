@@ -1,3 +1,12 @@
+## 1.26.0（2026-10-21）
+- 【升级】`vk-unicloud-admin-ui` 的 npm 包（执行`npm i vk-unicloud-admin-ui@1.26.0 --registry https://registry.npmjs.org/`）
+- 【升级】`vk依赖` [详情](https://ext.dcloud.net.cn/plugin?id=4157&update_log)
+- 【重要】默认富文本编辑器切换为 TinyMCE，直接使用 `vk-data-input-editor` 的页面请改用 `custom-editor-tinymce`
+- 【重要】云函数恢复 Nodejs18 运行环境，不兼容 HBuilderX 5.15，请升级 HBuilderX
+- 【修复】批量导入菜单时忽略重复标识失效、覆盖导入丢失内置权限的问题
+- 【修复】登录页面和支付统计已知问题
+- 【优化】统一组件默认尺寸
+- 【优化】其他细节问题
 ## 1.25.2（2026-09-10）
 - 【升级】`vk-unicloud-admin-ui` 的 npm 包（执行`npm i vk-unicloud-admin-ui@1.25.5 --registry https://registry.npmjs.org/`）
 - 【升级】`vk依赖` [详情](https://ext.dcloud.net.cn/plugin?id=4157&update_log)
