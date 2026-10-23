@@ -27,12 +27,9 @@
     </div>
 
     <div class="tips" style="position: fixed; right: 0px; top: 100px; bottom: 15px; overflow: auto; max-width: 400px; z-index: 99">
-      <div class="json-view" v-if="form1.data">
-        <div style="font-size: 14px">表单数据</div>
-        <pre>
-					{{ form1.data }}
-				</pre
-        >
+      <div class="json-view" style="font-size: 12px;" v-if="form1.data">
+        <div>表单数据</div>
+        <pre>{{ form1.data }}</pre>
       </div>
     </div>
 

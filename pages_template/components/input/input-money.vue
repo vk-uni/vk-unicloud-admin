@@ -10,17 +10,10 @@
       </div>
       <div class="mt15">
         金额输入框：
-        <vk-data-input-money v-model="form1.value1" placeholder="请输入金额" width="300px"></vk-data-input-money>
-      </div>
-      <div class="mt15">
-        表单绑定值：
-        <vk-data-input-number class="mt15" v-model="form1.value1" :precision="0" width="300px" placeholder="请输入金额"></vk-data-input-number>
+        <vk-data-input-numeric mode="money" v-model="form1.value1" placeholder="请输入金额" width="300px"></vk-data-input-numeric>
       </div>
       <div class="mt15 json-view" v-if="form1">
-        <pre>
-					{{ form1 }}
-				</pre
-        >
+        <pre>{{ form1 }}</pre>
       </div>
     </div>
     <!-- 页面内容结束 -->

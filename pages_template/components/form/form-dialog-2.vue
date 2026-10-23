@@ -16,10 +16,7 @@
       <div class="tips mt15">
         <div class="mt15 json-view" v-if="form1.data">
           <div style="font-size: 14px">表单数据</div>
-          <pre>
-						{{ form1.data }}
-					</pre
-          >
+          <pre>{{ form1.data }}</pre>
         </div>
       </div>
     </div>

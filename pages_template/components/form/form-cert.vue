@@ -10,10 +10,7 @@
       <div class="tips mt15">
         <div class="mt15 json-view" v-if="form1">
           <div style="font-size: 14px">证书内容</div>
-          <pre>
-						{{ form1 }}
-					</pre
-          >
+          <pre>{{ form1 }}</pre>
         </div>
       </div>
     </div>

@@ -5,16 +5,16 @@
     <div class="page-body">
       <div class="tips">正整数</div>
       <div class="mt15">
-        <vk-data-input-number v-model="form1.value1" :precision="0" width="300px" placeholder="请输入数字"></vk-data-input-number>
+        <vk-data-input-numeric mode="number" v-model="form1.value1" :precision="0" width="300px" placeholder="请输入数字"></vk-data-input-numeric>
       </div>
       <div class="mt15 tips">2位小数</div>
       <div class="mt15">
-        <vk-data-input-number v-model="form1.value2" :precision="2" width="300px" placeholder="请输入数字"></vk-data-input-number>
+        <vk-data-input-numeric mode="number" v-model="form1.value2" :precision="2" width="300px" placeholder="请输入数字"></vk-data-input-numeric>
       </div>
 
       <div class="mt15 tips">最大值100</div>
       <div class="mt15">
-        <vk-data-input-number ref="input-number-3" v-model="form1.value3" :precision="0" width="300px" placeholder="请输入数字" :max="100"></vk-data-input-number>
+        <vk-data-input-numeric mode="number" ref="input-number-3" v-model="form1.value3" :precision="0" width="300px" placeholder="请输入数字" :max="100"></vk-data-input-numeric>
       </div>
 
       <div class="mt15 tips">
