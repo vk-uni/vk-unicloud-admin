@@ -246,16 +246,23 @@ util.originalTo = function () {
   util.redirectTo(originalPage);
 };
 
+function hasAppStore() {
+  const vk = uni.vk;
+  if (typeof vk.getVuex !== 'function') return false;
+  if (typeof vk.getVuexStore !== 'function') return true;
+  return Object.prototype.hasOwnProperty.call(vk.getVuexStore().state, '$app');
+}
+
 /**
  * 获取登录前的页面
  * vk.navigate.getOriginalPage();
  */
 util.getOriginalPage = function () {
-  if (typeof uni.vk.getVuex === 'function') {
-    // 有安装vuex则使用vuex
+  if (hasAppStore()) {
+    // 已绑定 $app 模块则使用状态管理
     return uni.vk.getVuex('$app.originalPage');
   } else {
-    // 未安装则使用本地缓存
+    // 未绑定 $app 模块则使用本地缓存
     return uni.vk.getStorageSync('vk.navigate.originalPage');
   }
 };
@@ -267,11 +274,11 @@ util.getOriginalPage = function () {
 util.setOriginalPage = function (originalPage) {
   if (originalPage === null) originalPage = '';
   uni.vk.navigate.originalPage = originalPage; // 兼容老版本
-  if (typeof uni.vk.getVuex === 'function') {
-    // 有安装vuex则使用vuex
+  if (hasAppStore()) {
+    // 已绑定 $app 模块则使用状态管理
     return uni.vk.setVuex('$app.originalPage', originalPage);
   } else {
-    // 未安装则使用本地缓存
+    // 未绑定 $app 模块则使用本地缓存
     return uni.vk.setStorageSync('vk.navigate.originalPage', originalPage);
   }
 };
@@ -649,9 +656,6 @@ vk.navigateToLuckyDraw({
  */
 util.navigateToLuckyDraw = function (obj = {}) {
   let vk = uni.vk;
-  // #ifndef APP-PLUS || MP-WEIXIN || WEB
-  vk.alert('请在微信小程序中打开');
-  // #endif
   const mpConfig = {
     appid: 'wx2c55b235ad6553e3', // 抽奖服务小程序的appid（请勿修改）
     ghId: 'gh_fbd003114768', // 抽奖服务小程序的原始ID（请勿修改）
@@ -676,6 +680,14 @@ util.navigateToLuckyDraw = function (obj = {}) {
     if (typeof fail === 'function') fail(err);
     if (typeof complete === 'function') complete(err);
   };
+  // #ifndef APP-PLUS || MP-WEIXIN || WEB
+  vk.alert('当前环境暂不支持跳转抽奖小程序，请在微信小程序中打开');
+  failCallback({
+    errMsg: 'navigateToMiniProgram:fail 当前环境暂不支持跳转抽奖小程序',
+  });
+  return;
+  // #endif
+
   // #ifdef WEB
   let pathArr = path.split('?');
   let page = pathArr[0];

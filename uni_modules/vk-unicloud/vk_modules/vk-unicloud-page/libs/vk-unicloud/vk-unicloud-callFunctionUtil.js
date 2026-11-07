@@ -5,6 +5,12 @@ let lastToLoginTime = 0;
 
 import cloudStorage from '../../libs/cloud-storage/index.js';
 
+function hasUserStore() {
+  if (typeof vk.setVuex !== 'function') return false;
+  if (typeof vk.getVuexStore !== 'function') return true;
+  return Object.prototype.hasOwnProperty.call(vk.getVuexStore().state, '$user');
+}
+
 class CallFunctionUtil {
   constructor() {
     // 注意：此处的配置会被项目根目录的 app.config.js 覆盖，无需修改此处的配置
@@ -116,8 +122,8 @@ class CallFunctionUtil {
     this.updateUserInfo = (res = {}) => {
       let config = this.config;
       let { userInfo = {} } = res;
-      if (typeof vk.setVuex === 'function') {
-        // 有安装vuex则使用vuex
+      if (hasUserStore()) {
+        // 已绑定用户状态则更新状态，否则使用本地缓存
         vk.setVuex('$user.userInfo', userInfo);
       } else {
         // 否则使用本地缓存
@@ -129,8 +135,8 @@ class CallFunctionUtil {
     this.deleteUserInfo = (res = {}) => {
       let { log = true } = res;
       let config = this.config;
-      if (typeof vk.setVuex === 'function') {
-        // 有安装vuex则使用vuex
+      if (hasUserStore()) {
+        // 只清理实际绑定的用户状态
         vk.setVuex('$user.userInfo', {});
         vk.setVuex('$user.permission', []);
         vk.removeStorageSync(config.uniIdUserInfoKeyName);
@@ -274,6 +280,19 @@ class CallFunctionUtil {
                   let pages = getCurrentPages();
                   if (pages.length >= num) {
                     let that = pages[pages.length - num];
+
+                    // #ifdef UNI-APP-X
+                    // 蒸汽模式的 onLoad 回调保存在页面内部实例中。
+                    const hooks = that.vm?.$?.onLoad;
+                    if (Array.isArray(hooks)) {
+                      const options = that.options;
+                      for (const hook of hooks.slice()) {
+                        hook(options);
+                      }
+                    }
+                    // #endif
+
+                    // #ifndef UNI-APP-X
                     if (typeof that.onLoad == 'function') {
                       // 重新执行页面onLoad函数
                       that.onLoad(that.options);
@@ -284,6 +303,8 @@ class CallFunctionUtil {
                       // 重新执行一次云函数调用（还是让用户自己点比较好）
                       // callFunction(params);
                     }
+                    // #endif
+
                   } else {
                     // 重新执行一次云函数调用（还是让用户自己点比较好）
                     // callFunction(params);
@@ -688,7 +709,7 @@ class CallFunctionUtil {
     /**
      * 选择文件并直接上传 vk.chooseAndUploadFile
      * 文档：[https://vkdoc.fsq.pub/client/pages/chooseAndUploadFile.html](https://vkdoc.fsq.pub/client/pages/chooseAndUploadFile.html)
-     * @param {String} 	obj.type										文件类型，image（图片）、video（视频）、all（任意文件，仅H5和微信小程序支持）（必填）
+     * @param {String} 	obj.type										文件类型，image（图片）、video（视频）、all（任意文件，支持H5、微信小程序和uni-app x蒸汽模式App）（必填）
      * @param {String} 	obj.title										上传时的loading提示语
      * @param {Number} 	obj.count										最多可选择的文件数量，type为image时默认9，type为all时默认100（type为video时无效，一次只能选1个）
      * @param {Array} 	obj.extension								文件扩展名过滤（部分平台支持）
@@ -1074,7 +1095,7 @@ class CallFunctionUtil {
       errMsg = globalErrorCode['cloudfunction-network-unauthorized'];
       sysErr = true;
       needAlert = false;
-      // #ifdef APP-PLUS
+      // #ifdef APP
       vk.pubfn.debounce(
         () => {
           vk.alert(errMsg, '提示', '确定', () => {
@@ -1247,7 +1268,9 @@ class CallFunctionUtil {
           count: count || 9,
           sizeType,
           sourceType,
+          // #ifndef APP
           extension,
+          // #endif
           success: (res) => resolve(that.normalizeChooseFileRes(res, 'image')),
           fail: reject,
         });
@@ -1256,13 +1279,17 @@ class CallFunctionUtil {
           camera,
           maxDuration,
           sourceType,
+          // #ifndef APP
           extension,
+          // #endif
+          // #ifndef UNI-APP-X && APP-HARMONY
           compressed: typeof compressed === 'undefined' ? true : compressed,
+          // #endif
           success: (res) => resolve(that.normalizeChooseFileRes(res, 'video')),
           fail: reject,
         });
       } else if (type === 'all') {
-        // #ifdef H5
+        // #ifdef H5 || (APP && VUE3-VAPOR)
         uni.chooseFile({
           count: count || 100,
           type: 'all',
@@ -1280,8 +1307,8 @@ class CallFunctionUtil {
           fail: reject,
         });
         // #endif
-        // #ifndef H5 || MP-WEIXIN
-        reject({ errMsg: 'chooseAndUploadFile:fail 当前平台不支持 type:"all"，仅 H5 和微信小程序支持选择任意文件' });
+        // #ifndef H5 || MP-WEIXIN || (APP && VUE3-VAPOR)
+        reject({ errMsg: 'chooseAndUploadFile:fail 当前平台不支持 type:"all"，仅 H5、微信小程序和 uni-app x 蒸汽模式 App 支持选择任意文件' });
         // #endif
       }
     });
@@ -1438,7 +1465,7 @@ function hideRequestLoading(params, Logger) {
   if (Logger.loadingFinished) return;
   Logger.loadingFinished = true;
   if (params.title) vk.hideLoading('request');
-  if (params.loading) {
+  if (Logger.loading) {
     vk.setLoading(false, Logger.loading);
     Logger.loading = null;
   }
